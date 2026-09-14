@@ -184,22 +184,30 @@ struct LogbookScreen: View {
 }
 
 /// I timbri dei porti, in una pagina: ognuno un cerchio inclinato a modo suo.
+///
+/// Tutti dello **stesso diametro**, in una griglia che li contiene con margine: al
+/// primo giro i timbri si allargavano sul nome, «CHARLOTTE AMALIE» usciva dalla
+/// carta e l'anno finiva sopra il timbro accanto. Qui il cerchio è fisso, il nome
+/// va a capo sulle parole e, se una parola è lunga, si stringe.
 struct StampPage: View {
     @Environment(\.livery) private var livery
+    @ScaledMetric(relativeTo: .caption2) private var scaledDiameter: CGFloat = 92
     let stamps: [Logbook.Stamp]
     let clock: ShipClock
 
-    private let columns = [GridItem(.adaptive(minimum: 96), spacing: 10)]
+    private var diameter: CGFloat { min(scaledDiameter, 128) }
 
     var body: some View {
-        LazyVGrid(columns: columns, spacing: 10) {
+        // La cella è larga quanto il timbro più il respiro per l'inclinazione: così
+        // due timbri vicini non si toccano mai, a nessun corpo di testo.
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: diameter + 12), spacing: 8)], spacing: 12) {
             ForEach(Array(stamps.enumerated()), id: \.element.id) { index, stamp in
                 // Inclinazioni diverse, ma **fisse**: un timbro che gira a ogni
                 // ridisegno non è un timbro.
                 let rotation = [-11.0, 7.0, -5.0, 9.0, -8.0, 4.0][index % 6]
                 VStack(spacing: 6) {
                     Stamp(stampText(stamp), color: stamp.visits >= 3 ? livery.signal : livery.field,
-                          rotation: rotation)
+                          rotation: rotation, diameter: diameter)
                     Text(String(clock.calendar(at: stamp.port.arrival).component(.year, from: stamp.port.arrival)))
                         .font(TicketType.fieldLabel)
                         .foregroundStyle(livery.field)
@@ -213,8 +221,20 @@ struct StampPage: View {
         }
     }
 
+    /// Il nome spezzato sulle parole, una per riga, e le visite in fondo.
     private func stampText(_ stamp: Logbook.Stamp) -> String {
-        stamp.visits > 1 ? "\(stamp.port.name)\n×\(stamp.visits)" : stamp.port.name
+        let words = stamp.port.name.split(separator: " ").map(String.init)
+        var lines: [String] = []
+        for word in words {
+            // Due parole corte stanno sulla stessa riga: «SAN JUAN», non «SAN / JUAN».
+            if let last = lines.last, last.count + word.count + 1 <= 9 {
+                lines[lines.count - 1] = last + " " + word
+            } else {
+                lines.append(word)
+            }
+        }
+        if stamp.visits > 1 { lines.append("×\(stamp.visits)") }
+        return lines.prefix(3).joined(separator: "\n")
     }
 }
 
@@ -233,15 +253,7 @@ private struct VoyageStubCard: View {
                     .textCase(.uppercase)
                     .foregroundStyle(livery.ink)
                 if isCurrent {
-                    Text("In corso")
-                        .font(TicketType.stamp)
-                        .tracking(0.8)
-                        .textCase(.uppercase)
-                        .foregroundStyle(livery.signalInk)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .overlay(RoundedRectangle(cornerRadius: 4).stroke(livery.signal, lineWidth: 1.2))
-                        .rotationEffect(.degrees(-4))
+                    StampBadge(String(localized: "In corso"))
                 }
                 Spacer(minLength: 0)
             }

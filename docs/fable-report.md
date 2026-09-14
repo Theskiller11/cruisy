@@ -26,6 +26,9 @@ rapporto dice cosa c'è, cosa manca, e **come continuare senza perdere coerenza*
 - Dopo, primo giro: `screenshots/dopo-1/foglio.jpg` (Oggi, Itinerario, Scalo).
 - Dopo, secondo giro: `screenshots/dopo-2/foglio.jpg` (Oggi nei cinque stati, Itinerario,
   Scalo, Nave, Diario, Porti), dopo le cinque note di Matteo.
+- Dopo, terzo giro: `screenshots/dopo-3/foglio.jpg` (Diario, Itinerario, Porti), dopo le
+  tre note sui timbri: griglia a diametro fisso nel Diario, «Toccato» come badge accanto al
+  nome nell'Itinerario.
 - Giri `--lang en` e `--size AX5`: **non fatti** (vedi «Da fare»).
 
 La cartella `screenshots/` è ignorata da git: si rigenera con `scripts/screenshots.sh`.
@@ -111,8 +114,13 @@ Solo `@ScaledMetric` sulle altezze; mai dimensioni fisse per il testo.
   campi, due per riga, uno per riga ai corpi accessibili. `spoken` per VoiceOver quando
   l'abbreviazione non basta.
 - **`TicketRule`** — riga sottile fra gruppi di campi.
-- **`Stamp("In\nporto", color:rotation:)`** — timbro a doppio bordo, inclinato, che si
-  allarga finché il testo ci sta intero (mai trattini). Testi corti, a capo esplicito.
+- **`Stamp("In\nporto", color:rotation:diameter:)`** — timbro a doppio bordo, inclinato.
+  Senza `diameter` si allarga finché il testo ci sta intero (mai trattini): è il modo per
+  i biglietti, con testi corti e a capo esplicito. Con `diameter` è fisso e il testo si
+  adatta: è il modo per le griglie (la pagina dei timbri del Diario, `StampPage`, che
+  spezza i nomi sulle parole).
+- **`StampBadge("Oggi", color:)`** — il timbro piccolo, rettangolare, per una parola
+  accanto a un titolo: «OGGI», «DOMANI», «TOCCATO», «IN CORSO». Non ruba larghezza alla riga.
 - **`TicketBehind("Grand Turk · domani 08:00")`** — il biglietto che si intravede dietro.
 - **`Masthead(title, detail:)`** — la testata sullo scafo.
 - **`.paperCard()`** e **`PaperRow(glyph:title:subtitle:trailing:)`** — carta di servizio per
@@ -274,9 +282,8 @@ imparate. **Difetto trovato e corretto**: `LoggedVoyage` non nominava `track` fr
 - Striscia del fuso in cima a Oggi: **chiuso** (campo nella matrice).
 - Diario e Porti con lo sfondo diverso: **chiuso**.
 - Doppio interruttore della Live Activity nelle Impostazioni: **aperto** (istruzioni sopra).
-- Traguardo «Lo Stretto di Gibilterra fino alle Baleari»: **aperto** — rinominare in
-  `Milestone.scale` («Da Gibilterra a Palma», dettaglio «lo Stretto → le Baleari»),
-  controllando i test che citano il nome.
+- Traguardo «Lo Stretto di Gibilterra fino alle Baleari»: **chiuso** («Da Gibilterra a
+  Palma», dettaglio «lo Stretto → le Baleari»).
 - Carta senza ingrandimento dalla card: **aperto**, resta il push (motivo in
   `TodayScreen`).
 - Foto dei porti di qualità imprevedibile: **aperto**.
@@ -307,7 +314,6 @@ imparate. **Difetto trovato e corretto**: `LoggedVoyage` non nominava `track` fr
    tagliato. Attenzione ai timbri e all'ora grande ad AX5: hanno tetti e `minimumScaleFactor`,
    ma vanno guardati.
 7. Test di interfaccia per importazione, editor e impostazioni.
-8. Rinominare il traguardo Gibilterra–Palma.
 
 ## Domande per Matteo
 

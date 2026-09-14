@@ -144,14 +144,6 @@ private struct DayTicket: View {
             HStack(alignment: .center, spacing: 14) {
                 dateColumn
                 details
-                // Il passato non si attenua: si **timbra**. Una carta grigia con
-                // testo grigio sembrava illeggibile — e lo era quasi — mentre un
-                // timbro «toccato» dice la stessa cosa a contrasto pieno.
-                if isPast {
-                    Stamp(String(localized: "Toccato", comment: "Timbro"), color: livery.field, rotation: -9)
-                        .scaleEffect(0.78)
-                        .frame(width: 56, height: 56)
-                }
                 PaperDisclosure()
             }
             .padding(.horizontal, 16)
@@ -188,15 +180,12 @@ private struct DayTicket: View {
                     .foregroundStyle(livery.ink)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
+                // Il passato non si attenua: si **timbra**. Una carta grigia con
+                // testo grigio sembrava illeggibile — e lo era quasi — mentre un
+                // timbro «toccato» dice la stessa cosa a contrasto pieno. Piccolo e
+                // accanto al nome, perché la riga degli orari resti intera.
                 if let badge {
-                    Text(badge)
-                        .font(TicketType.stamp)
-                        .tracking(0.8)
-                        .foregroundStyle(livery.signalInk)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .overlay(RoundedRectangle(cornerRadius: 4).stroke(livery.signal, lineWidth: 1.2))
-                        .rotationEffect(.degrees(-4))
+                    StampBadge(badge, color: isPast ? livery.field : livery.signalInk)
                 }
             }
 
@@ -257,7 +246,8 @@ private struct DayTicket: View {
         switch day.standing {
         case .today: String(localized: "Oggi")
         case .tomorrow: String(localized: "Domani")
-        case .past, .future: nil
+        case .past: String(localized: "Toccato", comment: "Timbro")
+        case .future: nil
         }
     }
 }
@@ -296,15 +286,7 @@ private struct SeaDayRow: View {
                         .textCase(.uppercase)
                         .foregroundStyle(livery.onHull)
                     if isToday {
-                        Text("Oggi")
-                            .font(TicketType.stamp)
-                            .tracking(0.8)
-                            .textCase(.uppercase)
-                            .foregroundStyle(livery.signalOnHull)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .overlay(RoundedRectangle(cornerRadius: 4).stroke(livery.signalOnHull, lineWidth: 1.2))
-                            .rotationEffect(.degrees(-4))
+                        StampBadge(String(localized: "Oggi"), color: livery.signalOnHull)
                     }
                 }
                 let miles = Geo.nauticalMiles(from: from.coordinate, to: to.coordinate)

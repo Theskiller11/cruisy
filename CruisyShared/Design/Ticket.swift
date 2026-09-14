@@ -202,37 +202,86 @@ public struct TicketRule: View {
 /// sembra un'icona; il colore è quello del segnale, ma la parola c'è sempre.
 public struct Stamp: View {
     @Environment(\.livery) private var livery
-    @ScaledMetric(relativeTo: .caption2) private var diameter: CGFloat = 66
+    @ScaledMetric(relativeTo: .caption2) private var scaledDiameter: CGFloat = 66
     let text: String
     var color: Color?
     var rotation: Double = -12
+    /// Un diametro fisso: il testo si adatta al cerchio, non il contrario. Serve
+    /// dove i timbri stanno in griglia e devono avere tutti la stessa misura.
+    var diameter: CGFloat?
 
-    /// La misura del testo alla sua larghezza naturale: il cerchio si allarga
-    /// finché la parola più lunga ci sta intera. «DA IMBAR-CARE» col trattino, al
-    /// primo giro, è il motivo: un timbro non spezza le parole.
+    /// La misura del testo alla sua larghezza naturale: nel modo adattivo il
+    /// cerchio si allarga finché la parola più lunga ci sta intera. «DA IMBAR-CARE»
+    /// col trattino, al primo giro, è il motivo: un timbro non spezza le parole.
     @State private var textSize: CGSize = .zero
 
-    public init(_ text: String, color: Color? = nil, rotation: Double = -12) {
+    public init(_ text: String, color: Color? = nil, rotation: Double = -12, diameter: CGFloat? = nil) {
         self.text = text
         self.color = color
         self.rotation = rotation
+        self.diameter = diameter
     }
 
     public var body: some View {
         let tint = color ?? livery.signal
-        let size = max(min(diameter, 96), textSize.width + 24, textSize.height + 20)
+        Group {
+            if let diameter {
+                // Fisso: il testo va a capo sulle parole e, se serve, si stringe.
+                Text(text)
+                    .font(TicketType.stamp)
+                    .tracking(0.6)
+                    .textCase(.uppercase)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.55)
+                    .foregroundStyle(tint)
+                    .frame(width: diameter - 18, height: diameter - 18)
+                    .frame(width: diameter, height: diameter)
+            } else {
+                let size = max(min(scaledDiameter, 96), textSize.width + 24, textSize.height + 20)
+                Text(text)
+                    .font(TicketType.stamp)
+                    .tracking(1)
+                    .textCase(.uppercase)
+                    .multilineTextAlignment(.center)
+                    .fixedSize()
+                    .onGeometryChange(for: CGSize.self, of: { $0.size }) { textSize = $0 }
+                    .foregroundStyle(tint)
+                    .frame(width: size, height: size)
+            }
+        }
+        .overlay(Circle().stroke(tint, lineWidth: 2.2))
+        .overlay(Circle().stroke(tint, lineWidth: 0.8).padding(3.5))
+        .rotationEffect(.degrees(rotation))
+        .accessibilityLabel(Text(text))
+    }
+}
+
+/// Un piccolo timbro rettangolare, per una parola sola accanto a un titolo:
+/// «OGGI», «DOMANI», «TOCCATO», «IN CORSO». Prende poco spazio, e resta un timbro.
+public struct StampBadge: View {
+    @Environment(\.livery) private var livery
+    let text: String
+    var color: Color?
+
+    public init(_ text: String, color: Color? = nil) {
+        self.text = text
+        self.color = color
+    }
+
+    public var body: some View {
+        let tint = color ?? livery.signalInk
         Text(text)
             .font(TicketType.stamp)
-            .tracking(1)
+            .tracking(0.8)
             .textCase(.uppercase)
-            .multilineTextAlignment(.center)
+            .lineLimit(1)
             .fixedSize()
-            .onGeometryChange(for: CGSize.self, of: { $0.size }) { textSize = $0 }
             .foregroundStyle(tint)
-            .frame(width: size, height: size)
-            .overlay(Circle().stroke(tint, lineWidth: 2.2))
-            .overlay(Circle().stroke(tint, lineWidth: 0.8).padding(3.5))
-            .rotationEffect(.degrees(rotation))
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .overlay(RoundedRectangle(cornerRadius: 4).stroke(tint, lineWidth: 1.2))
+            .rotationEffect(.degrees(-4))
             .accessibilityLabel(Text(text))
     }
 }

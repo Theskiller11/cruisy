@@ -139,16 +139,33 @@ private struct DayTicket: View {
 
     private var isToday: Bool { day.standing == .today }
     private var isPast: Bool { day.standing == .past }
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(alignment: .center, spacing: 14) {
-                dateColumn
-                details
-                PaperDisclosure()
+            // Ai corpi accessibili la riga diventa una colonna: la data in testa,
+            // poi il resto. Con la colonna della data da 40 punti il giorno della
+            // settimana andava a capo lettera per lettera.
+            if typeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(alignment: .firstTextBaseline) {
+                        dateLine
+                        Spacer(minLength: 8)
+                        PaperDisclosure()
+                    }
+                    details
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 16)
+            } else {
+                HStack(alignment: .center, spacing: 14) {
+                    dateColumn
+                    details
+                    PaperDisclosure()
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, isToday ? 16 : 12)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, isToday ? 16 : 12)
 
             if let photo { portPhoto(photo) }
         }
@@ -170,23 +187,31 @@ private struct DayTicket: View {
         .accessibilityElement(children: .combine)
     }
 
+    /// La data su una riga sola, per i corpi accessibili: «GIO 10».
+    private var dateLine: some View {
+        Text("\(Format.weekdayAbbreviation(day.date, clock: voyage.clock)) \(Format.dayNumber(day.date, clock: voyage.clock))")
+            .font(.system(.title3, weight: .black).width(.condensed))
+            .monospacedDigit()
+            .foregroundStyle(isToday ? livery.signalInk : livery.ink)
+            .accessibilityElement(children: .combine)
+    }
+
     @ViewBuilder
     private var details: some View {
         VStack(alignment: .leading, spacing: 3) {
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text(call.name)
-                    .font(TicketType.place)
-                    .tracking(0.4)
-                    .textCase(.uppercase)
-                    .foregroundStyle(livery.ink)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-                // Il passato non si attenua: si **timbra**. Una carta grigia con
-                // testo grigio sembrava illeggibile — e lo era quasi — mentre un
-                // timbro «toccato» dice la stessa cosa a contrasto pieno. Piccolo e
-                // accanto al nome, perché la riga degli orari resti intera.
-                if let badge {
-                    StampBadge(badge, color: isPast ? livery.field : livery.signalInk)
+            // Il passato non si attenua: si **timbra**. Una carta grigia con testo
+            // grigio sembrava illeggibile — e lo era quasi — mentre un timbro
+            // «toccato» dice la stessa cosa a contrasto pieno. Piccolo e accanto al
+            // nome, perché la riga degli orari resti intera; se non ci sta accanto,
+            // va sotto, e il nome resta intero lui.
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    name.fixedSize()
+                    if let badge { StampBadge(badge, color: isPast ? livery.field : livery.signalInk) }
+                }
+                VStack(alignment: .leading, spacing: 4) {
+                    name
+                    if let badge { StampBadge(badge, color: isPast ? livery.field : livery.signalInk) }
                 }
             }
 
@@ -236,6 +261,16 @@ private struct DayTicket: View {
             .padding(.bottom, 8)
     }
 
+    private var name: some View {
+        Text(call.name)
+            .font(TicketType.place)
+            .tracking(0.4)
+            .textCase(.uppercase)
+            .foregroundStyle(livery.ink)
+            .lineLimit(2)
+            .minimumScaleFactor(0.8)
+    }
+
     private var subtitle: String {
         var parts = [Format.window(from: call.arrival, to: call.departure, clock: voyage.clock)]
         parts.append(call.berth.label)
@@ -262,18 +297,26 @@ private struct SeaDayRow: View {
     let voyage: Voyage
 
     private var isToday: Bool { day.standing == .today }
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         HStack(spacing: 14) {
-            VStack(spacing: 0) {
-                Text(Format.weekdayAbbreviation(day.date, clock: voyage.clock))
-                    .ticketFieldLabel(livery.onHullMuted)
-                Text(Format.dayNumber(day.date, clock: voyage.clock))
+            if typeSize.isAccessibilitySize {
+                Text("\(Format.weekdayAbbreviation(day.date, clock: voyage.clock)) \(Format.dayNumber(day.date, clock: voyage.clock))")
                     .font(.system(.title3, weight: .black).width(.condensed))
                     .monospacedDigit()
                     .foregroundStyle(livery.onHull)
+            } else {
+                VStack(spacing: 0) {
+                    Text(Format.weekdayAbbreviation(day.date, clock: voyage.clock))
+                        .ticketFieldLabel(livery.onHullMuted)
+                    Text(Format.dayNumber(day.date, clock: voyage.clock))
+                        .font(.system(.title3, weight: .black).width(.condensed))
+                        .monospacedDigit()
+                        .foregroundStyle(livery.onHull)
+                }
+                .frame(width: 40)
             }
-            .frame(width: 40)
 
             Image(systemName: "water.waves")
                 .font(.system(.body, weight: .semibold))

@@ -227,39 +227,21 @@ struct PortTicket: View {
 
     var body: some View {
         Ticket {
-            ZStack(alignment: .topTrailing) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(eyebrow).ticketEyebrow(livery.signalInk).padding(.trailing, 88)
-                    Text(clock.time(hour))
-                        .ticketHour()
-                        .foregroundStyle(livery.ink)
-                        .accessibilityLabel(Text("\(eyebrow) alle \(clock.time(hour))"))
-                    Text([call.name, call.region].filter { !$0.isEmpty }.joined(separator: " · "))
-                        .font(TicketType.place)
-                        .tracking(0.6)
-                        .textCase(.uppercase)
-                        .foregroundStyle(livery.ink)
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.8)
-                        .padding(.trailing, 80)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                Stamp(stamp, color: isPast && !isCurrent ? livery.field : nil)
-                    .padding(.top, 26)
-                    .padding(.trailing, 4)
+            TicketHead(eyebrow: eyebrow,
+                       place: [call.name, call.region].filter { !$0.isEmpty }.joined(separator: " · "),
+                       stamp: stamp,
+                       stampColor: isPast && !isCurrent ? livery.field : nil) {
+                Text(clock.time(hour))
+                    .ticketHour()
+                    .foregroundStyle(livery.ink)
+                    .accessibilityLabel(Text("\(eyebrow) alle \(clock.time(hour))"))
             }
-            .padding(.horizontal, 18)
-            .padding(.top, 16)
-            .padding(.bottom, 16)
         } stub: {
             VStack(alignment: .leading, spacing: 14) {
                 if let countdown, now < countdown.target {
-                    HStack(alignment: .lastTextBaseline) {
-                        Text("Mancano").ticketFieldLabel(livery.field)
-                        Spacer(minLength: 12)
+                    TicketCountRow(label: String(localized: "Mancano")) {
                         CountdownView(countdown: countdown, offset: offset)
                     }
-                    .accessibilityElement(children: .combine)
                     TicketRule()
                 }
                 TicketMatrix(fields: fields)

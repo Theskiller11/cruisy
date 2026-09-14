@@ -128,19 +128,23 @@ struct DistanceScaleCard: View {
 
             if let next {
                 let remaining = next.nauticalMiles - miles
-                HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    Image(systemName: next.glyph)
-                        .font(.system(.caption, weight: .semibold))
-                        .foregroundStyle(livery.signalInk)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(next.name)
-                            .font(TicketType.rowTitle)
-                            .foregroundStyle(livery.ink)
-                        Text("mancano \(Format.nauticalMiles(remaining))")
-                            .font(TicketType.rowDetail)
-                            .foregroundStyle(livery.field)
+                // Ai corpi accessibili il nome va a capo sulle parole, non sulle
+                // lettere: il moltiplicatore scende sotto invece di stringerlo.
+                AdaptiveHStack(verticalAlignment: .firstTextBaseline, spacing: 8) {
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Image(systemName: next.glyph)
+                            .font(.system(.caption, weight: .semibold))
+                            .foregroundStyle(livery.signalInk)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(next.name)
+                                .font(TicketType.rowTitle)
+                                .foregroundStyle(livery.ink)
+                            Text("mancano \(Format.nauticalMiles(remaining))")
+                                .font(TicketType.rowDetail)
+                                .foregroundStyle(livery.field)
+                        }
                     }
-                    Spacer(minLength: 0)
+                    AdaptiveSpacer(minLength: 0)
                     Text(Format.multiplier(next.times(miles)))
                         .font(TicketType.fieldValue)
                         .foregroundStyle(livery.signalInk)
@@ -160,22 +164,24 @@ struct DistanceScaleCard: View {
         VStack(spacing: 0) {
             TicketRule().padding(.bottom, 2)
             ForEach(comparisons) { milestone in
-                HStack(alignment: .firstTextBaseline, spacing: 10) {
-                    Image(systemName: milestone.glyph)
-                        .font(.system(.caption2, weight: .semibold))
-                        .foregroundStyle(livery.field)
-                        .frame(width: 16)
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(milestone.name)
-                            .font(TicketType.rowDetail)
-                            .foregroundStyle(livery.ink)
-                        if typeSize.isAccessibilitySize {
-                            Text(milestone.detail)
-                                .font(.caption2)
-                                .foregroundStyle(livery.field)
+                AdaptiveHStack(verticalAlignment: .firstTextBaseline, spacing: 10) {
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        Image(systemName: milestone.glyph)
+                            .font(.system(.caption2, weight: .semibold))
+                            .foregroundStyle(livery.field)
+                            .frame(width: 16)
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(milestone.name)
+                                .font(TicketType.rowDetail)
+                                .foregroundStyle(livery.ink)
+                            if typeSize.isAccessibilitySize {
+                                Text(milestone.detail)
+                                    .font(.caption2)
+                                    .foregroundStyle(livery.field)
+                            }
                         }
                     }
-                    Spacer(minLength: 8)
+                    AdaptiveSpacer(minLength: 8)
                     Text(Format.multiplier(milestone.times(miles)))
                         .font(TicketType.fieldValue)
                         .foregroundStyle(livery.ink)

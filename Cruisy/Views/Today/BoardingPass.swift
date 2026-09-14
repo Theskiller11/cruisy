@@ -35,30 +35,7 @@ struct BoardingPass: View {
 
     @ViewBuilder
     private var top: some View {
-        ZStack(alignment: .topTrailing) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(eyebrow).ticketEyebrow(livery.signalInk)
-                    // Il timbro sta a destra: il testo lascia lo spazio.
-                    .padding(.trailing, 88)
-                hour
-                Text(place)
-                    .font(TicketType.place)
-                    .tracking(0.6)
-                    .textCase(.uppercase)
-                    .foregroundStyle(livery.ink)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.8)
-                    .padding(.trailing, 80)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            Stamp(stamp)
-                .padding(.top, 26)
-                .padding(.trailing, 4)
-        }
-        .padding(.horizontal, 18)
-        .padding(.top, 16)
-        .padding(.bottom, 16)
+        TicketHead(eyebrow: eyebrow, place: place, stamp: stamp) { hour }
     }
 
     @ViewBuilder
@@ -94,13 +71,10 @@ struct BoardingPass: View {
     @ViewBuilder
     private var stub: some View {
         VStack(alignment: .leading, spacing: 14) {
-            if let focus, countdownLabel != nil {
-                HStack(alignment: .lastTextBaseline) {
-                    Text(countdownLabel ?? "").ticketFieldLabel(livery.field)
-                    Spacer(minLength: 12)
+            if let focus, let countdownLabel {
+                TicketCountRow(label: countdownLabel) {
                     CountdownView(countdown: focus.countdown, offset: offset)
                 }
-                .accessibilityElement(children: .combine)
                 TicketRule()
             }
             TicketMatrix(fields: fields)

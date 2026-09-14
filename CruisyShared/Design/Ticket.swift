@@ -120,6 +120,95 @@ public struct Perforation: View {
     }
 }
 
+// MARK: - La testa del biglietto
+
+/// L'intestazione di un biglietto: etichetta, ora grande, luogo, timbro.
+///
+/// Ai corpi normali il timbro sta a destra, sopra l'ora, come su un biglietto vero.
+/// Ai corpi accessibili l'etichetta va a capo e l'ora si allarga: il timbro tondo
+/// finiva **sopra le cifre**. Lì diventa un `StampBadge` in fila, sotto il luogo:
+/// stessa parola, stesso colore, niente sovrapposizioni.
+public struct TicketHead<Hour: View>: View {
+    @Environment(\.livery) private var livery
+    @Environment(\.dynamicTypeSize) private var typeSize
+    let eyebrow: String
+    let place: String
+    let stamp: String
+    var stampColor: Color?
+    @ViewBuilder let hour: () -> Hour
+
+    public init(eyebrow: String, place: String, stamp: String, stampColor: Color? = nil,
+                @ViewBuilder hour: @escaping () -> Hour) {
+        self.eyebrow = eyebrow
+        self.place = place
+        self.stamp = stamp
+        self.stampColor = stampColor
+        self.hour = hour
+    }
+
+    public var body: some View {
+        let accessible = typeSize.isAccessibilitySize
+        ZStack(alignment: .topTrailing) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(eyebrow).ticketEyebrow(livery.signalInk)
+                    // Il timbro sta a destra: il testo lascia lo spazio.
+                    .padding(.trailing, accessible ? 0 : 88)
+                hour()
+                Text(place)
+                    .font(TicketType.place)
+                    .tracking(0.6)
+                    .textCase(.uppercase)
+                    .foregroundStyle(livery.ink)
+                    .lineLimit(accessible ? 3 : 2)
+                    .minimumScaleFactor(0.8)
+                    .padding(.trailing, accessible ? 0 : 80)
+                if accessible {
+                    StampBadge(stamp.replacingOccurrences(of: "\n", with: " "), color: stampColor ?? livery.signalInk)
+                        .padding(.top, 6)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            if !accessible {
+                Stamp(stamp, color: stampColor)
+                    .padding(.top, 26)
+                    .padding(.trailing, 4)
+            }
+        }
+        .padding(.horizontal, 18)
+        .padding(.top, 16)
+        .padding(.bottom, 16)
+    }
+}
+
+/// La riga «MANCANO 2:59:52» della matrice: etichetta e cifre affiancate, e una
+/// sopra l'altra quando non ci stanno — «MAN-CANO» spezzato non è un'etichetta.
+public struct TicketCountRow<Count: View>: View {
+    @Environment(\.livery) private var livery
+    let label: String
+    @ViewBuilder let count: () -> Count
+
+    public init(label: String, @ViewBuilder count: @escaping () -> Count) {
+        self.label = label
+        self.count = count
+    }
+
+    public var body: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .lastTextBaseline) {
+                Text(label).ticketFieldLabel(livery.field).fixedSize()
+                Spacer(minLength: 12)
+                count()
+            }
+            VStack(alignment: .leading, spacing: 2) {
+                Text(label).ticketFieldLabel(livery.field)
+                count()
+            }
+        }
+        .accessibilityElement(children: .combine)
+    }
+}
+
 // MARK: - Campi
 
 /// Un campo della matrice: etichetta sopra, valore sotto. «ATTRACCO / 09:00».
@@ -294,6 +383,7 @@ public struct StampBadge: View {
 /// per aprire lo scalo, se chi lo usa lo collega.
 public struct TicketBehind: View {
     @Environment(\.livery) private var livery
+    @Environment(\.dynamicTypeSize) private var typeSize
     let text: String
 
     public init(_ text: String) { self.text = text }
@@ -304,7 +394,7 @@ public struct TicketBehind: View {
             .tracking(TicketType.fieldTracking)
             .textCase(.uppercase)
             .foregroundStyle(livery.ink)
-            .lineLimit(1)
+            .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
             .minimumScaleFactor(0.8)
             .padding(.horizontal, 16)
             .padding(.top, 9)

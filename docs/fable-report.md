@@ -48,7 +48,11 @@ rapporto dice cosa c'è, cosa manca, e **come continuare senza perdere coerenza*
 - Il cielo alle sei ore: `screenshots/dopo-8-ore/foglio.jpg` — notte con luna e stelle,
   alba, mattina, tramonto, sera, e il tramonto in scuro. Fatte con `-ora <h>`, l'argomento
   DEBUG che finge l'ora di bordo.
-- Giri `--lang en` e `--size AX5`: **non fatti** (vedi «Da fare»).
+- AX5: `screenshots/dopo-9-ax5/foglio.jpg` — Oggi (porto e mare), Itinerario, Scalo, Nave,
+  Diario al corpo accessibile più grande, dopo le correzioni ai componenti (timbro in fila
+  come badge, «MANCANO» sopra le cifre, righe dell'Itinerario impilate).
+- Giro `--lang en`, e AX5 sulle schermate non ancora convertite: **non fatti** (vedi «Da
+  fare»).
 
 La cartella `screenshots/` è ignorata da git: si rigenera con `scripts/screenshots.sh`.
 
@@ -140,7 +144,11 @@ fra stretto e largo, niente file da includere, Dynamic Type gratis.
 - `TicketType.stamp` — il testo di un timbro.
 - `rowTitle`, `rowDetail`, `body`, `technical`, `chip` — il resto.
 
-Solo `@ScaledMetric` sulle altezze; mai dimensioni fisse per il testo.
+Solo `@ScaledMetric` sulle altezze; mai dimensioni fisse per il testo. Ai corpi
+accessibili le righe **si impilano**, non si stringono: `AdaptiveHStack` /
+`AdaptiveSpacer` (in `CruisyShared/Design/AdaptiveStack.swift`) o `ViewThatFits`; la
+colonna della data dell'Itinerario diventa una riga «GIO 10». Il giro AX5 in
+`screenshots/dopo-9-ax5` è il riferimento.
 
 ### 4. I componenti del biglietto (`Ticket.swift`)
 
@@ -148,6 +156,12 @@ Solo `@ScaledMetric` sulle altezze; mai dimensioni fisse per il testo.
   l'etichetta, l'ora grande, il luogo e il timbro; la matrice ha il countdown e i campi. Gli
   incavi sono buchi nella forma (`TicketShape`, riempimento pari/dispari), quindi il biglietto
   sta su qualunque fondo.
+- **`TicketHead(eyebrow:place:stamp:stampColor:) { hour }`** — l'intestazione: etichetta,
+  ora grande, luogo, timbro a destra. Ai corpi accessibili il timbro tondo finiva sopra le
+  cifre: lì diventa uno `StampBadge` in fila sotto il luogo. **Usare sempre questa**, non
+  ricomporre la testa a mano.
+- **`TicketCountRow(label:) { CountdownView(...) }`** — la riga «MANCANO 2:59:52»:
+  affiancati, e uno sopra l'altro quando non ci stanno (`ViewThatFits`).
 - **`TicketField(label:value:spoken:isSignal:)`** e **`TicketMatrix(fields:columns:)`** — i
   campi, due per riga, uno per riga ai corpi accessibili. `spoken` per VoiceOver quando
   l'abbreviazione non basta.

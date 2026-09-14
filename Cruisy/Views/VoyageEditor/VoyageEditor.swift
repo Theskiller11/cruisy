@@ -173,7 +173,10 @@ struct VoyageEditor: View {
                                         .foregroundStyle(Palette.inkSecondary)
                                 }
                                 Spacer()
-                                Disclosure()
+                                Image(systemName: "chevron.right")
+                                    .font(.footnote.weight(.semibold))
+                                    .foregroundStyle(.tertiary)
+                                    .accessibilityHidden(true)
                             }
                         }
                     }

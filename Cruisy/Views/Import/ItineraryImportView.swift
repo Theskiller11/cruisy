@@ -69,7 +69,7 @@ struct ItineraryImportView: View {
                         editor
                         sources
                         if case .failed(let message) = importer.phase {
-                            StaleDataNotice(message: LocalizedStringKey(message))
+                            HullNotice(LocalizedStringKey(message))
                         }
                     }
                     .padding(.horizontal, 16)

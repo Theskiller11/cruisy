@@ -3,7 +3,8 @@
 Scritto il 14 settembre 2026, nel worktree `worktree-agent-aa61746baf9e551b0` partito dal
 commit `568927e`. Il lavoro è stato chiuso prima del previsto per il budget di Matteo: questo
 rapporto dice cosa c'è, cosa manca, e **come continuare senza perdere coerenza** (sezione
-«Regole del sistema», scritta per Claude Opus 5 o per chiunque riprenda).
+«Regole del sistema», scritta per Claude Opus 5 o per chiunque riprenda). I commit sono
+dieci, uno per blocco verde; l'ultimo è quello che contiene questo file.
 
 ## In breve
 
@@ -255,9 +256,13 @@ vecchio):
    `ProgressView` a larghezza infinita nella Dynamic Island, larghezza finita sul
    contatore). **Da provare sul telefono per primi.**
 8. Poi **cancellare** `Palette.swift`, `Typography.swift`, `GlassSurface.swift`,
-   `AdaptiveStack.swift` (se non più usato), `InfoRow.swift`, `MetricRow.swift`,
-   `ProvenanceChip.swift`, `VoyageStore+Legacy.swift`, e `PaletteContrastTests` (sostituito
-   da `LiveryContrastTests`). Il grep da fare a vuoto: `grep -rn "Palette\.\|Type\.\|glassSurface\|glassCapsule" Cruisy CruisyWidgets`.
+   `DebugFlags.swift` (serviva al vetro) e `PaletteContrastTests` (sostituito da
+   `LiveryContrastTests`). `InfoRow`, `MetricRow`, `ProvenanceChip` e
+   `VoyageStore+Legacy` sono già stati tolti. `AdaptiveStack.swift` **resta**: lo usa il
+   Diario. Il grep da fare a vuoto: `grep -rln "Palette[.]\|[^t]Type[.][a-z]\|glassSurface\|glassCapsule" Cruisy CruisyWidgets`
+   — oggi restituisce solo i file dei punti 2–5 e `SatelliteChart.swift` (tre colori di
+   rotta e segnaposto: `Palette.underway` → `livery.signalOnHull` o un verde acqua fisso,
+   `Palette.ink`/`abyss` → bianco e nero).
 
 Poi: `scripts/sync-strings.sh` con le traduzioni inglesi, e i giri `--lang en` e
 `--size AX5` su tutte le schermate. I timbri in inglese: «IN PORT», «AT SEA», «ASHORE»,
@@ -347,6 +352,19 @@ imparate. **Difetto trovato e corretto**: `LoggedVoyage` non nominava `track` fr
   Palma», dettaglio «lo Stretto → le Baleari»).
 - Carta senza ingrandimento dalla card: **aperto**, resta il push (motivo in
   `TodayScreen`).
+- **Nuovi, visti da Matteo nel giro AX5** (`screenshots/dopo-9-ax5`):
+  - con AX5 il titolo «Puerto Plata» nella barra di navigazione dello scalo è scuro sul
+    fondo blu. La barra è `inline` e prende `.toolbarColorScheme(.dark)` dallo stack di
+    Oggi, ma la schermata dello scalo si apre anche dall'Itinerario: mettere
+    `.toolbarColorScheme(.dark, for: .navigationBar)` direttamente in `PortDetailScreen`
+    (e in `PortsScreen`), oppure — come nel Diario — nascondere la barra e usare
+    `Masthead(current.name)` con un identificatore per il test `testPortDetailOpens`, che
+    oggi cerca `staticTexts["Puerto Plata"]`;
+  - con AX5 «Il Mediterraneo intero» nel Diario va a capo con il trattino: è la
+    sillabazione di sistema di una parola lunga in una colonna stretta. Ai corpi
+    accessibili si può usare `.allowsTightening(true)` con `minimumScaleFactor(0.85)` sul
+    nome del traguardo in `DistanceScaleCard`, o dare al nome tutta la riga (già fatto per
+    il moltiplicatore) e togliere l'icona da 16 punti a sinistra.
 - Foto dei porti di qualità imprevedibile: **aperto**.
 - «Sun Princess» mancante in `ships.bin`: **aperto** (serve rigenerare il database).
 - Figma indietro: **non toccato** (serve il server autorizzato).
@@ -367,14 +385,18 @@ imparate. **Difetto trovato e corretto**: `LoggedVoyage` non nominava `track` fr
 
 ## Da fare (in ordine)
 
-1. Editor, importazione, riesame, onboarding nativi (7.2–7.5).
-2. Provare widget e Live Activity sul telefono (7.7): sono scritti, non visti.
-3. Cancellare il design vecchio (7.8) e `PaletteContrastTests`.
-4. `scripts/sync-strings.sh`, traduzioni inglesi, `LocalizationTests` verde.
-5. Screenshot `--lang it`, `--lang en`, `--size AX5` e `--appearance dark` su tutte le
-   schermate, senza testo tagliato. Attenzione ai timbri e all'ora grande ad AX5: hanno
-   tetti e `minimumScaleFactor`, ma vanno guardati.
-6. Test di interfaccia per importazione, editor e impostazioni.
+1. I due difetti AX5 segnalati da Matteo (titolo dello scalo scuro sul blu, trattino nel
+   Diario): vedi «Difetti noti».
+2. Editor, importazione, riesame, onboarding nativi (7.2–7.5).
+3. Provare widget e Live Activity sul telefono (7.7): sono scritti, non visti.
+4. Cancellare il design vecchio (7.8) e `PaletteContrastTests`.
+5. `scripts/sync-strings.sh`, traduzioni inglesi, `LocalizationTests` verde. Le chiavi
+   nuove sono decine (etichette dei campi, timbri, livree, impostazioni): il catalogo
+   **non è stato sincronizzato** e oggi `LocalizationTests` passa solo perché non le vede.
+6. Screenshot `--lang it`, `--lang en`, `--size AX5` e `--appearance dark` su tutte le
+   schermate, senza testo tagliato. Il giro AX5 sulle schermate rifatte c'è
+   (`dopo-9-ax5`); manca su quelle da convertire, e manca l'inglese ovunque.
+7. Test di interfaccia per importazione, editor e impostazioni.
 
 **Cosa resta da convertire in scuro.** Le schermate rifatte usano solo token dinamici e
 sono già a posto in entrambe le modalità (verificate nel quarto giro: Oggi, Itinerario,

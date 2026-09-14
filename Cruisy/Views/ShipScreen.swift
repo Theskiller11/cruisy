@@ -29,6 +29,7 @@ struct ShipScreen: View {
             }
             .navigationTitle("Nave")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarColorScheme(.dark, for: .navigationBar)
         }
     }
 
@@ -195,20 +196,21 @@ struct ShipScreen: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(livery.ink)
+                // `tint`, non `ink`: in scuro l'inchiostro è bianco, e un pulsante
+                // bianco con la scritta bianca non si legge.
+                .tint(livery.tint)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
         .paperCard()
-        .environment(\.colorScheme, .light)
     }
 
     @ViewBuilder
     private func retry(name: String) -> some View {
         Button("Riprova") { Task { await lookup.search(name) } }
             .font(TicketType.rowTitle)
-            .tint(livery.ink)
+            .tint(livery.tint)
     }
 
     private var sourceNote: some View {

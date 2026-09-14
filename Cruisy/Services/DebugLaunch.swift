@@ -23,6 +23,15 @@ enum DebugLaunch {
     /// `importazione`, `impostazioni`, `onboarding`.
     static var open: String? { value("open") }
 
+    /// `-livrea rosso` veste l'app con una livrea del catalogo, per nome (`Livery.id`).
+    ///
+    /// Esiste perché la nave di prova non è nell'elenco, quindi senza questo non si
+    /// vedrebbe mai una livrea ispirata a una compagnia se non con una nave vera.
+    static var livery: Livery? {
+        guard let id = value("livrea") else { return nil }
+        return Livery.all.first { $0.id == id }
+    }
+
     /// La scheda che contiene la schermata richiesta con `-open`, così la si vede
     /// senza doverlo scrivere due volte.
     static var tabForOpen: String? {

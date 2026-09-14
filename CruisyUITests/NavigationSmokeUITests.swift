@@ -66,7 +66,9 @@ final class NavigationSmokeUITests: XCTestCase {
 
     func testLogbookOpens() {
         assertOpens(["-sample", "inPort", "-tab", "diario"],
-                    showing: { $0.navigationBars["Diario"] }, "Diario")
+                    // La testata è disegnata dall'app, non dalla barra: si cerca per
+                    // identificatore, che non cambia con la lingua.
+                    showing: { $0.descendants(matching: .any)["diario-testata"] }, "Diario")
     }
 
     func testAllPortsOpens() {

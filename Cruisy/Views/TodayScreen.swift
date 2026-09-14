@@ -43,6 +43,8 @@ struct TodayScreen: View {
                 }
             }
             .toolbar(.hidden, for: .navigationBar)
+            // Le barre sullo scafo restano scure in entrambe le modalità.
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .port(let call):

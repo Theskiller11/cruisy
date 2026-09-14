@@ -27,6 +27,12 @@ struct LogbookScreen: View {
                 } else {
                     ScrollView {
                         VStack(spacing: 14) {
+                            // La testata è nostra, come in Oggi: il titolo grande di
+                            // sistema in modalità chiara veniva blu scuro sullo scafo blu.
+                            Masthead(String(localized: "Diario"))
+                                .accessibilityIdentifier("diario-testata")
+                                .padding(.horizontal, 6)
+                                .padding(.top, 8)
                             DistanceScaleCard(logbook: logbook, year: $scaleYear)
                             stamps
                             records
@@ -39,6 +45,9 @@ struct LogbookScreen: View {
                 }
             }
             .navigationTitle("Diario")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             #if DEBUG
             .task { if DebugLaunch.open == "porti", !logbook.isEmpty { path = [.ports] } }
             #endif
@@ -93,6 +102,7 @@ struct LogbookScreen: View {
                     .buttonStyle(.plain)
                 }
                 StampPage(stamps: shown, clock: ShipClock(secondsFromGMT: 0))
+                    .padding(.horizontal, 6)
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -198,9 +208,10 @@ struct StampPage: View {
     private var diameter: CGFloat { min(scaledDiameter, 128) }
 
     var body: some View {
-        // La cella è larga quanto il timbro più il respiro per l'inclinazione: così
-        // due timbri vicini non si toccano mai, a nessun corpo di testo.
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: diameter + 12), spacing: 8)], spacing: 12) {
+        // Le celle sono un po' più strette dei timbri: due vicini si sfiorano e si
+        // accavallano di poco, come su un passaporto. La carta attorno ha margine
+        // perché nessuno esca dal bordo, nemmeno inclinato.
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: diameter - 8), spacing: 0)], spacing: 4) {
             ForEach(Array(stamps.enumerated()), id: \.element.id) { index, stamp in
                 // Inclinazioni diverse, ma **fisse**: un timbro che gira a ogni
                 // ridisegno non è un timbro.

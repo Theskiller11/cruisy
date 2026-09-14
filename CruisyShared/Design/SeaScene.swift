@@ -7,11 +7,10 @@ import SwiftUI
 /// accende quando il telefono dice mezzogiorno mentre a bordo sono le sei sarebbe
 /// la stessa bugia dei countdown sbagliati.
 ///
-/// Lo zenit resta scuro a **ogni** ora, ed è verificato da `SeaSceneContrastTests`:
-/// è lì che poggia la testata con il nome della nave, e il bianco deve leggersi
-/// anche a mezzogiorno. L'orizzonte invece può accendersi quanto vuole — rosa
-/// all'alba, arancio al tramonto, celeste di giorno — perché sopra non c'è testo:
-/// il biglietto di carta copre la linea dell'orizzonte, e il testo sta sulla carta.
+/// Di giorno il cielo è **chiaro e luminoso**, all'alba e al tramonto caldo, di notte
+/// scuro con la luna. Sopra la scena non c'è testo: la testata con il nome della
+/// nave sta sullo scafo, sopra la fascia, e il resto sta sulla carta del biglietto.
+/// Così il contrasto non dipende mai dal cielo, e il cielo può essere quello che è.
 public struct SeaSky: Equatable, Sendable {
     public let zenith: UInt32
     public let horizon: UInt32
@@ -25,12 +24,14 @@ public struct SeaSky: Equatable, Sendable {
     static let anchors: [(hour: Double, sky: SeaSky)] = [
         (0,  SeaSky(0x05101F, 0x0F2A47)),   // notte fonda: quasi nero, blu all'orizzonte
         (5,  SeaSky(0x0A1A38, 0x2B3A66)),   // prima dell'alba
-        (6.5, SeaSky(0x1D3560, 0xE9A36A)),  // alba: arancio basso
-        (9,  SeaSky(0x1D62A6, 0x9CD1F2)),   // mattina
-        (13, SeaSky(0x1B5EA3, 0xA9DBF7)),   // pieno giorno
-        (17, SeaSky(0x2A4D86, 0xE8B07A)),   // pomeriggio che cala
-        (18.5, SeaSky(0x2B2A5A, 0xEF7E56)), // tramonto
-        (20, SeaSky(0x0F1B3C, 0x4A3A64)),   // crepuscolo
+        (6.5, SeaSky(0x2E4A80, 0xF4A15C)),  // alba: arancio basso, cielo che si apre
+        (8,  SeaSky(0x2F7BC7, 0xA8D8F5)),   // mattina
+        (10, SeaSky(0x2F8AE0, 0xC6E6F9)),   // tarda mattina
+        (13, SeaSky(0x3A93E6, 0xCDEBFA)),   // pieno giorno: chiaro e luminoso
+        (16, SeaSky(0x3A83CC, 0xC0DCF0)),   // pomeriggio
+        (17.5, SeaSky(0x3F5F9E, 0xF7B36A)), // il sole che cala
+        (18.5, SeaSky(0x3A2F66, 0xF07C4E)), // tramonto
+        (20, SeaSky(0x121C40, 0x4A3A64)),   // crepuscolo
         (22, SeaSky(0x07142A, 0x1A2E50)),   // sera
     ]
 
@@ -50,11 +51,7 @@ public struct SeaSky: Equatable, Sendable {
     }
 
     private static func blend(_ a: UInt32, _ b: UInt32, _ t: Double) -> UInt32 {
-        func mix(_ shift: UInt32) -> UInt32 {
-            let x = Double((a >> shift) & 255), y = Double((b >> shift) & 255)
-            return UInt32((x + (y - x) * t).rounded())
-        }
-        return (mix(16) << 16) | (mix(8) << 8) | mix(0)
+        Livery.mix(a, b, t)
     }
 
     // MARK: Sole e luna
@@ -87,8 +84,14 @@ public struct SeaSky: Equatable, Sendable {
 /// chiedere fotogrammi, che è l'unico modo perché non costi batteria in tasca.
 public struct SeaScene: View {
     @Environment(\.livery) private var livery
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
+
+    /// Lo scafo nella modalità in vigore: le onde si mescolano con lui, e un `Canvas`
+    /// vuole numeri, non colori dinamici.
+    private var hullHex: UInt32 { livery.hullPair.hex(colorScheme == .dark ? .dark : .light) }
+    private var hullDeepHex: UInt32 { livery.hullDeepPair.hex(colorScheme == .dark ? .dark : .light) }
 
     /// L'ora di bordo, decimale.
     let hour: Double
@@ -118,8 +121,8 @@ public struct SeaScene: View {
         // bordo superiore — il blu della testata è il cielo che si fa profondo — e
         // sopra di lei non c'è mai testo da tenere a contrasto.
         canvas.fill(Path(skyRect), with: .linearGradient(
-            Gradient(stops: [.init(color: livery.hull, location: 0),
-                             .init(color: Color(hex: sky.zenith), location: 0.3),
+            Gradient(stops: [.init(color: Color(hex: hullHex), location: 0),
+                             .init(color: Color(hex: sky.zenith), location: 0.28),
                              .init(color: Color(hex: sky.horizon), location: 1)]),
             startPoint: .zero, endPoint: CGPoint(x: 0, y: horizonY)))
 
@@ -158,10 +161,15 @@ public struct SeaScene: View {
         let disc = Path(ellipseIn: CGRect(x: x - radius, y: y - radius, width: radius * 2, height: radius * 2))
 
         if sun != nil {
-            canvas.fill(Path(ellipseIn: CGRect(x: x - radius * 2.2, y: y - radius * 2.2,
-                                               width: radius * 4.4, height: radius * 4.4)),
-                        with: .color(Color(hex: 0xFFE9A8).opacity(0.22)))
-            canvas.fill(disc, with: .color(Color(hex: 0xFFEDB3)))
+            // Un sole acceso: giallo caldo con un alone largo, che di giorno si
+            // stacca dal celeste e all'alba si fonde con l'arancio.
+            canvas.fill(Path(ellipseIn: CGRect(x: x - radius * 2.4, y: y - radius * 2.4,
+                                               width: radius * 4.8, height: radius * 4.8)),
+                        with: .color(Color(hex: 0xFFE38A).opacity(0.35)))
+            canvas.fill(Path(ellipseIn: CGRect(x: x - radius * 1.4, y: y - radius * 1.4,
+                                               width: radius * 2.8, height: radius * 2.8)),
+                        with: .color(Color(hex: 0xFFE38A).opacity(0.35)))
+            canvas.fill(disc, with: .color(Color(hex: 0xFFD54A)))
         } else {
             canvas.fill(disc, with: .color(Color(hex: 0xE8ECF3)))
             // Il quarto d'ombra: una luna piena ogni notte sembrerebbe un sole spento.
@@ -175,10 +183,12 @@ public struct SeaScene: View {
     /// dello stesso colore dello scafo e chiude la scena senza giunture.
     private func drawSea(in canvas: inout GraphicsContext, size: CGSize, horizonY: CGFloat,
                          time: TimeInterval, sky: SeaSky) {
+        // Il mare prende un po' del colore dell'orizzonte — di giorno è celeste, al
+        // tramonto arancio — e scende verso lo scafo: l'ultima onda è lo scafo.
         let layers: [(offset: CGFloat, amplitude: CGFloat, wavelength: CGFloat, speed: Double, color: Color)] = [
-            (0, 5, 190, 0.35, Color(hex: sky.horizon).opacity(0.55).blended(over: livery.hull, 0.5)),
-            (16, 7, 140, 0.55, livery.onHull.opacity(0.10).blended(over: livery.hull, 1)),
-            (34, 9, 110, 0.8, livery.hull),
+            (0, 5, 190, 0.35, Color(hex: Livery.mix(hullHex, sky.horizon, 0.42))),
+            (16, 7, 140, 0.55, Color(hex: Livery.mix(hullHex, sky.horizon, 0.18))),
+            (34, 9, 110, 0.8, Color(hex: hullHex)),
         ]
         for (index, layer) in layers.enumerated() {
             // La nave passa fra la prima onda e la seconda: la prua nell'acqua.
@@ -228,34 +238,15 @@ public struct SeaScene: View {
         funnel.addRect(CGRect(x: 4, y: -30, width: 6, height: 9))
 
         let transform = CGAffineTransform(translationX: x, y: y).rotated(by: tilt)
-        canvas.fill(hull.applying(transform), with: .color(livery.hullDeep))
+        canvas.fill(hull.applying(transform), with: .color(Color(hex: hullDeepHex)))
         canvas.fill(deck.applying(transform), with: .color(Color(hex: 0xF2F5F8)))
-        canvas.fill(funnel.applying(transform), with: .color(livery.signal))
+        canvas.fill(funnel.applying(transform), with: .color(Color(hex: livery.signalOnHullHex)))
         // Le finestre: una fila di punti, che a questa scala bastano.
         var windows = Path()
         for i in 0..<7 {
             windows.addEllipse(in: CGRect(x: -20 + CGFloat(i) * 6, y: -9, width: 2.2, height: 2.2))
         }
-        canvas.fill(windows.applying(transform), with: .color(livery.hullDeep.opacity(0.7)))
+        canvas.fill(windows.applying(transform), with: .color(Color(hex: hullDeepHex).opacity(0.7)))
     }
 }
 
-private extension Color {
-    /// Questo colore appoggiato su un altro, con l'opacità data: un colore pieno,
-    /// così le onde non lasciano trasparire quello che c'è sotto.
-    func blended(over base: Color, _ alpha: Double) -> Color {
-        let a = UIColor(self).resolved, b = UIColor(base).resolved
-        let t = a.alpha * alpha
-        return Color(.sRGB, red: a.red * t + b.red * (1 - t),
-                     green: a.green * t + b.green * (1 - t),
-                     blue: a.blue * t + b.blue * (1 - t), opacity: 1)
-    }
-}
-
-private extension UIColor {
-    var resolved: (red: Double, green: Double, blue: Double, alpha: Double) {
-        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-        getRed(&r, green: &g, blue: &b, alpha: &a)
-        return (r, g, b, a)
-    }
-}

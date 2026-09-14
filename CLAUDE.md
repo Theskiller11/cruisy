@@ -20,8 +20,8 @@ Il design si può rifare da capo. Questi no, perché sono il motivo per cui l'ap
 - **L'ora è quella di bordo.** Ogni istante è in UTC; `ShipClock` è una scaletta di cambi alle 02:00
   (vedi `ShipClockSchedule.swift`). Gli orari che l'utente scrive sono **ora locale del porto**. Non
   usare mai `TimeZone.current` per mostrare un orario della crociera.
-- **Accessibilità come pavimento.** Contrasto WCAG AA verificato dai test (`PaletteContrastTests`,
-  `Contrast.swift`), Dynamic Type (niente dimensioni fisse per il testo; `@ScaledMetric` solo sulle
+- **Accessibilità come pavimento.** Contrasto WCAG AA verificato dai test (`LiveryContrastTests`,
+  in entrambe le modalità, `Contrast.swift`), Dynamic Type (niente dimensioni fisse per il testo; `@ScaledMetric` solo sulle
   altezze), VoiceOver, Riduci movimento (`Motion.honouring`).
 - **Privacy.** La posizione non esce dal telefono. Nessun server nostro, nessuna statistica. Se aggiungi
   una chiamata di rete, aggiorna `docs/index.html`.
@@ -44,8 +44,12 @@ Il progetto Xcode è **scritto a mano** (`objectVersion = 77`) con cartelle sinc
 in una di queste cartelle entra da solo nel target, senza toccare il `.pbxproj`. `CruisyShared/` sta nei
 gruppi sincronizzati sia dell'app sia dei widget.
 
-Design di oggi — tutto sostituibile, i principi sopra no: `CruisyShared/Design/` (`Palette`, `Type`,
-`Motion`, `GlassSurface`, `AdaptiveStack`, `Contrast`).
+Design di oggi — il biglietto d'imbarco, direzione D del 14 settembre 2026: `CruisyShared/Design/`
+(`Livery` coi token chiaro/scuro e il catalogo delle livree, `TicketType`, `Ticket` coi componenti,
+`SeaScene`, `Motion`, `Contrast`). Le regole per usarlo con coerenza sono in `docs/fable-report.md`,
+sezione «Regole del sistema». `Palette`, `Typography` e `GlassSurface` sono il design vecchio: li
+usano ancora widget, Live Activity, editor, importazione e onboarding, e spariscono con la loro
+conversione.
 
 ## Comandi
 
@@ -57,6 +61,7 @@ scripts/test.sh ui NavigationSmokeUITests/testAllPortsOpens   # uno solo
 
 scripts/screenshots.sh                  # fotografa tutte le schermate → screenshots/<data>/foglio.jpg
 scripts/screenshots.sh --lang en --size AX5 --only oggi-porto,diario
+scripts/screenshots.sh --appearance dark  # modalità scura
 
 scripts/sync-strings.sh                 # porta le stringhe nuove nel catalogo (xcodebuild non lo fa)
 ```
@@ -71,8 +76,11 @@ Simulatore: **iPhone 17 Pro**, iOS 27.
   - `-tab oggi | itinerario | nave | diario`;
   - `-open carta | scalo | porti | editor | importazione | impostazioni | onboarding`
     (`Cruisy/Services/DebugLaunch.swift`);
-  - `-cruisy.hasSeenDisclaimer YES` salta l'onboarding, `-AppleLanguages "(en)"` cambia lingua.
-  `scripts/screenshots.sh` li usa tutti. Guarda `foglio.jpg`, che le mette in griglia.
+  - `-cruisy.hasSeenDisclaimer YES` salta l'onboarding, `-AppleLanguages "(en)"` cambia lingua;
+  - `-livrea rosso` veste l'app con una livrea del catalogo (`Livery.id`), perché la nave di prova
+    non è nell'elenco e da sola resterebbe sempre quella di Cruisy.
+  `scripts/screenshots.sh` li usa tutti (`--appearance dark` per la modalità scura). Guarda
+  `foglio.jpg`, che le mette in griglia.
 - **I gesti si verificano con i test di interfaccia**, non a occhio: `CruisyUITests/`.
 - **Quando un test di interfaccia fallisce, il messaggio può mentire.** Esporta gli allegati e leggi
   l'albero dell'interfaccia al momento del fallimento:
@@ -89,9 +97,11 @@ Simulatore: **iPhone 17 Pro**, iOS 27.
   `UIBackgroundModes` non arrivava nell'app. Le chiavi fuori elenco vanno in `Cruisy-Info.plist`, e si
   verificano sull'**app compilata** (`/usr/libexec/PlistBuddy -c "Print :Chiave" <…>/Cruisy.app/Info.plist`),
   mai guardando il progetto. `InfoPlistTests` ne controlla alcune.
-- **Concorrenza**: il progetto compila in modalità Swift 5, **senza controlli di concorrenza**. Un servizio
-  `@Observable` con metodi `async` che modificano il suo stato va legato a `@MainActor`: la schermata dei
-  porti crashava perché più `load` modificavano lo stesso `Set` in parallelo.
+- **Concorrenza**: dal 14 settembre 2026 il progetto è in **Swift 6** con `SWIFT_APPROACHABLE_CONCURRENCY`.
+  Un servizio `@Observable` con metodi `async` che modificano il suo stato è `@MainActor`: la schermata dei
+  porti crashava perché più `load` modificavano lo stesso `Set` in parallelo. I delegati di CoreLocation e
+  VisionKit passano da conformanze `@preconcurrency`; `SeaChart` è `@preconcurrency Animatable`; un valore
+  preso da una proprietà dell'attore non si può passare ad ActivityKit (vedi `LiveActivityController.update`).
 - **Immagini `.fill`**: mai come figlia diretta di uno stack. Detta la larghezza alla colonna e taglia i
   testi («Icon of the Seas» diventava «on of the Seas»). Si mettono in un `.overlay` su un `Color.clear`
   con altezza fissa.

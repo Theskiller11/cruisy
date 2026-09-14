@@ -28,7 +28,10 @@ struct RootTabView: View {
     }
 
     private var livery: Livery {
-        Livery.resolve(preferences.livery, operatorName: store.shipRecord?.operatorName)
+        #if DEBUG
+        if let forced = DebugLaunch.livery { return forced }
+        #endif
+        return Livery.resolve(preferences.livery, operatorName: store.shipRecord?.operatorName)
     }
 
     enum Section: Hashable {
@@ -65,11 +68,11 @@ struct RootTabView: View {
         .tabBarMinimizeBehavior(.onScrollDown)
         .tint(livery.signalOnHull)
         .environment(\.livery, livery)
-        // Le schermate della crociera sono scure per progetto — scafo blu, biglietti
-        // bianchi — e vanno lette in coperta di notte come in banchina di giorno.
-        // I fogli di sistema (impostazioni, editor, importazione) seguono invece
-        // l'aspetto scelto nel telefono: sono iOS, e restano iOS.
-        .preferredColorScheme(.dark)
+        // L'app segue l'aspetto del telefono: in chiaro biglietti bianchi sullo
+        // scafo blu, in scuro biglietti di carta scura sullo scafo quasi nero. Le
+        // barre stanno sempre sullo scafo, che è scuro in entrambe le modalità:
+        // per questo si tengono scure, così le loro scritte restano bianche.
+        .toolbarColorScheme(.dark, for: .tabBar)
         // Un file .cruisy ricevuto per AirDrop, messaggio o email apre qui.
         .onOpenURL { url in
             do { incoming = try VoyageFile.read(from: url) }

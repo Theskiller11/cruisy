@@ -16,9 +16,12 @@ rapporto dice cosa c'è, cosa manca, e **come continuare senza perdere coerenza*
   `SeaScene`) e schermate rifatte nella direzione D: Oggi in tutti gli stati, Itinerario,
   dettaglio dello scalo, Nave, Diario con i timbri a passaporto, Porti toccati, Carta.
 - **Livrea per compagnia**: catalogo di 17 palette ispirate, agganciate a
-  `ShipRecord.operatorName`, tutte verificate da `LiveryContrastTests`; preferenza
-  condivisa coi widget. **Manca ancora il selettore nelle Impostazioni** (vedi «Da fare»).
-- **Test**: 239 unitari (erano 214) e 15 di interfaccia, tutti verdi.
+  `ShipRecord.operatorName`, con il selettore nelle Impostazioni e la preferenza condivisa
+  coi widget. Ogni token ha la variante **chiara e scura**, ricavata con il contrasto come
+  vincolo; `LiveryContrastTests` scorre tutte le livree in entrambe le modalità. Per vedere
+  una livrea con la nave di prova: `-livrea rosso` (o un altro `Livery.id`) fra gli
+  argomenti di avvio.
+- **Test**: 242 unitari (erano 214) e 15 di interfaccia, tutti verdi.
 
 ## Screenshot
 
@@ -29,6 +32,13 @@ rapporto dice cosa c'è, cosa manca, e **come continuare senza perdere coerenza*
 - Dopo, terzo giro: `screenshots/dopo-3/foglio.jpg` (Diario, Itinerario, Porti), dopo le
   tre note sui timbri: griglia a diametro fisso nel Diario, «Toccato» come badge accanto al
   nome nell'Itinerario.
+- Dopo, quarto giro: `screenshots/dopo-4-chiaro/foglio.jpg` e
+  `screenshots/dopo-4-scuro/foglio.jpg` — le stesse schermate in **modalità chiara e
+  scura**, col cielo luminoso di giorno, le Impostazioni col selettore della livrea.
+  Il giro in scuro si fa con `scripts/screenshots.sh --appearance dark`.
+- Dopo, quinto giro: `screenshots/dopo-5-chiaro/foglio.jpg` (Diario con la testata
+  propria, Oggi in mare) e `screenshots/dopo-5-scuro/foglio.jpg` (Diario, Impostazioni con la
+  tinta viva, Nave col pulsante leggibile), dopo le tre note sul quarto giro.
 - Giri `--lang en` e `--size AX5`: **non fatti** (vedi «Da fare»).
 
 La cartella `screenshots/` è ignorata da git: si rigenera con `scripts/screenshots.sh`.
@@ -78,6 +88,23 @@ l'ambiente della vista che lo presenta.
 **Mai** `signal` per testo piccolo: usare `signalInk`. Mai `onHullMuted` sulla carta né
 `field` sullo scafo. Il colore non porta mai significato da solo: accanto c'è sempre una
 parola (il timbro ha il testo, il campo ha l'etichetta).
+
+**Le due modalità.** Ogni token è un `Color` dinamico con le varianti chiara e scura
+(`Livery.Pair`, `Color(light:dark:)`): in chiaro il biglietto è bianco con l'inchiostro
+dello scafo; in scuro il biglietto è di **carta scura** — lo scafo della livrea appena
+schiarito — con l'inchiostro chiaro (`darkInkHex`), e lo scafo attorno si fa quasi nero.
+Il segnale in scuro è `signalOnHull` schiarito finché regge sulla carta scura. Le varianti
+scure si **ricavano** da quelle chiare con il contrasto come vincolo (`lightened`,
+`darkened`, `vivid`, `mix`): una livrea nuova va bene in scuro senza scegliere altri
+colori, e `LiveryContrastTests` scorre **tutte le livree in entrambe le modalità**.
+Quando serve il valore numerico (un `Canvas`, come in `SeaScene`) si legge
+`livery.hullPair.hex(scheme)` con lo schema dell'ambiente.
+
+L'app **segue l'aspetto del telefono**: la radice non forza più lo scuro. Le barre sullo
+scafo restano scure in entrambe le modalità (`.toolbarColorScheme(.dark)` su barra delle
+schede e barre di navigazione delle schermate della crociera), e la barra di stato è
+sempre a testo chiaro (`UIViewControllerBasedStatusBarAppearance = NO` in
+`Cruisy-Info.plist`). I `Form` di sistema fanno da soli.
 
 `LiveryContrastTests` scorre **tutte** le livree su tutte le coppie: una livrea nuova che
 non regge ferma la build. Per aggiungerne una: una voce in `Livery.companies` con la parola
@@ -170,13 +197,9 @@ matrice di stato), stato vuoto.
 
 **Da convertire** (oggi compilano e funzionano col design vecchio):
 
-1. `SettingsSheet` — `Form` nativo. Da fare: aggiungere la sezione **Livrea** con un
-   `Picker` su `preferences.livery` (`LiveryChoice.cruisy` «Cruisy» / `.company` «Colori
-   della compagnia»), e un piè di pagina che spieghi che sono colori ispirati e che con una
-   nave sconosciuta resta quella di Cruisy; togliere il **secondo interruttore** della Live
-   Activity (oggi ci sono la preferenza e `LiveActivitySetting`: tenere la preferenza,
-   sostituire la riga di controllo con un testo di stato); sostituire i riferimenti a
-   `Palette`/`Type` con `livery.tint` e font di sistema.
+1. `SettingsSheet` — **fatto**: `Form` nativo con la sezione Livrea (`Picker` su
+   `preferences.livery`, riga «Adesso» con la livrea in vigore, piè di pagina che spiega),
+   un solo interruttore per la Live Activity con una riga di stato, `.tint(livery.tint)`.
 2. `VoyageEditor`, `PortCallEditor` — già `Form`; togliere `Palette` e `Type`
    (`Palette.underway` → `livery.tint`, `Palette.adrift` → `.red`, `Palette.inkPrimary` →
    `.primary`).
@@ -188,9 +211,10 @@ matrice di stato), stato vuoto.
    di conferma `.borderedProminent` in `safeAreaInset`.
 5. `OnboardingFlow`, `DisclaimerSheet` — fondo di sistema, `.borderedProminent` con
    `livery.tint`; la pagina «Come funziona» come `List`.
-6. `LiveActivityRow` / `LiveActivitySetting` — semplificare (vedi 1).
-7. **Widget e Live Activity** — stessa lingua: carta bianca, `ink`, `signalInk` per
-   «RIENTRO A BORDO», ora grande, countdown con `Text(timerInterval:)`. Il widget medio con
+6. `LiveActivityRow` / `LiveActivitySetting` — **cancellati** (vedi 1).
+7. **Widget e Live Activity** — stessa lingua: carta con `livery.paper`, `ink`, `signalInk`
+   per «RIENTRO A BORDO», ora grande, countdown con `Text(timerInterval:)`. I token sono
+   dinamici, quindi il widget segue da solo chiaro e scuro. Il widget medio con
    perforazione e matrice. La livrea si legge con `LiveryChoice.stored()` +
    `ShipDirectory.shared.lookup(voyage.shipName)?.operatorName`. Rispettare i vincoli in
    `CLAUDE.md` (niente `ProgressView` a larghezza infinita nella Dynamic Island).
@@ -281,7 +305,8 @@ imparate. **Difetto trovato e corretto**: `LoggedVoyage` non nominava `track` fr
 - Rotta due volte in pre-crociera: **chiuso** (foto o rotta, mai entrambe).
 - Striscia del fuso in cima a Oggi: **chiuso** (campo nella matrice).
 - Diario e Porti con lo sfondo diverso: **chiuso**.
-- Doppio interruttore della Live Activity nelle Impostazioni: **aperto** (istruzioni sopra).
+- Doppio interruttore della Live Activity nelle Impostazioni: **chiuso** (la preferenza,
+  più una riga di stato).
 - Traguardo «Lo Stretto di Gibilterra fino alle Baleari»: **chiuso** («Da Gibilterra a
   Palma», dettaglio «lo Stretto → le Baleari»).
 - Carta senza ingrandimento dalla card: **aperto**, resta il push (motivo in
@@ -294,9 +319,10 @@ imparate. **Difetto trovato e corretto**: `LoggedVoyage` non nominava `track` fr
 
 ## Stato dei test
 
-- Unitari: **239** in 34 suite, tutti verdi (`scripts/test.sh unit`). Nuove suite:
+- Unitari: **242** in 34 suite, tutti verdi (`scripts/test.sh unit`). Nuove suite:
   `PersistenceCompatibilityTests` (7), `LocationProfileTests` (4), `NetworkClientTests` (5),
-  `LiveryContrastTests` (6, parametrizzati su tutte le livree), `SeaSceneContrastTests` (3).
+  `LiveryContrastTests` (8, parametrizzati su tutte le livree × le due modalità),
+  `SeaSceneContrastTests` (4: giorno chiaro, alba e tramonto caldi, continuità, sole e luna).
 - Interfaccia: **15**, tutti verdi (`scripts/test.sh ui`). Non aggiunti quelli per
   importazione, editor e impostazioni: da fare sul modello di `NavigationSmokeUITests`
   (`-open importazione` + scrivere nel `TextEditor` + «Leggi» → «Controlla»; `-open editor`
@@ -304,16 +330,22 @@ imparate. **Difetto trovato e corretto**: `LoggedVoyage` non nominava `track` fr
 
 ## Da fare (in ordine)
 
-1. Impostazioni: selettore della livrea, un solo interruttore per la Live Activity, via
-   `Palette` (vedi «Regole del sistema», 7.1).
-2. Editor, importazione, riesame, onboarding nativi (7.2–7.5).
-3. Widget e Live Activity nel linguaggio del biglietto (7.7).
-4. Cancellare il design vecchio (7.8) e `PaletteContrastTests`.
-5. `scripts/sync-strings.sh`, traduzioni inglesi, `LocalizationTests` verde.
-6. Screenshot `--lang it`, `--lang en`, `--size AX5` su tutte le schermate, senza testo
-   tagliato. Attenzione ai timbri e all'ora grande ad AX5: hanno tetti e `minimumScaleFactor`,
-   ma vanno guardati.
-7. Test di interfaccia per importazione, editor e impostazioni.
+1. Editor, importazione, riesame, onboarding nativi (7.2–7.5).
+2. Widget e Live Activity nel linguaggio del biglietto (7.7).
+3. Cancellare il design vecchio (7.8) e `PaletteContrastTests`.
+4. `scripts/sync-strings.sh`, traduzioni inglesi, `LocalizationTests` verde.
+5. Screenshot `--lang it`, `--lang en`, `--size AX5` e `--appearance dark` su tutte le
+   schermate, senza testo tagliato. Attenzione ai timbri e all'ora grande ad AX5: hanno
+   tetti e `minimumScaleFactor`, ma vanno guardati.
+6. Test di interfaccia per importazione, editor e impostazioni.
+
+**Cosa resta da convertire in scuro.** Le schermate rifatte usano solo token dinamici e
+sono già a posto in entrambe le modalità (verificate nel quarto giro: Oggi, Itinerario,
+Scalo, Nave, Diario). I `Form` (Impostazioni, editor, importazione, onboarding) sono di
+sistema e seguono la modalità da soli. Restano **widget e Live Activity**, ancora con la
+palette vecchia (`Palette`), da rifare coi token: lì il chiaro/scuro arriverà con la
+conversione. Da guardare a mano, in scuro, dopo la conversione: la Carta (scrim e
+matrice di stato) e la pagina dei Porti toccati, che nel quarto giro non c'erano.
 
 ## Domande per Matteo
 

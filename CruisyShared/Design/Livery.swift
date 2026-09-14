@@ -94,38 +94,154 @@ public struct Livery: Identifiable, Equatable, Sendable {
 
     // MARK: Costanti della carta
 
-    /// La carta del biglietto. Bianca ovunque: è il motivo per cui il biglietto si
+    /// La carta del biglietto, in chiaro. Bianca: è il motivo per cui il biglietto si
     /// legge col sole in banchina.
     public static let paperHex: UInt32 = 0xFFFFFF
-    /// La perforazione fra biglietto e matrice.
+    /// La perforazione fra biglietto e matrice, in chiaro.
     public static let perforationHex: UInt32 = 0xB7C4D0
-    /// Le righe sottili fra i campi.
+    /// Le righe sottili fra i campi, in chiaro.
     public static let ruleHex: UInt32 = 0xE3E9EE
     /// Il testo sullo scafo.
     public static let onHullHex: UInt32 = 0xFFFFFF
+    /// L'inchiostro sulla carta scura.
+    public static let darkInkHex: UInt32 = 0xF2F5F8
+
+    // MARK: Le due modalità
+    //
+    // In chiaro il biglietto è bianco con l'inchiostro dello scafo. In scuro il
+    // biglietto è **di carta scura** — il blu della livrea — con l'inchiostro chiaro,
+    // e lo scafo attorno si fa quasi nero, così il biglietto resta un cartoncino
+    // appoggiato su un fondo. L'arancio del segnale si schiarisce quanto basta a
+    // leggersi sulla carta scura. Ogni token ha le due varianti, e i `Color` esposti
+    // le portano entrambe: sceglie SwiftUI, con l'ambiente.
+    //
+    // Le varianti scure si **ricavano** da quelle chiare, con il contrasto come
+    // vincolo e non come speranza: `lightened(_:toContrast:over:)` schiarisce finché
+    // la soglia WCAG è superata. Così una livrea nuova va bene in scuro senza che
+    // nessuno debba scegliere altri otto colori a mano — e i test lo verificano.
+
+    public enum Scheme: Sendable, CaseIterable { case light, dark }
+
+    /// Un token nelle due modalità.
+    public struct Pair: Equatable, Sendable {
+        public let light: UInt32
+        public let dark: UInt32
+        public func hex(_ scheme: Scheme) -> UInt32 { scheme == .light ? light : dark }
+        var color: Color { Color(light: light, dark: dark) }
+    }
+
+    /// La carta scura: lo scafo appena schiarito, e poi scurito quanto basta perché
+    /// l'inchiostro chiaro ci stia a 7:1 — serve per le livree con lo scafo chiaro,
+    /// come un rosso mattone. Lo scafo scuro si ricava **da lei**, molto più scuro:
+    /// un biglietto dello stesso colore dello scafo non si staccherebbe dal fondo, e
+    /// il test pretende almeno 1,4:1 fra carta e scafo.
+    public var darkPaperHex: UInt32 {
+        Self.darkened(Self.mix(hullHex, 0xFFFFFF, 0.10), toContrast: 7, forInk: Self.darkInkHex)
+    }
+
+    public var hullPair: Pair { Pair(light: hullHex, dark: Self.mix(darkPaperHex, 0x000000, 0.8)) }
+    public var hullDeepPair: Pair { Pair(light: hullDeepHex, dark: Self.mix(darkPaperHex, 0x000000, 0.88)) }
+    public var onHullPair: Pair { Pair(light: Self.onHullHex, dark: Self.onHullHex) }
+    public var onHullMutedPair: Pair { Pair(light: onHullMutedHex, dark: onHullMutedHex) }
+    public var signalOnHullPair: Pair { Pair(light: signalOnHullHex, dark: signalOnHullHex) }
+    /// In scuro la carta è lo scafo della livrea, appena schiarito.
+    public var paperPair: Pair { Pair(light: Self.paperHex, dark: darkPaperHex) }
+    public var paperShadePair: Pair {
+        Pair(light: paperShadeHex, dark: Self.mix(darkPaperHex, hullPair.dark, 0.5))
+    }
+    public var inkPair: Pair { Pair(light: inkHex, dark: Self.darkInkHex) }
+    public var fieldPair: Pair {
+        Pair(light: fieldHex,
+             dark: Self.lightened(onHullMutedHex, toContrast: Contrast.bodyMinimum, over: darkPaperHex))
+    }
+    public var perforationPair: Pair {
+        Pair(light: Self.perforationHex, dark: Self.mix(darkPaperHex, 0xFFFFFF, 0.35))
+    }
+    public var rulePair: Pair { Pair(light: Self.ruleHex, dark: Self.mix(darkPaperHex, 0xFFFFFF, 0.14)) }
+    public var signalPair: Pair {
+        Pair(light: signalHex,
+             dark: Self.lightened(signalOnHullHex, toContrast: Contrast.largeTextMinimum, over: darkPaperHex))
+    }
+    public var signalInkPair: Pair {
+        Pair(light: signalInkHex,
+             dark: Self.lightened(signalOnHullHex, toContrast: Contrast.bodyMinimum, over: darkPaperHex))
+    }
+    /// La tinta dei controlli di sistema: lo scafo sui fondi chiari di un `Form`;
+    /// sui fondi scuri lo stesso colore reso **vivo** — stessa tinta, più chiaro e
+    /// saturo — e poi schiarito finché si legge sul nero. Schiarire il blu navy
+    /// verso il bianco dava un grigio spento, e i pulsanti sembravano disabilitati.
+    public var tintPair: Pair {
+        Pair(light: inkHex,
+             dark: Self.lightened(Self.vivid(hullHex), toContrast: Contrast.bodyMinimum, over: 0x000000))
+    }
 
     // MARK: Colori
 
-    public var hull: Color { Color(hex: hullHex) }
-    public var hullDeep: Color { Color(hex: hullDeepHex) }
-    public var onHull: Color { Color(hex: Self.onHullHex) }
-    public var onHullMuted: Color { Color(hex: onHullMutedHex) }
-    public var signalOnHull: Color { Color(hex: signalOnHullHex) }
-    public var paper: Color { Color(hex: Self.paperHex) }
-    public var paperShade: Color { Color(hex: paperShadeHex) }
-    public var ink: Color { Color(hex: inkHex) }
-    public var field: Color { Color(hex: fieldHex) }
-    public var perforation: Color { Color(hex: Self.perforationHex) }
-    public var rule: Color { Color(hex: Self.ruleHex) }
-    public var signal: Color { Color(hex: signalHex) }
-    public var signalInk: Color { Color(hex: signalInkHex) }
-
-    /// La tinta dei controlli di sistema: interruttori, collegamenti, pulsanti.
-    /// È lo scafo, che sui fondi chiari di un `Form` si legge sempre.
-    public var tint: Color { ink }
+    public var hull: Color { hullPair.color }
+    public var hullDeep: Color { hullDeepPair.color }
+    public var onHull: Color { onHullPair.color }
+    public var onHullMuted: Color { onHullMutedPair.color }
+    public var signalOnHull: Color { signalOnHullPair.color }
+    public var paper: Color { paperPair.color }
+    public var paperShade: Color { paperShadePair.color }
+    public var ink: Color { inkPair.color }
+    public var field: Color { fieldPair.color }
+    public var perforation: Color { perforationPair.color }
+    public var rule: Color { rulePair.color }
+    public var signal: Color { signalPair.color }
+    public var signalInk: Color { signalInkPair.color }
+    public var tint: Color { tintPair.color }
 
     /// Una linea sottile sullo scafo, per separare senza pesare.
     public var hullHairline: Color { onHull.opacity(0.14) }
+
+    // MARK: Aritmetica dei colori
+
+    /// Lo stesso colore, acceso: stessa tinta, luminosità alta e saturazione piena.
+    /// È come si porta uno scafo scuro a fare da accento su un fondo nero.
+    public static func vivid(_ hex: UInt32) -> UInt32 {
+        var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, alpha: CGFloat = 0
+        UIColor(Color(hex: hex)).getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        let lifted = UIColor(hue: hue, saturation: max(0.62, min(saturation, 0.8)), brightness: 0.86, alpha: 1)
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
+        lifted.getRed(&r, green: &g, blue: &b, alpha: &alpha)
+        return (UInt32((r * 255).rounded()) << 16) | (UInt32((g * 255).rounded()) << 8) | UInt32((b * 255).rounded())
+    }
+
+    /// `a` mescolato con `b` per la quota `t`, nello spazio sRGB.
+    public static func mix(_ a: UInt32, _ b: UInt32, _ t: Double) -> UInt32 {
+        func channel(_ shift: UInt32) -> UInt32 {
+            let x = Double((a >> shift) & 255), y = Double((b >> shift) & 255)
+            return UInt32((x + (y - x) * min(max(t, 0), 1)).rounded())
+        }
+        return (channel(16) << 16) | (channel(8) << 8) | channel(0)
+    }
+
+    /// Il colore scurito verso il nero, a passi del 2%, finché un inchiostro dato ci
+    /// sta sopra con il contrasto voluto. Se già ci sta, torna com'è.
+    public static func darkened(_ hex: UInt32, toContrast target: Double, forInk ink: UInt32) -> UInt32 {
+        let inkRGB = Contrast.RGB(hex: ink)
+        var current = hex
+        var step = 0
+        while Contrast.ratio(inkRGB, Contrast.RGB(hex: current)) < target, step < 50 {
+            step += 1
+            current = mix(hex, 0x000000, Double(step) * 0.02)
+        }
+        return current
+    }
+
+    /// Il colore schiarito verso il bianco, a passi del 2%, finché il contrasto sul
+    /// fondo supera la soglia. Se già la supera, torna com'è.
+    public static func lightened(_ hex: UInt32, toContrast target: Double, over background: UInt32) -> UInt32 {
+        let base = Contrast.RGB(hex: background)
+        var current = hex
+        var step = 0
+        while Contrast.ratio(Contrast.RGB(hex: current), base) < target, step < 50 {
+            step += 1
+            current = mix(hex, 0xFFFFFF, Double(step) * 0.02)
+        }
+        return current
+    }
 
     // MARK: Il catalogo
 
@@ -243,5 +359,24 @@ public extension EnvironmentValues {
     var livery: Livery {
         get { self[LiveryKey.self] }
         set { self[LiveryKey.self] = newValue }
+    }
+}
+
+public extension Color {
+    /// Da esadecimale a 24 bit in spazio sRGB.
+    init(hex: UInt32) {
+        self.init(.sRGB,
+                  red: Double((hex >> 16) & 0xFF) / 255,
+                  green: Double((hex >> 8) & 0xFF) / 255,
+                  blue: Double(hex & 0xFF) / 255,
+                  opacity: 1)
+    }
+
+    /// Un colore con le due varianti: sceglie il sistema, secondo l'aspetto in vigore
+    /// dove la vista è disegnata — compreso un `.colorScheme` forzato a mano.
+    init(light: UInt32, dark: UInt32) {
+        self.init(uiColor: UIColor { traits in
+            UIColor(Color(hex: traits.userInterfaceStyle == .dark ? dark : light))
+        })
     }
 }

@@ -163,9 +163,6 @@ struct PortDetailScreen: View {
         }
         .padding(16)
         .paperCard()
-        // Su carta bianca i controlli vanno chiari: il resto dello schermo è scuro,
-        // ma qui siamo su un foglio.
-        .environment(\.colorScheme, .light)
     }
 
     private func reminderDescription(allAboard: Date) -> String {

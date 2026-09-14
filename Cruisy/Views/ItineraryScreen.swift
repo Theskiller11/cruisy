@@ -29,6 +29,7 @@ struct ItineraryScreen: View {
             }
             .navigationTitle("Itinerario")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 if let voyage = store.voyage {
                     ToolbarItem(placement: .topBarTrailing) {

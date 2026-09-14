@@ -2,13 +2,14 @@ import SwiftUI
 
 /// Tutti i porti toccati, in dettaglio, con le loro fotografie.
 ///
-/// Esiste perché il riquadro nel diario non può contenerli tutti: dopo qualche
-/// crociera diventa un muro di pastiglie in cui non si trova più niente. Lì restano
+/// Esiste perché la pagina dei timbri nel diario non può contenerli tutti: dopo
+/// qualche crociera diventa un muro in cui non si trova più niente. Lì restano
 /// **solo i porti visitati tre volte o più** — quelli che raccontano qualcosa di chi
 /// li ha toccati — e da lì si arriva qui, dove ci sono tutti.
 struct PortsScreen: View {
     let stamps: [Logbook.Stamp]
 
+    @Environment(\.livery) private var livery
     @State private var photos = PortPhotoService()
     @Environment(Reachability.self) private var reachability
     @State private var query = ""
@@ -21,7 +22,7 @@ struct PortsScreen: View {
 
     var body: some View {
         ZStack {
-            Palette.seaBackground.ignoresSafeArea()
+            livery.hull.ignoresSafeArea()
             ScrollView {
                 LazyVStack(spacing: 12) {
                     ForEach(shown) { stamp in
@@ -38,7 +39,7 @@ struct PortsScreen: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 8)
-                .padding(.bottom, 96)
+                .padding(.bottom, 24)
             }
         }
         .navigationTitle("Porti toccati")
@@ -54,8 +55,9 @@ struct PortsScreen: View {
     }
 }
 
-/// Un porto nel dettaglio: la foto, quante volte ci sei stato, quando la prima.
+/// Un porto nel dettaglio: la foto, il timbro, quando la prima volta.
 private struct PortCard: View {
+    @Environment(\.livery) private var livery
     let stamp: Logbook.Stamp
     var photo: CommonsPhoto?
 
@@ -72,36 +74,37 @@ private struct PortCard: View {
                     .overlay(alignment: .bottomTrailing) {
                         Text(photo.credit)
                             .font(.caption2)
-                            .foregroundStyle(Palette.inkSecondary)
+                            .foregroundStyle(.white)
                             .lineLimit(1)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 3)
-                            .background(Capsule().fill(Palette.abyss.opacity(0.7)))
+                            .background(Capsule().fill(.black.opacity(0.6)))
                             .padding(6)
                     }
-                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    .padding(6)
             }
 
-            VStack(alignment: .leading, spacing: 3) {
-                HStack(alignment: .firstTextBaseline, spacing: 8) {
+            HStack(alignment: .center, spacing: 14) {
+                VStack(alignment: .leading, spacing: 3) {
                     Text(stamp.port.name)
-                        .font(Type.rowTitle)
-                        .foregroundStyle(Palette.inkPrimary)
-                    Spacer(minLength: 0)
-                    if stamp.visits > 1 {
-                        Text("×\(stamp.visits)")
-                            .font(Type.metricLabel.weight(.semibold))
-                            .foregroundStyle(Palette.underway)
-                    }
+                        .font(TicketType.place)
+                        .tracking(0.4)
+                        .textCase(.uppercase)
+                        .foregroundStyle(livery.ink)
+                    Text(subtitle)
+                        .font(TicketType.rowDetail)
+                        .foregroundStyle(livery.field)
                 }
-                Text(subtitle)
-                    .font(Type.rowDetail)
-                    .foregroundStyle(Palette.inkSecondary)
+                Spacer(minLength: 8)
+                Stamp(stamp.visits > 1 ? String(localized: "×\(stamp.visits)\nvolte") : String(localized: "Toccato"),
+                      color: stamp.visits >= 3 ? livery.signal : livery.field, rotation: -9)
             }
-            .padding(14)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .glassSurface(cornerRadius: 22, prominence: .card)
+        .paperCard()
         .accessibilityElement(children: .combine)
         .accessibilityLabel(stamp.visits > 1
             ? Text("\(stamp.port.name), \(stamp.visits) volte")

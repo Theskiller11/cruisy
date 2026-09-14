@@ -171,7 +171,7 @@ public struct Livery: Identifiable, Equatable, Sendable {
             signal: 0xD22630, signalInk: 0xB81F28)),
         ("norwegian", Livery(
             id: "azzurro", name: "Blu azzurro",
-            hull: 0x0C3B8C, hullDeep: 0x092B66, onHullMuted: 0xAAC3EA, signalOnHull: 0xFF7A33,
+            hull: 0x0C3B8C, hullDeep: 0x092B66, onHullMuted: 0xAAC3EA, signalOnHull: 0xFFA06A,
             signal: 0xE4570F, signalInk: 0xBF4708)),
         ("princess", Livery(
             id: "blu-profondo", name: "Blu profondo",
@@ -196,7 +196,7 @@ public struct Livery: Identifiable, Equatable, Sendable {
             signal: 0xA8862E, signalInk: 0x7D6320)),
         ("tui", Livery(
             id: "blu-rosso-tui", name: "Blu e rosso",
-            hull: 0x0B3F8F, hullDeep: 0x082E69, onHullMuted: 0xAAC3EA, signalOnHull: 0xFF8A94,
+            hull: 0x0B3F8F, hullDeep: 0x082E69, onHullMuted: 0xAAC3EA, signalOnHull: 0xFFA8B0,
             signal: 0xD40E14, signalInk: 0xB40C11)),
         ("viking", Livery(
             id: "rosso-mattone", name: "Rosso mattone",

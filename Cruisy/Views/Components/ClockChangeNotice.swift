@@ -18,8 +18,7 @@ struct ClockChangeNotice: View {
     ///
     /// Venti ore: abbastanza da prendere tutta la sera prima — che è quando uno
     /// pianifica la giornata dopo e punta la sveglia — e non tanto da comparire per
-    /// giorni. Un avviso che sta lì da tre giorni non è un avviso, è arredamento, e
-    /// smette di essere letto proprio la notte in cui conta.
+    /// giorni. Un avviso che sta lì da tre giorni non è un avviso, è arredamento.
     private static let leadTime: TimeInterval = 20 * 3600
 
     private var imminent: ShipClock.Change? {
@@ -38,9 +37,10 @@ struct ClockChangeNotice: View {
             // che ha al polso chi sta andando a dormire.
             let when = clock.timeBeforeChange(change)
 
-            StaleDataNotice(message: shift > 0
+            HullNotice(shift > 0
                 ? "Stanotte alle \(when) l'orologio di bordo va avanti di \(hours == 1 ? String(localized: "un'ora") : String(localized: "\(hours) ore")). Dormirai di meno: la sveglia del telefono non si sposta da sola."
-                : "Stanotte alle \(when) l'orologio di bordo torna indietro di \(hours == 1 ? String(localized: "un'ora") : String(localized: "\(hours) ore")). Guadagni un'ora: gli orari di domani non cambiano, cambia l'orologio.")
+                : "Stanotte alle \(when) l'orologio di bordo torna indietro di \(hours == 1 ? String(localized: "un'ora") : String(localized: "\(hours) ore")). Guadagni un'ora: gli orari di domani non cambiano, cambia l'orologio.",
+                glyph: "clock.arrow.trianglehead.2.counterclockwise.rotate.90")
         }
     }
 }

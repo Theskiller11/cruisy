@@ -1,27 +1,26 @@
 import SwiftUI
 
-/// La scheda della nave.
+/// La scheda della nave: le carte di bordo.
 ///
 /// Si riempie da sola dal nome: i dati vengono da Wikidata, che è **CC0** — stazza,
 /// lunghezza, numero IMO, anno di consegna sono fatti, e i fatti non appartengono a
 /// nessuno. Il piano dei ponti invece resta fuori: quello è materiale della
-/// compagnia, ed è la ragione per cui questa schermata esiste in questa forma e non
-/// in quella del brief.
+/// compagnia. Il nome della compagnia compare qui **come dato**, e solo qui.
 struct ShipScreen: View {
     @Environment(VoyageStore.self) private var store
+    @Environment(Preferences.self) private var preferences
+    @Environment(\.livery) private var livery
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var photos = ShipPhotoService()
     @Environment(Reachability.self) private var reachability
     @Environment(ShipLookupService.self) private var lookup
 
-    private var record: ShipRecord? {
-        store.voyage.flatMap { ShipDirectory.shared.lookup($0.shipName) }
-    }
+    private var record: ShipRecord? { store.shipRecord }
 
     var body: some View {
         NavigationStack {
             ZStack {
-                store.background.ignoresSafeArea()
+                livery.hull.ignoresSafeArea()
                 if let voyage = store.voyage {
                     content(voyage: voyage)
                 } else {
@@ -36,35 +35,26 @@ struct ShipScreen: View {
     @ViewBuilder
     private func content(voyage: Voyage) -> some View {
         ScrollView {
-            VStack(spacing: 12) {
+            VStack(spacing: 14) {
                 photo(voyage: voyage)
 
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(record?.name ?? voyage.shipName)
-                        .font(.title2.weight(.semibold))
-                        .foregroundStyle(Palette.inkPrimary)
-                    if let operatorName = record?.operatorName, !operatorName.isEmpty {
-                        Text(operatorName)
-                            .font(Type.screenSubtitle)
-                            .foregroundStyle(Palette.inkSecondary)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                Masthead(record?.name ?? voyage.shipName,
+                         detail: record?.operatorName.isEmpty == false ? record?.operatorName : nil)
+                    .padding(.horizontal, 6)
 
-                if let record {
-                    measurements(record)
-                }
+                papers(voyage: voyage)
 
-                identifiers(voyage: voyage)
+                liveryRow
 
-                if record == nil, let voyage = store.voyage {
+                if record == nil {
                     missingShip(name: voyage.shipName)
                 }
 
                 sourceNote
             }
             .padding(.horizontal, 16)
-            .padding(.bottom, 96)
+            .padding(.top, 4)
+            .padding(.bottom, 24)
         }
         .task(id: "\(record?.imageFile ?? "")|\(reachability.isExpensive)") {
             if let record {
@@ -77,126 +67,92 @@ struct ShipScreen: View {
 
     @ViewBuilder
     private func photo(voyage: Voyage) -> some View {
-        VStack(alignment: .trailing, spacing: 6) {
-            photoFrame(voyage: voyage)
-            if let photo = photos.photo, typeSize.isAccessibilitySize {
-                creditLabel(photo.credit)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func photoFrame(voyage: Voyage) -> some View {
-        // La foto sta in un **overlay**, non dentro allo ZStack: riempiendo a
-        // `.fill` l'immagine è più larga del riquadro, e da figlia diretta imponeva
-        // quella larghezza a tutta la colonna — ecco perché il nome della nave e i
-        // crediti finivano oltre il bordo sinistro dello schermo. Un overlay non
-        // può cambiare la misura di ciò che riveste: `clipShape` nasconde
-        // l'eccedenza, ma è la struttura che deve impedirla.
-        Rectangle()
-            .fill(Palette.seaHigh)
-            .overlay {
-                if let photo = photos.photo {
-                    Image(uiImage: photo.image)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
+        if let photo = photos.photo {
+            ShipPhotoCard(photo: photo)
+        } else {
+            // Senza foto non si lascia un buco: si disegna la rotta, che è un
+            // contenuto vero e sempre disponibile.
+            ZStack {
+                SeaChart(voyage: voyage, fix: nil, now: store.now,
+                         framing: .wholeVoyage, showsPortNames: false,
+                         showsGraticule: true, showsShip: false, padding: 26)
+                if photos.isLoading {
+                    ProgressView().controlSize(.small)
                 }
             }
-            .overlay {
-                if photos.photo == nil {
-                    // Senza foto non si lascia un buco: si disegna la rotta, che è
-                    // un contenuto vero e sempre disponibile.
-                    ZStack {
-                        SeaChart(voyage: voyage, fix: nil, now: store.now,
-                                 framing: .wholeVoyage, showsPortNames: false,
-                                 showsGraticule: true, showsShip: false, padding: 26)
-                        if photos.isLoading {
-                            ProgressView().controlSize(.small)
-                        }
-                    }
+            .frame(height: 190)
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .padding(6)
+            .paperCard()
+            .accessibilityLabel(Text("La rotta della crociera"))
+        }
+    }
+
+    // MARK: Le carte di bordo
+
+    /// Stazza, misure, anno, bandiera, identificativi: la matrice delle carte.
+    @ViewBuilder
+    private func papers(voyage: Voyage) -> some View {
+        let fields = paperFields(voyage: voyage)
+        if !fields.isEmpty {
+            Ticket {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Carte di bordo").ticketEyebrow(livery.signalInk)
+                    Text(record?.name ?? voyage.shipName)
+                        .font(.system(.largeTitle, weight: .black).width(.condensed))
+                        .textCase(.uppercase)
+                        .foregroundStyle(livery.ink)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.6)
                 }
-            }
-        .frame(height: 190)
-        .frame(maxWidth: .infinity)
-        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous)
-            .stroke(Palette.hairline, lineWidth: 0.5))
-        .overlay(alignment: .bottomTrailing) {
-            // Il credito sta **sulla** foto: è la condizione con cui l'autore la
-            // mette a disposizione, non una nota a piè di pagina. Ai corpi
-            // accessibili però la pastiglia coprirebbe l'immagine, quindi lì
-            // scende sotto — visibile lo stesso, senza nascondere quello che
-            // sta accreditando.
-            if let photo = photos.photo, !typeSize.isAccessibilitySize {
-                creditLabel(photo.credit)
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 4)
-                    .background(Capsule().fill(Palette.abyss.opacity(0.7)))
-                    .padding(8)
+                .padding(.horizontal, 18)
+                .padding(.top, 16)
+                .padding(.bottom, 14)
+            } stub: {
+                TicketMatrix(fields: fields, columns: 2)
+                    .padding(.horizontal, 18)
+                    .padding(.top, 14)
+                    .padding(.bottom, 18)
             }
         }
-        .padding(.top, 8)
     }
 
-    /// La riga di credito. Mai sotto gli 11pt e mai a dimensione fissa: è l'unica
-    /// cosa che la licenza **obbliga** a mostrare, e deve restare leggibile a
-    /// qualunque corpo di testo.
-    private func creditLabel(_ credit: String) -> some View {
-        Text(credit)
-            .font(.caption2.weight(.medium))
-            .foregroundStyle(Palette.inkSecondary)
-            .lineLimit(3)
-            .multilineTextAlignment(.trailing)
-    }
-
-    // MARK: I numeri
-
-    @ViewBuilder
-    private func measurements(_ record: ShipRecord) -> some View {
-        let metrics: [Metric] = [
-            record.tonnage > 0
-                ? Metric(value: Format.tonnage(record.tonnage), label: String(localized: "Stazza")) : nil,
-            record.length > 0
-                ? Metric(value: "\(Int(record.length)) m", label: String(localized: "Lunghezza")) : nil,
-            record.beam > 0
-                ? Metric(value: "\(Int(record.beam)) m", label: String(localized: "Larghezza")) : nil,
-            record.year > 0
-                ? Metric(value: "\(record.year)", label: String(localized: "In servizio")) : nil,
-            record.flag.isEmpty
-                ? nil : Metric(value: record.flag, label: String(localized: "Bandiera")),
-        ].compactMap(\.self)
-
-        if !metrics.isEmpty {
-            MetricRow(metrics: metrics, columns: 3)
-                .padding(16)
-                .glassSurface(cornerRadius: 24, prominence: .card)
+    private func paperFields(voyage: Voyage) -> [TicketField] {
+        var fields: [TicketField] = []
+        if let record {
+            if record.tonnage > 0 {
+                fields.append(TicketField(label: String(localized: "Stazza"), value: Format.tonnage(record.tonnage)))
+            }
+            if record.length > 0 {
+                fields.append(TicketField(label: String(localized: "Lunghezza"), value: "\(Int(record.length)) m"))
+            }
+            if record.beam > 0 {
+                fields.append(TicketField(label: String(localized: "Larghezza"), value: "\(Int(record.beam)) m"))
+            }
+            if record.year > 0 {
+                fields.append(TicketField(label: String(localized: "In servizio"), value: "\(record.year)"))
+            }
+            if !record.flag.isEmpty {
+                fields.append(TicketField(label: String(localized: "Bandiera"), value: record.flag))
+            }
         }
-    }
-
-    @ViewBuilder
-    private func identifiers(voyage: Voyage) -> some View {
         let imo = record?.imo.isEmpty == false ? record?.imo : voyage.imo
         let mmsi = record?.mmsi.isEmpty == false ? record?.mmsi : voyage.mmsi
-
-        if imo != nil || mmsi != nil {
-            VStack(spacing: 10) {
-                if let imo { row(label: "IMO", value: imo) }
-                if let mmsi { row(label: "MMSI", value: mmsi) }
-            }
-            .padding(16)
-            .glassSurface(cornerRadius: 20, prominence: .chip)
-        }
+        if let imo { fields.append(TicketField(label: "IMO", value: imo)) }
+        if let mmsi { fields.append(TicketField(label: "MMSI", value: mmsi)) }
+        return fields
     }
 
-    private func row(label: String, value: String) -> some View {
-        HStack {
-            Text(label).eyebrow()
-            Spacer(minLength: 12)
-            Text(value)
-                .font(Type.technical)
-                .foregroundStyle(Palette.inkPrimary)
-        }
-        .accessibilityElement(children: .combine)
+    /// La livrea in vigore, e da dove viene. Solo come informazione: si cambia
+    /// nelle Impostazioni, e qui si dice dove.
+    @ViewBuilder
+    private var liveryRow: some View {
+        let fromCompany = preferences.livery == .company && livery != .cruisy
+        PaperRow(glyph: "paintpalette",
+                 title: String(localized: "Livrea: \(livery.name)"),
+                 subtitle: fromCompany
+                    ? String(localized: "Colori ispirati alla compagnia. Si cambia nelle Impostazioni.")
+                    : String(localized: "La livrea di Cruisy. Si cambia nelle Impostazioni."))
     }
 
     /// Quando la nave non è nell'elenco.
@@ -213,54 +169,52 @@ struct ShipScreen: View {
                 HStack(spacing: 10) {
                     ProgressView().controlSize(.small)
                     Text("Cerco «\(name)» su Wikidata…")
-                        .font(.subheadline)
-                        .foregroundStyle(Palette.inkSecondary)
+                        .font(TicketType.body)
+                        .foregroundStyle(livery.field)
                 }
             case .notFound:
                 Label("Su Wikidata non c'è nessuna nave con questo nome. Controlla come è scritto: conta la grafia, non le maiuscole.",
                       systemImage: "questionmark.circle")
-                    .font(.subheadline)
-                    .foregroundStyle(Palette.inkSecondary)
+                    .font(TicketType.body)
+                    .foregroundStyle(livery.ink)
                 retry(name: name)
             case .failed(let reason):
                 Label("Non sono riuscito a chiedere a Wikidata: \(reason)",
                       systemImage: "wifi.exclamationmark")
-                    .font(.subheadline)
-                    .foregroundStyle(Palette.inkSecondary)
+                    .font(TicketType.body)
+                    .foregroundStyle(livery.ink)
                 retry(name: name)
             default:
                 Text("Questa nave non è nell'elenco che viaggia dentro l'app. I countdown funzionano lo stesso: la scheda è un di più.")
-                    .font(.subheadline)
-                    .foregroundStyle(Palette.inkSecondary)
+                    .font(TicketType.body)
+                    .foregroundStyle(livery.ink)
                 Button {
                     Task { await lookup.search(name) }
                 } label: {
                     Label("Cercala su Wikidata", systemImage: "arrow.down.circle")
                         .frame(maxWidth: .infinity)
-                        // Scuro, non bianco: bianco su questo azzurro sta a 1,5:1, e
-                        // `borderedProminent` lo mette bianco da sé. Scuro sta a 12:1.
-                        .foregroundStyle(Palette.abyss)
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(Palette.action)
+                .tint(livery.ink)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
-        .glassSurface(cornerRadius: 22, prominence: .card)
+        .paperCard()
+        .environment(\.colorScheme, .light)
     }
 
     @ViewBuilder
     private func retry(name: String) -> some View {
         Button("Riprova") { Task { await lookup.search(name) } }
-            .font(.subheadline.weight(.semibold))
-            .foregroundStyle(Palette.action)
+            .font(TicketType.rowTitle)
+            .tint(livery.ink)
     }
 
     private var sourceNote: some View {
         Text("Dati da Wikidata, di pubblico dominio. Le fotografie vengono da Wikimedia Commons e restano dei rispettivi autori.")
-            .font(.caption2)
-            .foregroundStyle(Palette.inkTertiary)
+            .font(.caption)
+            .foregroundStyle(livery.onHullMuted)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.top, 4)
     }

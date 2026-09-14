@@ -25,10 +25,10 @@ struct AppleWeatherLink: View {
             Button {
                 openURL(Self.url)
             } label: {
-                InfoRow(glyph: "cloud.sun.fill", tint: Palette.action,
-                        title: String(localized: "Il tempo a terra"),
-                        subtitle: String(localized: "Apri Meteo di Apple")) {
-                    Disclosure()
+                PaperRow(glyph: "cloud.sun.fill",
+                         title: String(localized: "Il tempo a terra"),
+                         subtitle: String(localized: "Apri Meteo di Apple")) {
+                    PaperDisclosure()
                 }
             }
             .buttonStyle(.plain)

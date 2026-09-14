@@ -1,15 +1,16 @@
 import SwiftUI
 
-/// Il diario di bordo: quello che resta quando la crociera è finita.
+/// Il diario di bordo: il passaporto.
 ///
 /// Non è una schermata operativa — non serve a prendere la nave — quindi non
 /// compete con le altre per l'attenzione: qui i numeri possono essere grandi e
-/// lenti. Si riempie da solo mentre navighi, scalo dopo scalo.
-/// Dove può portare il diario.
+/// lenti. I porti toccati sono timbri su una pagina; le crociere, matrici di
+/// biglietti conservate. Si riempie da solo mentre navighi, scalo dopo scalo.
 enum LogbookRoute: Hashable { case ports }
 
 struct LogbookScreen: View {
     @Environment(VoyageStore.self) private var store
+    @Environment(\.livery) private var livery
     @State private var confirmingRemoval: LoggedVoyage?
     /// L'anno mostrato nella scala delle distanze. Nullo = tutto.
     @State private var scaleYear: Int?
@@ -20,21 +21,20 @@ struct LogbookScreen: View {
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
-                Palette.seaBackground.ignoresSafeArea()
+                livery.hull.ignoresSafeArea()
                 if logbook.isEmpty {
                     EmptyLogbook()
                 } else {
                     ScrollView {
-                        VStack(spacing: 16) {
+                        VStack(spacing: 14) {
                             DistanceScaleCard(logbook: logbook, year: $scaleYear)
-                                .padding(.top, 8)
-                            totals
-                            records
                             stamps
+                            records
                             voyages
                         }
                         .padding(.horizontal, 16)
-                        .padding(.bottom, 96)
+                        .padding(.top, 4)
+                        .padding(.bottom, 24)
                     }
                 }
             }
@@ -62,29 +62,42 @@ struct LogbookScreen: View {
         }
     }
 
-    // MARK: I totali
+    // MARK: I timbri
 
-    /// I tre conteggi. **Le miglia non stanno più qui**: le ha prese la card della
-    /// scala, che sa anche dire quanto valgono. Ripeterle a tre centimetri di
-    /// distanza sarebbe rumore, e toglierebbe spazio a quello che manca.
-    private var totals: some View {
-        VStack(spacing: 14) {
-            MetricRow(metrics: [
-                Metric(value: "\(logbook.seaDays)",
-                       label: logbook.seaDays == 1 ? String(localized: "Giorno di mare")
-                                                   : String(localized: "Giorni di mare")),
-                Metric(value: "\(logbook.stamps.count)",
-                       label: logbook.stamps.count == 1 ? String(localized: "Porto")
-                                                        : String(localized: "Porti")),
-                Metric(value: "\(logbook.voyages.count)",
-                       label: logbook.voyages.count == 1 ? String(localized: "Crociera")
-                                                         : String(localized: "Crociere")),
-            ])
+    /// I porti toccati, come timbri sul passaporto.
+    ///
+    /// **Solo quelli visitati tre volte o più.** Dopo qualche crociera l'elenco
+    /// completo diventa un muro in cui non si trova più niente, e un porto visto una
+    /// volta sola non dice nulla di chi lo ha visto: quelli che tornano sì. Tutti gli
+    /// altri stanno nella pagina dedicata, con le foto.
+    ///
+    /// Finché di porti abituali non ce n'è nessuno si mostrano comunque i più
+    /// recenti: una pagina vuota intitolata «Porti toccati» a chi ha appena finito
+    /// la prima crociera sembrerebbe un guasto.
+    @ViewBuilder
+    private var stamps: some View {
+        let all = logbook.stamps
+        let regulars = all.filter { $0.visits >= 3 }
+        let shown = regulars.isEmpty ? Array(all.prefix(6)) : Array(regulars.prefix(6))
+        if !all.isEmpty {
+            VStack(alignment: .leading, spacing: 14) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text(regulars.isEmpty ? "Porti toccati" : "I porti dove torni").ticketEyebrow(livery.signalInk)
+                    Spacer(minLength: 8)
+                    NavigationLink(value: LogbookRoute.ports) {
+                        HStack(spacing: 3) {
+                            Text("Tutti e \(all.count)").ticketFieldLabel(livery.field)
+                            PaperDisclosure()
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+                StampPage(stamps: shown, clock: ShipClock(secondsFromGMT: 0))
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .paperCard()
         }
-        .padding(20)
-        .frame(maxWidth: .infinity)
-        .glassSurface(cornerRadius: 28, prominence: .card)
-        .accessibilityElement(children: .combine)
     }
 
     // MARK: I primati
@@ -93,28 +106,30 @@ struct LogbookScreen: View {
     private var records: some View {
         let rows = recordRows
         if !rows.isEmpty {
-            VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 0) {
+                Text("Primati").ticketEyebrow(livery.signalInk)
+                    .padding(.bottom, 6)
                 ForEach(Array(rows.enumerated()), id: \.offset) { index, row in
-                    if index > 0 { Divider().overlay(Palette.hairline) }
+                    if index > 0 { TicketRule() }
                     HStack(alignment: .firstTextBaseline, spacing: 12) {
                         Image(systemName: row.glyph)
-                            .font(.footnote)
-                            .foregroundStyle(Palette.underway)
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(livery.field)
                             .frame(width: 18)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(row.title).eyebrow()
+                            Text(row.title).ticketFieldLabel(livery.field)
                             Text(row.detail)
-                                .font(.subheadline)
-                                .foregroundStyle(Palette.inkPrimary)
+                                .font(TicketType.fieldValue)
+                                .foregroundStyle(livery.ink)
                         }
                         Spacer(minLength: 0)
                     }
-                    .padding(.vertical, 11)
+                    .padding(.vertical, 10)
                     .accessibilityElement(children: .combine)
                 }
             }
-            .padding(.horizontal, 16)
-            .glassSurface(cornerRadius: 24, prominence: .card)
+            .padding(16)
+            .paperCard()
         }
     }
 
@@ -149,75 +164,15 @@ struct LogbookScreen: View {
         return rows
     }
 
-    // MARK: I timbri
-
-    @ViewBuilder
-    /// I porti toccati.
-    ///
-    /// **Solo quelli visitati tre volte o più.** Dopo qualche crociera l'elenco
-    /// completo diventa un muro di pastiglie in cui non si trova più niente, e un
-    /// porto visto una volta sola non dice nulla di chi lo ha visto: quelli che
-    /// tornano sì. Tutti gli altri stanno nella schermata dedicata, con le foto.
-    ///
-    /// Finché di porti abituali non ce n'è nessuno si mostrano comunque i più
-    /// recenti: un riquadro vuoto intitolato "Porti toccati" a chi ha appena finito
-    /// la prima crociera sembrerebbe un guasto.
-    private var stamps: some View {
-        let all = logbook.stamps
-        let regulars = all.filter { $0.visits >= 3 }
-        let shown = regulars.isEmpty ? Array(all.prefix(8)) : regulars
-        if !all.isEmpty {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack {
-                    Text(regulars.isEmpty ? "Porti toccati" : "I porti dove torni").eyebrow()
-                    Spacer(minLength: 8)
-                    NavigationLink(value: LogbookRoute.ports) {
-                        HStack(spacing: 3) {
-                            Text("Tutti e \(all.count)")
-                                .font(Type.metricLabel.weight(.semibold))
-                            Image(systemName: "chevron.forward")
-                                .font(.system(size: 9, weight: .semibold))
-                        }
-                        .foregroundStyle(Palette.action)
-                    }
-                    .buttonStyle(.plain)
-                }
-                FlowRow(spacing: 7) {
-                    ForEach(shown) { stamp in
-                        HStack(spacing: 5) {
-                            Text(stamp.port.name)
-                                .font(.footnote.weight(.medium))
-                                .foregroundStyle(Palette.inkPrimary)
-                            if stamp.visits > 1 {
-                                Text("×\(stamp.visits)")
-                                    .font(.caption2.weight(.semibold))
-                                    .foregroundStyle(Palette.underway)
-                            }
-                        }
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(Capsule().fill(Palette.ink.opacity(0.07)))
-                        .overlay(Capsule().stroke(Palette.hairline, lineWidth: 0.5))
-                        .accessibilityElement(children: .combine)
-                        .accessibilityLabel(stamp.visits > 1
-                            ? Text("\(stamp.port.name), \(stamp.visits) volte")
-                            : Text(stamp.port.name))
-                    }
-                }
-            }
-            .padding(16)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .glassSurface(cornerRadius: 24, prominence: .card)
-        }
-    }
-
     // MARK: Le crociere
 
     private var voyages: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Le tue crociere").eyebrow()
+            Text("Le tue crociere")
+                .ticketEyebrow(livery.onHullMuted)
+                .padding(.horizontal, 4)
             ForEach(logbook.voyages) { entry in
-                VoyageEntryCard(entry: entry, isCurrent: entry.id == store.voyage?.id)
+                VoyageStubCard(entry: entry, isCurrent: entry.id == store.voyage?.id)
                     .contextMenu {
                         Button("Togli dal diario", systemImage: "trash", role: .destructive) {
                             confirmingRemoval = entry
@@ -228,69 +183,110 @@ struct LogbookScreen: View {
     }
 }
 
-/// Una crociera nel diario.
-private struct VoyageEntryCard: View {
+/// I timbri dei porti, in una pagina: ognuno un cerchio inclinato a modo suo.
+struct StampPage: View {
+    @Environment(\.livery) private var livery
+    let stamps: [Logbook.Stamp]
+    let clock: ShipClock
+
+    private let columns = [GridItem(.adaptive(minimum: 96), spacing: 10)]
+
+    var body: some View {
+        LazyVGrid(columns: columns, spacing: 10) {
+            ForEach(Array(stamps.enumerated()), id: \.element.id) { index, stamp in
+                // Inclinazioni diverse, ma **fisse**: un timbro che gira a ogni
+                // ridisegno non è un timbro.
+                let rotation = [-11.0, 7.0, -5.0, 9.0, -8.0, 4.0][index % 6]
+                VStack(spacing: 6) {
+                    Stamp(stampText(stamp), color: stamp.visits >= 3 ? livery.signal : livery.field,
+                          rotation: rotation)
+                    Text(String(clock.calendar(at: stamp.port.arrival).component(.year, from: stamp.port.arrival)))
+                        .font(TicketType.fieldLabel)
+                        .foregroundStyle(livery.field)
+                }
+                .frame(maxWidth: .infinity)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(stamp.visits > 1
+                    ? Text("\(stamp.port.name), \(stamp.visits) volte")
+                    : Text(stamp.port.name))
+            }
+        }
+    }
+
+    private func stampText(_ stamp: Logbook.Stamp) -> String {
+        stamp.visits > 1 ? "\(stamp.port.name)\n×\(stamp.visits)" : stamp.port.name
+    }
+}
+
+/// Una crociera nel diario: la matrice del biglietto che resta.
+private struct VoyageStubCard: View {
+    @Environment(\.livery) private var livery
     let entry: LoggedVoyage
     let isCurrent: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 Text(entry.shipName.isEmpty ? String(localized: "Senza nome") : entry.shipName)
-                    .font(.headline)
-                    .foregroundStyle(Palette.inkPrimary)
+                    .font(TicketType.place)
+                    .tracking(0.4)
+                    .textCase(.uppercase)
+                    .foregroundStyle(livery.ink)
                 if isCurrent {
-                    Text("in corso")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Palette.underway)
-                        .padding(.horizontal, 7)
+                    Text("In corso")
+                        .font(TicketType.stamp)
+                        .tracking(0.8)
+                        .textCase(.uppercase)
+                        .foregroundStyle(livery.signalInk)
+                        .padding(.horizontal, 6)
                         .padding(.vertical, 2)
-                        .background(Capsule().fill(Palette.underway.opacity(0.14)))
+                        .overlay(RoundedRectangle(cornerRadius: 4).stroke(livery.signal, lineWidth: 1.2))
+                        .rotationEffect(.degrees(-4))
                 }
                 Spacer(minLength: 0)
             }
 
             if let start = entry.start, let end = entry.end {
                 Text(Format.dateRange(from: start, to: end, clock: entry.clock))
-                    .font(.caption)
-                    .foregroundStyle(Palette.inkSecondary)
+                    .font(TicketType.rowDetail)
+                    .foregroundStyle(livery.field)
             }
 
             Text(entry.ports.map(\.name).joined(separator: " · "))
-                .font(.caption)
-                .foregroundStyle(Palette.inkTertiary)
+                .font(TicketType.rowDetail)
+                .foregroundStyle(livery.ink)
                 .lineLimit(3)
 
-            HStack(spacing: 14) {
-                Label(Format.nauticalMiles(entry.nauticalMiles), systemImage: "point.topleft.down.to.point.bottomright.curvepath")
-                Label(entry.seaDays == 1 ? String(localized: "1 giorno in mare")
-                                         : String(localized: "\(entry.seaDays) giorni in mare"),
-                      systemImage: "water.waves")
-            }
-            .font(.caption2)
-            .foregroundStyle(Palette.inkSecondary)
-            .padding(.top, 2)
+            TicketRule()
+
+            TicketMatrix(fields: [
+                TicketField(label: String(localized: "Miglia"), value: Format.nauticalMiles(entry.nauticalMiles)),
+                TicketField(label: String(localized: "Giorni di mare"), value: "\(entry.seaDays)"),
+                TicketField(label: String(localized: "Porti"), value: "\(entry.ports.count)"),
+            ], columns: 3)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .glassSurface(cornerRadius: 22, prominence: .card)
+        .paperCard()
         .accessibilityElement(children: .combine)
     }
 }
 
 /// Il diario vuoto non si scusa: dice quando si riempirà.
 private struct EmptyLogbook: View {
+    @Environment(\.livery) private var livery
+
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: "book.closed")
                 .font(.system(size: 40, weight: .light))
-                .foregroundStyle(Palette.inkTertiary)
+                .foregroundStyle(livery.onHullMuted)
             Text("Il diario è ancora bianco")
                 .font(.headline)
-                .foregroundStyle(Palette.inkPrimary)
+                .foregroundStyle(livery.onHull)
             Text("Ogni porto in cui arrivi ci finisce da solo, con le miglia percorse per raggiungerlo.")
                 .font(.subheadline)
-                .foregroundStyle(Palette.inkSecondary)
+                .foregroundStyle(livery.onHullMuted)
                 .multilineTextAlignment(.center)
         }
         .padding(32)

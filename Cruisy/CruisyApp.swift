@@ -27,9 +27,6 @@ struct CruisyApp: App {
                 .environment(reachability)
                 .environment(weather)
                 .environment(shipLookup)
-                // L'app si legge in coperta di notte e in banchina di giorno:
-                // il tema scuro non è una preferenza, è il progetto.
-                .preferredColorScheme(.dark)
         }
     }
 }

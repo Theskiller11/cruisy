@@ -36,7 +36,7 @@ final class ShipPhotoService {
         guard !ship.imageFile.isEmpty, attempted != ship.imageFile else { return }
         photo = nil
 
-        if let cached = Commons.readCache(cache, key: ship.imageFile) {
+        if let cached = await Commons.readCache(cache, key: ship.imageFile) {
             attempted = ship.imageFile
             photo = cached
             return
@@ -58,6 +58,6 @@ final class ShipPhotoService {
 
         let result = CommonsPhoto(image: image, author: author, licence: licence)
         photo = result
-        Commons.writeCache(result, to: cache, key: ship.imageFile)
+        await Commons.writeCache(result, to: cache, key: ship.imageFile)
     }
 }

@@ -4,6 +4,7 @@ import SwiftUI
 /// quanto manca, e a che cosa.
 struct TodayScreen: View {
     @Environment(VoyageStore.self) private var store
+    @Environment(Preferences.self) private var preferences
     @Environment(PositionService.self) private var position
     @Environment(MarineWeatherService.self) private var weather
     @Environment(\.scenePhase) private var scenePhase
@@ -107,7 +108,7 @@ struct TodayScreen: View {
                 ClockChangeNotice(clock: voyage.clock, now: store.now)
 
                 if case .atSea(_, let destination) = moment,
-                   let estimate = ArrivalEstimate.estimate(track: store.track,
+                   let estimate = ArrivalEstimate.estimate(track: store.recorder.track,
                                                            destination: destination, now: store.now),
                    estimate.isLate {
                     ArrivalDelayNotice(estimate: estimate, port: destination, clock: voyage.clock)
@@ -238,7 +239,7 @@ struct TodayScreen: View {
                 CrossingHero(from: from, to: to, countdown: focus.countdown,
                              clock: voyage.clock, now: store.now, offset: store.timeOffset,
                              fix: position.shipFix(for: voyage, at: store.now),
-                             speedUnit: store.speedUnit)
+                             speedUnit: preferences.speedUnit)
             }
 
         case .beforeVoyage(let call):

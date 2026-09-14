@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 /// Le impostazioni: condivisione della crociera, unità, avvisi, fonti.
 struct SettingsSheet: View {
     @Environment(VoyageStore.self) private var store
+    @Environment(Preferences.self) private var preferences
     @Environment(PositionService.self) private var position
     @Environment(\.dismiss) private var dismiss
 
@@ -107,8 +108,8 @@ struct SettingsSheet: View {
     private var liveActivitySection: some View {
         Section {
             Toggle(isOn: Binding(
-                get: { store.wantsLiveActivity },
-                set: { store.wantsLiveActivity = $0 })) {
+                get: { preferences.wantsLiveActivity },
+                set: { preferences.wantsLiveActivity = $0 })) {
                     Text("Countdown sulla schermata di blocco")
                 }
             LiveActivitySetting()
@@ -131,15 +132,15 @@ struct SettingsSheet: View {
     private var trackingSection: some View {
         Section {
             Toggle(isOn: Binding(
-                get: { store.wantsTracking },
+                get: { preferences.wantsTracking },
                 set: { wanted in
-                    store.wantsTracking = wanted
+                    preferences.wantsTracking = wanted
                     if wanted { position.requestAlwaysAccess() }
                 })) {
                     Text("Registra la rotta percorsa")
                 }
 
-            if store.wantsTracking, !position.canTrackInBackground {
+            if preferences.wantsTracking, !position.canTrackInBackground {
                 // Distinguere "non l'hai ancora dato" da "l'hai negato": la prima si
                 // risolve qui, la seconda solo in Impostazioni di sistema.
                 Label {
@@ -153,10 +154,10 @@ struct SettingsSheet: View {
                 .font(Type.rowDetail)
             }
 
-            if !store.track.isEmpty {
-                LabeledContent("Punti registrati", value: "\(store.track.points.count)")
+            if !store.recorder.track.isEmpty {
+                LabeledContent("Punti registrati", value: "\(store.recorder.track.points.count)")
                 LabeledContent("Miglia vere",
-                               value: Format.nauticalMiles(store.track.nauticalMiles))
+                               value: Format.nauticalMiles(store.recorder.track.nauticalMiles))
             }
         } header: {
             Text("Rotta")
@@ -168,8 +169,8 @@ struct SettingsSheet: View {
     private var unitsSection: some View {
         Section("Unità") {
             Picker("Velocità", selection: Binding(
-                get: { store.speedUnit },
-                set: { store.speedUnit = $0 })) {
+                get: { preferences.speedUnit },
+                set: { preferences.speedUnit = $0 })) {
                     ForEach(SpeedUnit.allCases, id: \.self) { Text($0.label).tag($0) }
                 }
         }

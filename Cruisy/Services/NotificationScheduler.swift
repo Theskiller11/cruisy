@@ -18,6 +18,7 @@ import Observation
 /// Conseguenza da tenere presente: con un Full Immersion attivo l'avviso **non**
 /// suona. Per quel caso la difesa è la Live Activity sulla schermata di blocco, che
 /// resta visibile senza dipendere dalle notifiche.
+@MainActor
 @Observable
 final class NotificationScheduler {
 

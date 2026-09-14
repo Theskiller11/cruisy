@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct CruisyApp: App {
+    @State private var preferences = Preferences()
     @State private var store = VoyageStore()
     @State private var position = PositionService()
     @State private var notifications = NotificationScheduler()
@@ -16,7 +17,10 @@ struct CruisyApp: App {
                 // Le navi imparate a bordo valgono quanto quelle impacchettate,
                 // ma vanno rilette da disco prima che qualcuno le cerchi.
                 .task { ShipDirectory.shared.loadLearned() }
+                .environment(preferences)
                 .environment(store)
+                .environment(store.logbook)
+                .environment(store.recorder)
                 .environment(position)
                 .environment(notifications)
                 .environment(activities)

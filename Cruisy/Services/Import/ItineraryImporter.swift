@@ -8,6 +8,7 @@ import CoreGraphics
 /// risultato, quindi si può collaudare, e funziona su qualunque iPhone senza
 /// dipendere da modelli che possono non esserci. Una strada sviluppata bene batte
 /// due sviluppate a metà.
+@MainActor
 @Observable
 final class ItineraryImporter {
 

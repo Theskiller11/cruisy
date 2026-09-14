@@ -13,6 +13,7 @@ import SwiftUI
 struct RootTabView: View {
     @Environment(LiveActivityController.self) private var activities
     @Environment(VoyageStore.self) private var store
+    @Environment(Preferences.self) private var preferences
     @Environment(NotificationScheduler.self) private var notifications
     @Environment(PositionService.self) private var position
     @State private var selection: Section = .today
@@ -25,7 +26,7 @@ struct RootTabView: View {
     /// Cambia solo quando cambia qualcosa che riguarda la registrazione, così il
     /// `task` non riparte a ogni battito dei trenta secondi.
     private var trackingKey: String {
-        "\(store.wantsTracking)-\(store.voyage?.id.uuidString ?? "-")-\(store.moment == .completed)-\(position.canTrackInBackground)"
+        "\(preferences.wantsTracking)-\(store.voyage?.id.uuidString ?? "-")-\(store.moment == .completed)-\(position.canTrackInBackground)"
     }
 
     enum Section: Hashable {
@@ -90,14 +91,14 @@ struct RootTabView: View {
             Text("Questo file non contiene una crociera che riesco a leggere.")
         }
         .sheet(isPresented: $showsDisclaimer) {
-            OnboardingFlow { store.hasSeenDisclaimer = true }
+            OnboardingFlow { preferences.hasSeenDisclaimer = true }
         }
         // La registrazione della rotta segue la preferenza **e** lo stato della
         // crociera: si spegne da sola quando sbarchi. Una crociera finita che
         // continua a tenere il GPS acceso è la ragione per cui la gente disinstalla.
         .task(id: trackingKey) {
             let sailing = store.voyage != nil && store.moment != .completed
-            position.setTracking(store.wantsTracking && sailing) { fix in
+            position.setTracking(preferences.wantsTracking && sailing) { fix in
                 store.record(fix: Coordinate(latitude: fix.coordinate.latitude,
                                              longitude: fix.coordinate.longitude),
                              at: fix.timestamp)
@@ -106,7 +107,7 @@ struct RootTabView: View {
         // Andando in secondo piano si scrive subito: se no gli ultimi punti — fino
         // a venti, cioè quasi un'ora di navigazione — se ne andrebbero al riavvio.
         .onChange(of: scenePhase) { _, phase in
-            if phase != .active { store.persistTrack() }
+            if phase != .active { store.recorder.persist() }
         }
         // Sta qui e non nella riga dell'interruttore, che vive solo finché la
         // schermata Oggi è a video: l'attività va chiusa anche se sei sulla Carta.
@@ -118,7 +119,7 @@ struct RootTabView: View {
             // una domanda a vuoto: quando la finestra si apre l'attività si accende
             // da sé. Spegnerla a mano la spegne e basta — `wantsLiveActivity` resta
             // vero, ma `reconcile` non la riaccende finché il traguardo è lo stesso.
-            guard store.wantsLiveActivity, !activities.isRunning,
+            guard preferences.wantsLiveActivity, !activities.isRunning,
                   let voyage = store.voyage, let focus = store.focus else { return }
             let atSea = if case .arrival = focus.kind { true } else { false }
             _ = activities.start(voyage: voyage, call: focus.port, countdown: focus.countdown,
@@ -174,10 +175,10 @@ struct RootTabView: View {
             // prova che aprono altro devono saltare l'onboarding.
             let skipping = ProcessInfo.processInfo.arguments.contains("-importDemo")
                 || ProcessInfo.processInfo.arguments.contains("-skipOnboarding")
-            showsDisclaimer = (!store.hasSeenDisclaimer && !skipping)
+            showsDisclaimer = (!preferences.hasSeenDisclaimer && !skipping)
                 || DebugLaunch.open == "onboarding"
             #else
-            showsDisclaimer = !store.hasSeenDisclaimer
+            showsDisclaimer = !preferences.hasSeenDisclaimer
             #endif
             await notifications.refreshAuthorization()
             await notifications.reschedule(for: store.voyage)
@@ -195,6 +196,7 @@ struct RootTabView: View {
 #Preview {
     RootTabView()
         .environment(VoyageStore.preview)
+        .environment(Preferences.ephemeral)
         .environment(PositionService())
         .environment(NotificationScheduler())
         .environment(LiveActivityController())

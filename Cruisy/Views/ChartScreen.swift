@@ -8,6 +8,7 @@ import SwiftUI
 /// manca l'app lo dice invece di lasciare un rettangolo vuoto.
 struct ChartScreen: View {
     @Environment(VoyageStore.self) private var store
+    @Environment(Preferences.self) private var preferences
     @Environment(PositionService.self) private var position
     @Environment(Reachability.self) private var reachability
     @Environment(\.dismiss) private var dismiss
@@ -294,7 +295,7 @@ struct ChartScreen: View {
     private func metrics(voyage: Voyage, fix: ShipFix) -> [Metric] {
         var metrics: [Metric] = []
         if let speed = fix.speed, speed > 0.2 {
-            metrics.append(Metric(value: Format.speed(knots: speed, unit: store.speedUnit),
+            metrics.append(Metric(value: Format.speed(knots: speed, unit: preferences.speedUnit),
                                   label: String(localized: "Velocità")))
         }
         if let course = fix.course {

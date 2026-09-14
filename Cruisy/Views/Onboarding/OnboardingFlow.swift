@@ -10,6 +10,7 @@ struct OnboardingFlow: View {
     let onFinish: () -> Void
 
     @Environment(VoyageStore.self) private var store
+    @Environment(Preferences.self) private var preferences
     @Environment(\.dismiss) private var dismiss
 
     @State private var step = {
@@ -151,8 +152,8 @@ struct OnboardingFlow: View {
                 alignment: .leading)
 
             Toggle(isOn: Binding(
-                get: { store.wantsLiveActivity },
-                set: { store.wantsLiveActivity = $0 })) {
+                get: { preferences.wantsLiveActivity },
+                set: { preferences.wantsLiveActivity = $0 })) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Mostralo quando serve")
                             .font(Type.rowTitle)

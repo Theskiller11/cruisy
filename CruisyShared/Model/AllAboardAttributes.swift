@@ -16,7 +16,7 @@ public struct AllAboardAttributes: ActivityAttributes {
         public var isAtSea: Bool { self == .arrival }
     }
 
-    public struct ContentState: Codable, Hashable {
+    public struct ContentState: Codable, Hashable, Sendable {
         public var start: Date
         public var target: Date
         public var origin: CountdownOrigin

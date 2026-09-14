@@ -13,6 +13,7 @@ import Observation
 /// dice dove sei **tu**, mentre la nave è ferma in banchina. Da quella differenza
 /// nasce il "sei a 3,4 km dalla nave", che è l'informazione che conta davvero mentre
 /// il countdown scorre.
+@MainActor
 @Observable
 final class PositionService {
 

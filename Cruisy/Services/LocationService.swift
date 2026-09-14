@@ -16,8 +16,13 @@ import Observation
 /// e in mezzo all'Atlantico non ce n'è nessuna, quindi non si sveglierebbe mai.
 /// Restare svegli col GPS costa batteria, e per questo è una scelta esplicita che si
 /// spegne da sola quando la crociera finisce.
+/// `@MainActor` con la conformanza `@preconcurrency`: `CLLocationManager` chiama il
+/// delegato sul thread su cui è stato creato — qui il principale — quindi i metodi
+/// possono restare isolati all'attore, e il compilatore lo accetta perché la
+/// conformanza dichiara di fidarsi del contratto di CoreLocation.
+@MainActor
 @Observable
-final class LocationService: NSObject, CLLocationManagerDelegate {
+final class LocationService: NSObject, @preconcurrency CLLocationManagerDelegate {
 
     private let manager = CLLocationManager()
 
@@ -26,6 +31,8 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
 
     /// Vero quando la registrazione della rotta è accesa adesso.
     private(set) var isTracking = false
+    /// Vero mentre una schermata sta guardando la posizione: carta, distanza dal molo.
+    private var isForeground = false
 
     /// Chiamata a ogni posizione buona. La usa `VoyageStore` per allungare la traccia.
     var onFix: ((CLLocation) -> Void)?
@@ -33,10 +40,7 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
     override init() {
         super.init()
         manager.delegate = self
-        manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-        // In mare la nave si sposta di continuo ma lentamente rispetto al GPS:
-        // 50 metri di filtro tolgono il rumore senza perdere il movimento.
-        manager.distanceFilter = 50
+        LocationProfile.foreground.apply(to: manager)
         authorization = manager.authorizationStatus
     }
 
@@ -60,7 +64,7 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
     /// CoreLocation. Controllarlo qui trasforma un Info.plist sbagliato — com'era il
     /// 14 settembre 2026 — da un crash all'avvio in una registrazione che funziona
     /// solo in primo piano.
-    static var declaresBackgroundLocation: Bool {
+    nonisolated static var declaresBackgroundLocation: Bool {
         let modes = Bundle.main.object(forInfoDictionaryKey: "UIBackgroundModes") as? [String]
         return modes?.contains("location") ?? false
     }
@@ -84,16 +88,25 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
     }
 
     func start() {
+        isForeground = true
+        applyProfile()
         guard isAuthorised else { return }
         manager.startUpdatingLocation()
     }
 
     func stop() {
+        isForeground = false
+        applyProfile()
         // Fermarsi non deve spegnere la registrazione: `stop()` viene chiamata ogni
         // volta che l'app va in secondo piano, ed è **esattamente** il momento in cui
-        // la traccia deve continuare.
+        // la traccia deve continuare — col profilo grossolano, che costa meno.
         guard !isTracking else { return }
         manager.stopUpdatingLocation()
+    }
+
+    /// Il profilo del GPS segue l'uso: vedi `LocationProfile`.
+    private func applyProfile() {
+        LocationProfile.profile(isRecording: isTracking, isForeground: isForeground).apply(to: manager)
     }
 
     // MARK: La rotta percorsa
@@ -101,6 +114,7 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
     func startTracking() {
         guard canTrackInBackground else { return }
         isTracking = true
+        applyProfile()
         // Mai senza la dichiarazione nell'Info.plist: vedi `declaresBackgroundLocation`.
         // In quel caso si registra comunque, ma solo finché l'app è aperta.
         guard Self.declaresBackgroundLocation else {
@@ -118,6 +132,7 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
 
     func stopTracking() {
         isTracking = false
+        applyProfile()
         // Anche spegnerlo passa dalla stessa asserzione, quindi stessa protezione.
         if Self.declaresBackgroundLocation { manager.allowsBackgroundLocationUpdates = false }
         manager.showsBackgroundLocationIndicator = false

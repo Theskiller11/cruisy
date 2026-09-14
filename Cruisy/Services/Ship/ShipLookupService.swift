@@ -27,11 +27,12 @@ final class ShipLookupService {
 
     private(set) var outcome: Outcome = .idle
 
-    private let session: URLSession
-    private static let agent = "Cruisy/1.0 (app iOS; ricerca navi da Wikidata)"
+    private let client: NetworkClient
 
     init(session: URLSession = .shared) {
-        self.session = session
+        client = NetworkClient(session: session,
+                               userAgent: "Cruisy/1.0 (app iOS; ricerca navi da Wikidata)",
+                               timeout: 15)
     }
 
     func reset() { outcome = .idle }
@@ -176,12 +177,6 @@ final class ShipLookupService {
     }
 
     private func get(_ url: URL) async throws -> [String: Any] {
-        var request = URLRequest(url: url, timeoutInterval: 15)
-        request.setValue(Self.agent, forHTTPHeaderField: "User-Agent")
-        let (data, response) = try await session.data(for: request)
-        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
-            throw URLError(.badServerResponse)
-        }
-        return try JSONSerialization.jsonObject(with: data) as? [String: Any] ?? [:]
+        try await client.json(url)
     }
 }

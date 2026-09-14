@@ -15,7 +15,7 @@ struct LogbookScreen: View {
     @State private var scaleYear: Int?
     @State private var path: [LogbookRoute] = []
 
-    private var logbook: Logbook { store.logbook }
+    private var logbook: Logbook { store.logbook.logbook }
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -52,7 +52,7 @@ struct LogbookScreen: View {
                                                      set: { if !$0 { confirmingRemoval = nil } }),
                                 titleVisibility: .visible) {
                 Button("Togli dal diario", role: .destructive) {
-                    if let entry = confirmingRemoval { store.forget(entry) }
+                    if let entry = confirmingRemoval { store.logbook.forget(entry) }
                     confirmingRemoval = nil
                 }
                 Button("Annulla", role: .cancel) { confirmingRemoval = nil }

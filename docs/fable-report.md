@@ -48,6 +48,8 @@ rapporto dice cosa c'è, cosa manca, e **come continuare senza perdere coerenza*
 - Il cielo alle sei ore: `screenshots/dopo-8-ore/foglio.jpg` — notte con luna e stelle,
   alba, mattina, tramonto, sera, e il tramonto in scuro. Fatte con `-ora <h>`, l'argomento
   DEBUG che finge l'ora di bordo.
+- In scuro, il resto: `screenshots/dopo-10-scuro-carta/foglio.jpg` — Carta in porto e in
+  mare, Porti toccati, pre-crociera.
 - AX5: `screenshots/dopo-9-ax5/foglio.jpg` — Oggi (porto e mare), Itinerario, Scalo, Nave,
   Diario al corpo accessibile più grande, dopo le correzioni ai componenti (timbro in fila
   come badge, «MANCANO» sopra le cifre, righe dell'Itinerario impilate).
@@ -377,10 +379,9 @@ imparate. **Difetto trovato e corretto**: `LoggedVoyage` non nominava `track` fr
 **Cosa resta da convertire in scuro.** Le schermate rifatte usano solo token dinamici e
 sono già a posto in entrambe le modalità (verificate nel quarto giro: Oggi, Itinerario,
 Scalo, Nave, Diario). I `Form` (Impostazioni, editor, importazione, onboarding) sono di
-sistema e seguono la modalità da soli. Widget e Live Activity usano i token dinamici,
-ma vanno **visti sul telefono** in entrambe le modalità. Da guardare a mano, in scuro,
-anche la Carta (scrim e matrice di stato) e la pagina dei Porti toccati, che nei giri
-in scuro non c'erano.
+sistema e seguono la modalità da soli. La Carta, i Porti toccati e la pre-crociera in
+scuro sono in `screenshots/dopo-10-scuro-carta` e vanno bene. Widget e Live Activity
+usano i token dinamici, ma vanno **visti sul telefono** in entrambe le modalità.
 
 ## Domande per Matteo
 

@@ -66,7 +66,7 @@ struct RootTabView: View {
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
-        .tint(livery.signalOnHull)
+        .tint(livery.tabTint)
         .environment(\.livery, livery)
         // L'app segue l'aspetto del telefono: in chiaro biglietti bianchi sullo
         // scafo blu, in scuro biglietti di carta scura sullo scafo quasi nero. Le

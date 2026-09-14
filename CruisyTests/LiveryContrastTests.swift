@@ -76,6 +76,20 @@ struct LiveryContrastTests {
                 "\(livery.id): tinta in scuro")
     }
 
+    @Test("La scheda selezionata si legge sul vetro chiaro e su quello scuro", arguments: Livery.all)
+    func tabTintOnGlass(livery: Livery) {
+        // Il vetro della barra non è mai bianco o nero puri: si prova sul caso peggiore
+        // (bianco e nero) e su un vetro appena velato.
+        for light in [0xFFFFFF as UInt32, 0xF2F4F7] {
+            #expect(Contrast.ratio(rgb(livery.tabTintPair.light), rgb(light)) >= Contrast.bodyMinimum,
+                    "\(livery.id): scheda selezionata sul vetro chiaro")
+        }
+        for dark in [0x000000 as UInt32, 0x14181D] {
+            #expect(Contrast.ratio(rgb(livery.tabTintPair.dark), rgb(dark)) >= Contrast.bodyMinimum,
+                    "\(livery.id): scheda selezionata sul vetro scuro")
+        }
+    }
+
     @Test("Schiarire fino al contrasto: si ferma appena basta, e non tocca chi già regge")
     func lighteningStopsAtThreshold() {
         let navy: UInt32 = 0x0E2A47

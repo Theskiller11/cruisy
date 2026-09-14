@@ -166,6 +166,16 @@ public struct Livery: Identifiable, Equatable, Sendable {
         Pair(light: signalInkHex,
              dark: Self.lightened(signalOnHullHex, toContrast: Contrast.bodyMinimum, over: darkPaperHex))
     }
+    /// La tinta della barra delle schede: il segnale come si legge **sul vetro**.
+    ///
+    /// La barra è Liquid Glass e si adatta a quello che ha dietro: in chiaro la
+    /// scheda selezionata sta su una pastiglia chiara, in scuro su una scura. Il
+    /// segnale «sullo scafo», scelto per il blu, sul vetro chiaro quasi spariva —
+    /// rosa pallido sul rosso, oro chiaro sul navy. Quindi in chiaro si usa il
+    /// segnale scuro (quello delle etichette su carta, che regge sul bianco) e in
+    /// scuro quello chiaro (che regge sul nero). Il test lo verifica su entrambi.
+    public var tabTintPair: Pair { Pair(light: signalInkHex, dark: signalOnHullHex) }
+
     /// La tinta dei controlli di sistema: lo scafo sui fondi chiari di un `Form`;
     /// sui fondi scuri lo stesso colore reso **vivo** — stessa tinta, più chiaro e
     /// saturo — e poi schiarito finché si legge sul nero. Schiarire il blu navy
@@ -191,6 +201,7 @@ public struct Livery: Identifiable, Equatable, Sendable {
     public var signal: Color { signalPair.color }
     public var signalInk: Color { signalInkPair.color }
     public var tint: Color { tintPair.color }
+    public var tabTint: Color { tabTintPair.color }
 
     /// Una linea sottile sullo scafo, per separare senza pesare.
     public var hullHairline: Color { onHull.opacity(0.14) }

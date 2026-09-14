@@ -21,7 +21,7 @@ rapporto dice cosa c'è, cosa manca, e **come continuare senza perdere coerenza*
   vincolo; `LiveryContrastTests` scorre tutte le livree in entrambe le modalità. Per vedere
   una livrea con la nave di prova: `-livrea rosso` (o un altro `Livery.id`) fra gli
   argomenti di avvio.
-- **Test**: 242 unitari (erano 214) e 15 di interfaccia, tutti verdi.
+- **Test**: 243 unitari (erano 214) e 15 di interfaccia, tutti verdi.
 
 ## Screenshot
 
@@ -39,6 +39,12 @@ rapporto dice cosa c'è, cosa manca, e **come continuare senza perdere coerenza*
 - Dopo, quinto giro: `screenshots/dopo-5-chiaro/foglio.jpg` (Diario con la testata
   propria, Oggi in mare) e `screenshots/dopo-5-scuro/foglio.jpg` (Diario, Impostazioni con la
   tinta viva, Nave col pulsante leggibile), dopo le tre note sul quarto giro.
+- Le livree: `screenshots/dopo-6-livree/foglio.jpg` — Oggi in porto e in mare con «Rosso»,
+  «Blu notte e oro» e «Blu e giallo», in chiaro e in scuro, e il Diario in scuro con l'oro.
+  Fatte con `-livrea <id>`; lo script è nel rapporto solo come idea: sei lanci di `simctl`
+  con l'argomento in più.
+- La barra delle schede: `screenshots/dopo-7-barra/foglio.jpg` — la scheda selezionata con
+  `tabTint` su Cruisy, «Rosso», «Blu notte e oro» e «Blu e giallo», in chiaro e in scuro.
 - Giri `--lang en` e `--size AX5`: **non fatti** (vedi «Da fare»).
 
 La cartella `screenshots/` è ignorata da git: si rigenera con `scripts/screenshots.sh`.
@@ -76,14 +82,15 @@ l'ambiente della vista che lo presenta.
 | `onHull` | testo sullo scafo (bianco) | ≥ 7:1 su `hull` |
 | `onHullMuted` | testo di appoggio sullo scafo | ≥ 4,5:1 su `hull` |
 | `signalOnHull` | il segnale sullo scafo: scheda selezionata, badge sui giorni di mare | ≥ 4,5:1 su `hull` |
-| `paper` | la carta del biglietto, bianca | — |
+| `paper` | la carta del biglietto: bianca in chiaro, scafo schiarito in scuro | ≥ 1,4:1 da `hull` |
 | `paperShade` | il biglietto di dietro nella pila | `ink` ≥ 4,5:1 sopra |
 | `ink` | testo sulla carta (di norma = `hull`) | ≥ 7:1 su `paper` |
 | `field` | etichette dei campi, testo di appoggio su carta | ≥ 4,5:1 su `paper` |
 | `rule`, `perforation` | righe sottili e tratteggio | non testo |
 | `signal` | timbri, ora stampata, barre: grafica e testo grande | ≥ 3:1 su `paper` |
 | `signalInk` | il segnale come testo piccolo su carta («RIENTRO A BORDO») | ≥ 4,5:1 su `paper` |
-| `tint` | controlli di sistema nei `Form` | = `ink` |
+| `tint` | controlli di sistema nei `Form` e pulsanti | `ink` in chiaro; in scuro lo scafo reso vivo, ≥ 4,5:1 sul nero |
+| `tabTint` | la scheda selezionata nella barra delle schede | `signalInk` in chiaro (≥ 4,5:1 sul vetro chiaro), `signalOnHull` in scuro (≥ 4,5:1 sul vetro scuro) |
 
 **Mai** `signal` per testo piccolo: usare `signalInk`. Mai `onHullMuted` sulla carta né
 `field` sullo scafo. Il colore non porta mai significato da solo: accanto c'è sempre una
@@ -109,8 +116,9 @@ sempre a testo chiaro (`UIViewControllerBasedStatusBarAppearance = NO` in
 `LiveryContrastTests` scorre **tutte** le livree su tutte le coppie: una livrea nuova che
 non regge ferma la build. Per aggiungerne una: una voce in `Livery.companies` con la parola
 chiave che si confronta col nome dell'armatore ripiegato (`ShipDirectory.fold`), un **nome di
-colori** (mai di compagnia — un test lo controlla), e i valori. Le livree ispirate cambiano
-scafo, testo sullo scafo, segnale e talvolta `field`/`paperShade`; la carta resta bianca.
+colori** (mai di compagnia — un test lo controlla), e i valori **della sola modalità
+chiara**: quelli scuri si ricavano. Le livree ispirate cambiano scafo, testo sullo scafo,
+segnale e talvolta `field`/`paperShade`; in chiaro la carta resta bianca.
 
 ### 3. La tipografia: `TicketType` (`TicketType.swift`)
 
@@ -172,22 +180,26 @@ Solo `@ScaledMetric` sulle altezze; mai dimensioni fisse per il testo.
 - **Carta bianca** per tutto ciò che si legge; **scafo** per navigare e respirare.
 - **Scena del mare** (`SeaScene(hour:)`): solo in giorno di mare, come fascia fra la testata
   e il biglietto, alta ~250 pt, col biglietto che ci entra di 54 pt. Il cielo parte dallo
-  scafo, quindi non ha bordo in cima; lo zenit resta scuro a ogni ora
-  (`SeaSceneContrastTests`); sole e luna seguono l'ora **di bordo** (`store.shipHour`); una
-  nave passa e beccheggia. `Riduci movimento` la ferma, fuori dal primo piano si sospende.
+  scafo, quindi non ha bordo in cima; di giorno è chiaro e luminoso, all'alba e al tramonto
+  caldo, di notte scuro con le stelle (`SeaSceneContrastTests` lo verifica, insieme alla
+  continuità); **sopra la scena non va mai testo** — la testata sta sullo scafo, il resto
+  sulla carta. Sole e luna seguono l'ora **di bordo** (`store.shipHour`); una nave passa e
+  beccheggia. `Riduci movimento` la ferma, fuori dal primo piano si sospende.
 
 ### 6. Cosa resta nativo
 
-`TabView` con Liquid Glass (`.tint(livery.signalOnHull)`); barre di navigazione (titolo
+`TabView` con Liquid Glass (`.tint(livery.tabTint)`: la pastiglia della scheda selezionata è
+vetro chiaro in chiaro e scuro in scuro, e il segnale «sullo scafo» sul vetro chiaro
+spariva); barre di navigazione (titolo
 inline, con lo scafo dietro); `Form` e `List` per Impostazioni, editor, importazione,
 riesame; `Toggle`, `Picker`, `DatePicker`, `TextField`, `Menu`, `.searchable`, alert e
 `confirmationDialog`; SF Symbols; i pulsanti `.glass` / `.glassProminent` /
-`.borderedProminent`. I controlli posati su carta bianca prendono
-`.environment(\.colorScheme, .light)`, perché la finestra è scura ma il foglio no.
+`.borderedProminent` (con `livery.tint`, mai `livery.ink`: in scuro l'inchiostro è bianco e
+un pulsante bianco con la scritta bianca non si legge). I controlli posati su carta
+seguono la modalità come tutto il resto: **non** forzare `.colorScheme` a mano.
 
-La radice (`RootTabView`) impone `.preferredColorScheme(.dark)`: le schermate della crociera
-sono scure per progetto. I fogli di sistema seguono l'aspetto del telefono: **non** forzare
-lo scuro sui `Form`.
+La radice (`RootTabView`) **non** impone nessuno schema: l'app segue il telefono. Le barre
+sullo scafo sono tenute scure con `.toolbarColorScheme(.dark)`; i `Form` fanno da soli.
 
 ### 7. Schermate: fatte e da fare
 
@@ -195,7 +207,8 @@ Fatte nel linguaggio nuovo: Oggi (in porto, in mare, imminente, imbarco domani,
 pre-crociera, conclusa), Itinerario, Scalo, Nave, Diario, Porti toccati, Carta (cornice e
 matrice di stato), stato vuoto.
 
-**Da convertire** (oggi compilano e funzionano col design vecchio):
+**Da convertire, e stato** (ciò che non è segnato «fatto» compila e funziona col design
+vecchio):
 
 1. `SettingsSheet` — **fatto**: `Form` nativo con la sezione Livrea (`Picker` su
    `preferences.livery`, riga «Adesso» con la livrea in vigore, piè di pagina che spiega),
@@ -323,9 +336,10 @@ imparate. **Difetto trovato e corretto**: `LoggedVoyage` non nominava `track` fr
 
 ## Stato dei test
 
-- Unitari: **242** in 34 suite, tutti verdi (`scripts/test.sh unit`). Nuove suite:
+- Unitari: **243** in 34 suite, tutti verdi (`scripts/test.sh unit`). Nuove suite:
   `PersistenceCompatibilityTests` (7), `LocationProfileTests` (4), `NetworkClientTests` (5),
-  `LiveryContrastTests` (8, parametrizzati su tutte le livree × le due modalità),
+  `LiveryContrastTests` (9, parametrizzati su tutte le livree × le due modalità, compresa
+  la scheda selezionata sul vetro chiaro e scuro),
   `SeaSceneContrastTests` (4: giorno chiaro, alba e tramonto caldi, continuità, sole e luna).
 - Interfaccia: **15**, tutti verdi (`scripts/test.sh ui`). Non aggiunti quelli per
   importazione, editor e impostazioni: da fare sul modello di `NavigationSmokeUITests`

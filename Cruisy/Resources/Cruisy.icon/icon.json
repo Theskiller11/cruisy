@@ -1,0 +1,228 @@
+{
+  "features" : [
+    "refractivity"
+  ],
+  "fill" : {
+    "automatic-gradient" : "display-p3:0.06925,0.16233,0.30108,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name" : "Cruisy-anello-pieno.svg",
+          "name" : "Cruisy-anello-pieno",
+          "position" : {
+            "scale" : 0.99,
+            "translation-in-points" : [
+              0.005383433109614089,
+              3.814341198449256e-08
+            ]
+          }
+        }
+      ],
+      "opacity" : 1,
+      "position" : {
+        "scale" : 1.12,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "refractivity" : {
+        "depth" : 0.456171875,
+        "enabled" : false,
+        "strength" : -0.0251953125
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.6
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.34
+      }
+    },
+    {
+      "layers" : [
+        {
+          "glass" : true,
+          "image-name" : "Risorsa 3Cruisy assets.svg",
+          "name" : "Risorsa 3Cruisy assets",
+          "position" : {
+            "scale" : 5.5,
+            "translation-in-points" : [
+              67.56911812567097,
+              226.39281249999988
+            ]
+          }
+        },
+        {
+          "glass" : true,
+          "image-name" : "Risorsa 2Cruisy assets.svg",
+          "name" : "Risorsa 2Cruisy assets",
+          "position" : {
+            "scale" : 6,
+            "translation-in-points" : [
+              -135.98088187432887,
+              -272.4478125000001
+            ]
+          }
+        },
+        {
+          "glass" : true,
+          "image-name" : "Risorsa 1Cruisy assets.svg",
+          "name" : "Risorsa 1Cruisy assets",
+          "position" : {
+            "scale" : 6,
+            "translation-in-points" : [
+              -21.620881874328916,
+              -48.372812500000066
+            ]
+          }
+        }
+      ],
+      "lighting" : "combined",
+      "name" : "Deck Nave",
+      "position" : {
+        "scale" : 0.67,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "refractivity" : {
+        "depth" : 0.826328125,
+        "enabled" : true,
+        "strength" : 0.800625
+      },
+      "shadow" : {
+        "kind" : "layer-color",
+        "opacity" : 0.12
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.32
+      }
+    },
+    {
+      "hidden" : true,
+      "layers" : [
+        {
+          "image-name" : "Risorsa 11Cruisy assets.svg",
+          "name" : "Risorsa 11Cruisy assets",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -48.94543860220799,
+              13.320000000000007
+            ]
+          }
+        },
+        {
+          "image-name" : "Risorsa 10Cruisy assets.svg",
+          "name" : "Risorsa 10Cruisy assets",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -31.692719301104,
+              13.320000000000007
+            ]
+          }
+        },
+        {
+          "image-name" : "Risorsa 9Cruisy assets.svg",
+          "name" : "Risorsa 9Cruisy assets",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -16,
+              13.320000000000007
+            ]
+          }
+        },
+        {
+          "image-name" : "Risorsa 8Cruisy assets.svg",
+          "name" : "Risorsa 8Cruisy assets",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0.35342235234675456,
+              13.320000000000007
+            ]
+          }
+        },
+        {
+          "image-name" : "Risorsa 7Cruisy assets.svg",
+          "name" : "Risorsa 7Cruisy assets",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              15.054561397792028,
+              13.320000000000007
+            ]
+          }
+        },
+        {
+          "image-name" : "Risorsa 6Cruisy assets.svg",
+          "name" : "Risorsa 6Cruisy assets",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -48.94543860220799,
+              -32.67999999999999
+            ]
+          }
+        },
+        {
+          "image-name" : "Risorsa 5Cruisy assets.svg",
+          "name" : "Risorsa 5Cruisy assets",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -35.207719301104014,
+              -32.67999999999999
+            ]
+          }
+        },
+        {
+          "image-name" : "Risorsa 4Cruisy assets.svg",
+          "name" : "Risorsa 4Cruisy assets",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -19.514999999999986,
+              -32.67999999999999
+            ]
+          }
+        }
+      ],
+      "lighting" : "combined",
+      "position" : {
+        "scale" : 5,
+        "translation-in-points" : [
+          25.924999999999955,
+          -0.39999999999997726
+        ]
+      },
+      "refractivity" : {
+        "depth" : 0,
+        "enabled" : true,
+        "strength" : 0.5
+      },
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.21
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.17
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

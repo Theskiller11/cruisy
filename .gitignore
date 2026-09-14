@@ -1,0 +1,8 @@
+.DS_Store
+xcuserdata/
+*.xcuserstate
+build/
+DerivedData/
+*.xcresult
+# Uscita di scripts/screenshots.sh: si rigenera quando serve.
+screenshots/

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Il meccanismo INFOPLIST_KEY_ scrive solo chiavi di primo livello, mentre
+	     un'estensione ha bisogno di NSExtension annidato: senza, il simulatore
+	     rifiuta di installare l'app con "failed to create app extension placeholder". -->
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.widgetkit-extension</string>
+	</dict>
+</dict>
+</plist>

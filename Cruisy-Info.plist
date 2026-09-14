@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- La posizione in background, per registrare la rotta col telefono in tasca.
+	     Sta qui e **non** in `INFOPLIST_KEY_UIBackgroundModes`: quella impostazione non
+	     esiste fra quelle che Xcode trasforma in Info.plist, e viene ignorata senza un
+	     errore né un avviso. Senza questa chiave CoreLocation fa crashare l'app
+	     nell'istante in cui si accende `allowsBackgroundLocationUpdates` — cioè subito
+	     dopo che l'utente ha concesso «Sempre». È successo, il 14 settembre 2026. -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
+	<!-- Per chiedere a iOS se Meteo di Apple si può aprire: senza questa voce
+	     `canOpenURL` risponde sempre di no. Vedi AppleWeatherLink.swift. -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>weather</string>
+	</array>
+	<!-- Il tipo di documento di Cruisy. Sta in un plist esplicito perché il
+	     meccanismo INFOPLIST_KEY_ scrive solo chiavi di primo livello, e queste
+	     sono array di dizionari. -->
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>it.matteopapini.cruisy.voyage</string>
+			<key>UTTypeDescription</key>
+			<string>Crociera Cruisy</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.json</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cruisy</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+	<!-- Cruisy **copia** la crociera dentro di sé e non modifica il file d'origine:
+	     un itinerario ricevuto diventa tuo, e correggerlo non deve toccare la copia
+	     di chi te l'ha mandato. -->
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<false/>
+	<!-- Così un file .cruisy ricevuto per AirDrop, messaggio o email apre Cruisy. -->
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Crociera Cruisy</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>it.matteopapini.cruisy.voyage</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

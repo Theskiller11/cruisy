@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Nessun tracciamento: l'app non ha rete verso di noi e non ha SDK di terzi. -->
+	<key>NSPrivacyTracking</key>
+	<false/>
+	<key>NSPrivacyTrackingDomains</key>
+	<array/>
+
+	<!-- Nessun dato raccolto da noi.
+	     La posizione è usata solo sul dispositivo, per disegnare la carta e calcolare
+	     la distanza dal molo: non lascia mai il telefono.
+	     L'itinerario, se l'utente accende la sincronizzazione, va nel **suo** iCloud
+	     privato: non passa da nessun nostro server e non è accessibile a noi, quindi
+	     secondo la definizione di Apple non è "raccolto". -->
+	<key>NSPrivacyCollectedDataTypes</key>
+	<array/>
+
+	<key>NSPrivacyAccessedAPITypes</key>
+	<array>
+		<dict>
+			<key>NSPrivacyAccessedAPIType</key>
+			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+			<key>NSPrivacyAccessedAPITypeReasons</key>
+			<array>
+				<!-- CA92.1: preferenze della sola app (unità di velocità, anticipo
+				     dell'avviso, avviso già letto). Nessuna condivisione. -->
+				<string>CA92.1</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

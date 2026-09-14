@@ -1,0 +1,457 @@
+<meta charset="utf-8">
+<title>Quattro facce per Cruisy</title>
+<meta name="description" content="Quattro direzioni di design per Cruisy, con un mock della schermata Oggi in porto per ognuna.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400&family=B612+Mono:wght@400;700&family=Barlow+Semi+Condensed:wght@500;600;700&family=Spline+Sans+Mono:ital,wght@0,400;0,500;1,400&family=Archivo:wdth,wght@62..125,500;62..125,700;62..125,800&display=swap">
+<style>
+:root {
+  --ground: #EEF0F1;
+  --surface: #FFFFFF;
+  --ink: #15191C;
+  --ink-2: #4B545B;
+  --ink-3: #6B747B;
+  --rule: rgba(21, 25, 28, 0.12);
+  --accent: #1F5FBF;
+  --chrome: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --code: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #121416; --surface: #1B1E21; --ink: #E9ECEE; --ink-2: #A3ABB2;
+    --ink-3: #87909A; --rule: rgba(233, 236, 238, 0.12); --accent: #8AB8FF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #121416; --surface: #1B1E21; --ink: #E9ECEE; --ink-2: #A3ABB2;
+  --ink-3: #87909A; --rule: rgba(233, 236, 238, 0.12); --accent: #8AB8FF;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--ground); color: var(--ink);
+  font: 400 1rem/1.6 var(--chrome);
+  padding-inline: 20px; padding-block: 0 80px;
+}
+.page { max-width: 1120px; margin-inline: auto; display: grid; gap: 88px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+a { color: var(--accent); }
+
+.intro { padding-top: 56px; display: grid; gap: 18px; max-width: 44rem; }
+.intro h1 { font-size: clamp(2.4rem, 5.5vw, 3.6rem); font-weight: 600; line-height: 1.02; letter-spacing: -0.02em; }
+.intro p { color: var(--ink-2); font-size: 1.0625rem; }
+.intro ul { margin: 0; padding-left: 1.1em; color: var(--ink-2); display: grid; gap: 4px; }
+
+.direction { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 56px; align-items: start; }
+.direction .copy { display: grid; gap: 22px; padding-top: 8px; }
+.direction h2 { font-size: 2.1rem; font-weight: 600; letter-spacing: -0.015em; line-height: 1.1; }
+.idea { font-size: 1.125rem; color: var(--ink-2); max-width: 36rem; }
+.stage { display: flex; gap: 14px; justify-content: center; }
+.direction.wide { grid-template-columns: minmax(0, 600px) minmax(0, 1fr); gap: 44px; }
+.stage.pair .phone { width: 265px; height: 574px; }
+.stage.pair .phone .scale { transform: scale(0.78); }
+
+.swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+.swatch { display: grid; gap: 6px; width: 92px; }
+.chip { height: 44px; border-radius: 10px; border: 1px solid var(--rule); }
+.swatch span { font-family: var(--code); font-size: 0.72rem; color: var(--ink-2); }
+.swatch b { font-weight: 500; font-size: 0.78rem; }
+
+.spec { display: grid; grid-template-columns: 7.5rem 1fr; gap: 10px 18px; margin: 0; }
+.spec dt { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); padding-top: 3px; }
+.spec dd { margin: 0; color: var(--ink); }
+.spec ul { margin: 0; padding-left: 1.05em; display: grid; gap: 6px; }
+.spec li::marker { color: var(--ink-3); }
+
+.compare-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 0.95rem; }
+th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+td:first-child { font-weight: 600; white-space: nowrap; }
+.verdict { display: grid; gap: 14px; max-width: 44rem; }
+.verdict h2 { font-size: 1.6rem; font-weight: 600; }
+.verdict p { color: var(--ink-2); }
+
+@media (max-width: 860px) {
+  .direction, .direction.wide { grid-template-columns: 1fr; gap: 28px; }
+  .stage { justify-content: flex-start; overflow-x: auto; padding-bottom: 8px; }
+}
+
+/* ---------- Telefono ---------- */
+.phone {
+  width: 340px; height: 736px; border-radius: 46px; position: relative; overflow: hidden;
+  box-shadow: 0 0 0 10px #0B0C0D, 0 0 0 11px #2A2D30, 0 30px 60px -20px rgba(0,0,0,0.45);
+  margin: 12px; flex: none;
+}
+.phone .scale { width: 340px; height: 736px; transform-origin: top left; position: absolute; inset: 0; }
+.island { position: absolute; top: 11px; left: 50%; width: 104px; height: 30px; margin-left: -52px; border-radius: 20px; background: #000; z-index: 5; }
+.status { position: absolute; top: 16px; left: 30px; right: 26px; display: flex; justify-content: space-between; font: 600 15px/1 -apple-system, system-ui, sans-serif; z-index: 4; }
+.status i { display: inline-block; width: 24px; height: 11px; border-radius: 3px; border: 1.5px solid currentColor; opacity: 0.9; position: relative; }
+.status i::after { content: ""; position: absolute; inset: 1.5px 4px 1.5px 1.5px; background: currentColor; border-radius: 1px; }
+
+/* ---------- A. Cielo di bordo ---------- */
+.sky { font-family: -apple-system, system-ui, "SF Pro Display", "Helvetica Neue", sans-serif; color: #fff; }
+.sky .status { color: #fff; }
+.sky.day .scale {
+  background:
+    radial-gradient(circle at 78% 17%, rgba(255,246,214,0.95) 0 20px, rgba(255,232,170,0.45) 21px 64px, transparent 140px),
+    linear-gradient(180deg, #2C7FD0 0%, #58A9E6 38%, #A8DCF3 58%, #CFEFF6 61.5%, #2BA3BE 62%, #13809F 78%, #0B5F7C 100%);
+}
+.sky.night .scale {
+  background:
+    radial-gradient(circle at 24% 14%, #F6F1DA 0 13px, rgba(246,241,218,0.18) 14px 40px, transparent 80px),
+    radial-gradient(1.2px 1.2px at 12% 30%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 38% 22%, #fff 50%, transparent 51%),
+    radial-gradient(1.4px 1.4px at 66% 11%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 84% 28%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 55% 40%, #fff 50%, transparent 51%),
+    linear-gradient(180deg, #050A1C 0%, #0D1738 42%, #1D2C58 60%, #2A3B6B 61.5%, #0A1733 62%, #061024 80%, #030814 100%);
+}
+.sky .wave { position: absolute; left: 0; right: 0; top: 60.5%; height: 14px;
+  background: repeating-radial-gradient(circle at 10px -6px, transparent 0 9px, rgba(255,255,255,0.35) 9.5px 10.5px, transparent 11px);
+  background-size: 22px 14px; opacity: 0.55; }
+.sky .head { position: absolute; top: 64px; left: 24px; right: 24px; text-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+.sky .head b { font-size: 26px; font-weight: 600; display: block; letter-spacing: -0.01em; }
+.sky .head span { font-size: 15px; opacity: 0.92; }
+.sky .big { position: absolute; top: 150px; left: 0; right: 0; text-align: center; text-shadow: 0 2px 10px rgba(0,0,0,0.18); }
+.sky .big .port { font-size: 17px; font-weight: 600; }
+.sky .big .count { font-size: 70px; font-weight: 200; letter-spacing: -2px; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.sky .big .by { font-size: 17px; font-weight: 500; }
+.sky .glass {
+  position: absolute; left: 16px; right: 16px; border-radius: 24px; padding: 14px 16px;
+  background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3);
+  -webkit-backdrop-filter: blur(22px) saturate(1.5); backdrop-filter: blur(22px) saturate(1.5);
+}
+.sky.night .glass { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.18); }
+.sky .glass .k { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.8; }
+.sky .times { top: 330px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.sky .times b { display: block; font-size: 22px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.sky .sea { top: 430px; display: flex; justify-content: space-between; align-items: center; }
+.sky .sea b { font-size: 20px; font-weight: 600; display: block; }
+.sky .sea .t { font-size: 44px; font-weight: 200; }
+.sky .prov { top: 530px; display: flex; gap: 8px; align-items: center; font-size: 14px; padding: 10px 14px; }
+.sky .tabs { position: absolute; left: 16px; right: 16px; bottom: 22px; height: 64px; border-radius: 32px; display: grid; grid-template-columns: repeat(4, 1fr); align-items: center; text-align: center; font-size: 11px; font-weight: 500;
+  background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); }
+.sky.night .tabs { background: rgba(255,255,255,0.1); }
+.sky .tabs span { display: grid; gap: 3px; justify-items: center; opacity: 0.8; }
+.sky .tabs span::before { content: ""; width: 20px; height: 20px; border-radius: 6px; background: currentColor; opacity: 0.9; }
+.sky .tabs .on { opacity: 1; }
+.sky .tabs .on::before { border-radius: 50%; }
+
+/* ---------- B. Carta nautica ---------- */
+.chart { background: #FFFFFF; color: #151515; font-family: "Barlow Semi Condensed", "Arial Narrow", sans-serif; }
+.chart .status { color: #151515; }
+.chart svg.map { position: absolute; top: 0; left: 0; width: 340px; height: 300px; }
+.chart .soundings { font-family: "Spline Sans Mono", ui-monospace, monospace; font-style: italic; font-size: 10px; fill: #5B6A74; }
+.chart .head { position: absolute; top: 312px; left: 22px; right: 22px; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1.5px solid #151515; padding-bottom: 6px; }
+.chart .head b { font-weight: 700; font-size: 20px; text-transform: uppercase; letter-spacing: 0.06em; }
+.chart .head span { font-family: "Spline Sans Mono", monospace; font-size: 11px; color: #3A464E; }
+.chart .note { position: absolute; top: 352px; left: 22px; right: 22px; border: 1.5px solid #A3166F; padding: 12px 14px 14px; }
+.chart .note .tag { display: inline-block; background: #A3166F; color: #fff; font-weight: 600; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 8px; }
+.chart .note .count { font-family: "Spline Sans Mono", monospace; font-weight: 500; font-size: 54px; letter-spacing: -1px; line-height: 1.05; margin-top: 8px; font-variant-numeric: tabular-nums; }
+.chart .note .by { font-size: 17px; font-weight: 500; }
+.chart .note .by em { font-style: normal; color: #A3166F; font-weight: 700; }
+.chart table.tbl { position: absolute; top: 518px; left: 22px; width: 296px; min-width: 0; table-layout: fixed; border-collapse: collapse; font-size: 15px; }
+.chart table.tbl td, .chart table.tbl th { border: 0; border-bottom: 1px solid #C9CFD3; padding: 7px 0; color: #151515; }
+.chart table.tbl th { font-size: 11px; letter-spacing: 0.12em; color: #5B6A74; font-weight: 600; text-transform: uppercase; width: 38%; white-space: nowrap; }
+.chart table.tbl td { font-family: "Spline Sans Mono", monospace; font-size: 14px; text-align: right; white-space: normal; font-weight: 400; }
+.chart .tabs { position: absolute; left: 0; right: 0; bottom: 0; height: 78px; border-top: 1.5px solid #151515; display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; padding-top: 14px; font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5B6A74; background: #fff; }
+.chart .tabs .on { color: #A3166F; }
+.chart .tabs .on span { border-bottom: 2px solid #A3166F; padding-bottom: 3px; }
+
+/* ---------- C. Plancia di notte ---------- */
+.bridge { background: #000; color: #FFB000; font-family: "B612 Mono", ui-monospace, monospace; }
+.bridge .status { color: #8E8E93; }
+.bridge .head { position: absolute; top: 60px; left: 22px; right: 22px; display: flex; justify-content: space-between; font-size: 11px; color: #8E8E93; letter-spacing: 0.08em; border-bottom: 1px solid #2C2C2E; padding-bottom: 10px; }
+.bridge .head b { color: #FFB000; font-weight: 700; }
+.bridge .dial { position: absolute; top: 100px; left: 50%; width: 260px; height: 260px; margin-left: -130px; border-radius: 50%; }
+.bridge .dial .ticks { position: absolute; inset: 0; border-radius: 50%;
+  background: repeating-conic-gradient(#3A3A3C 0 0.6deg, transparent 0.6deg 6deg);
+  -webkit-mask: radial-gradient(circle, transparent 118px, #000 119px 128px, transparent 129px);
+          mask: radial-gradient(circle, transparent 118px, #000 119px 128px, transparent 129px); }
+.bridge .dial .arc { position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(#FFB000 0 72%, #1C1C1E 72% 100%);
+  -webkit-mask: radial-gradient(circle, transparent 106px, #000 107px 112px, transparent 113px);
+          mask: radial-gradient(circle, transparent 106px, #000 107px 112px, transparent 113px); }
+.bridge .dial .mark { position: absolute; top: 50%; left: 50%; width: 2px; height: 26px; background: #FF453A; transform-origin: 1px 130px; transform: translate(-1px, -130px) rotate(302deg); }
+.bridge .dial .face { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 4px; }
+.bridge .dial .k { font-size: 10px; color: #8E8E93; letter-spacing: 0.14em; }
+.bridge .dial .count { font-size: 42px; font-weight: 700; letter-spacing: -1px; font-variant-numeric: tabular-nums; text-shadow: 0 0 18px rgba(255,176,0,0.35); }
+.bridge .dial .count .c { margin: 0 -7px; }
+.bridge .dial .by { font-size: 13px; color: #C98A00; }
+.bridge .cells { position: absolute; top: 386px; left: 22px; right: 22px; display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid #2C2C2E; }
+.bridge .cells div { padding: 10px 10px 12px; border-right: 1px solid #2C2C2E; }
+.bridge .cells div:last-child { border-right: 0; }
+.bridge .cells span { display: block; font-size: 9.5px; color: #8E8E93; letter-spacing: 0.1em; }
+.bridge .cells b { font-size: 20px; }
+.bridge .sea { position: absolute; top: 468px; left: 22px; right: 22px; font-size: 12px; color: #C98A00; line-height: 1.7; border-bottom: 1px solid #2C2C2E; padding-bottom: 12px; }
+.bridge .sea b { color: #FFB000; }
+.bridge .modes { position: absolute; top: 548px; left: 22px; right: 22px; display: flex; gap: 8px; font-size: 11px; letter-spacing: 0.08em; }
+.bridge .modes span { border: 1px solid #3A3A3C; color: #8E8E93; padding: 5px 9px; }
+.bridge .modes .on { border-color: #FF453A; color: #FF453A; }
+.bridge .tabs { position: absolute; left: 0; right: 0; bottom: 0; height: 80px; border-top: 1px solid #1C1C1E; display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; padding-top: 16px; font-size: 11px; letter-spacing: 0.1em; color: #636366; }
+.bridge .tabs .on { color: #FFB000; }
+
+/* ---------- D. Biglietto d'imbarco ---------- */
+.ticket { background: #0E2A47; color: #fff; font-family: "Archivo", "Arial Narrow", sans-serif; }
+.ticket .status { color: #fff; }
+.ticket .head { position: absolute; top: 60px; left: 22px; right: 22px; }
+.ticket .head b { font-stretch: 75%; font-weight: 800; font-size: 30px; letter-spacing: 0.01em; display: block; text-transform: uppercase; line-height: 1; }
+.ticket .head span { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: #9FB6CC; font-weight: 500; }
+.ticket .behind { position: absolute; top: 124px; left: 34px; right: 34px; height: 60px; border-radius: 14px; background: #D9E2EA; color: #0E2A47; padding: 7px 14px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; }
+.ticket .pass { position: absolute; top: 160px; left: 18px; right: 18px; background: #FFFFFF; color: #0E2A47; border-radius: 16px; box-shadow: 0 18px 40px -18px rgba(0,0,0,0.5); }
+.ticket .pass .top { padding: 16px 18px 18px; position: relative; }
+.ticket .pass .eyebrow { color: #E4570F; font-weight: 700; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+.ticket .pass .when { font-stretch: 70%; font-weight: 800; font-size: 86px; line-height: 0.95; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.ticket .pass .where { font-weight: 700; font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; }
+.ticket .stamp { position: absolute; right: 16px; top: 46px; width: 78px; height: 78px; border-radius: 50%; border: 2.5px solid #E4570F; color: #E4570F; display: grid; place-content: center; text-align: center; font-weight: 800; font-size: 11px; letter-spacing: 0.1em; transform: rotate(-12deg); line-height: 1.15; }
+.ticket .perf { height: 0; border-top: 2px dashed #B7C4D0; margin: 0 14px; position: relative; }
+.ticket .perf::before, .ticket .perf::after { content: ""; position: absolute; top: -12px; width: 22px; height: 22px; border-radius: 50%; background: #0E2A47; }
+.ticket .perf::before { left: -26px; } .ticket .perf::after { right: -26px; }
+.ticket .pass .stub { padding: 14px 18px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+.ticket .pass .stub span { display: block; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: #5D7389; font-weight: 700; }
+.ticket .pass .stub b { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ticket .pass .stub .count { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid #E3E9EE; padding-bottom: 10px; }
+.ticket .pass .stub .count b { font-stretch: 80%; font-size: 34px; font-weight: 800; }
+.ticket .wx { position: absolute; top: 590px; left: 22px; right: 22px; display: flex; gap: 8px; flex-wrap: wrap; font-size: 13px; font-weight: 500; }
+.ticket .wx span { border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 4px 11px; }
+.ticket .tabs { position: absolute; left: 0; right: 0; bottom: 0; height: 80px; background: #0A2039; display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; padding-top: 16px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #8FA7BE; }
+.ticket .tabs .on { color: #FF7A33; }
+</style>
+
+<main class="page">
+
+<header class="intro">
+  <p class="label">Proposte di design · 14 settembre 2026</p>
+  <h1>Quattro facce per Cruisy</h1>
+  <p>Quattro direzioni molto diverse, tutte sulla stessa schermata: <strong>Oggi, in porto a Puerto Plata</strong>, con 2:59:52 al rientro a bordo. Cambia solo il vestito, così il confronto è onesto.</p>
+  <p>Qualunque scegli, alcune cose non si toccano, perché sono il motivo per cui l'app esiste:</p>
+  <ul>
+    <li>il numero grande è sempre il tempo che manca, e dice da dove viene l'orario;</li>
+    <li>contrasto leggibile anche col sole in banchina, Dynamic Type, VoiceOver, Riduci movimento;</li>
+    <li>tutto quello che serve per non perdere la nave funziona senza rete.</li>
+  </ul>
+  <p>Puoi anche incrociarle: la più naturale è la prima di giorno con la terza di notte.</p>
+</header>
+
+<!-- A -->
+<section class="direction wide" aria-labelledby="a">
+  <div class="stage pair">
+    <div class="phone sky day" role="img" aria-label="Mock di Cielo di bordo, di giorno"><div class="scale">
+      <div class="island"></div><div class="status"><span>9:41</span><i></i></div>
+      <div class="wave"></div>
+      <div class="head"><b>Stella Australe</b><span>Giorno 5 di 9 · in porto</span></div>
+      <div class="big"><div class="port">Puerto Plata · rientro a bordo</div><div class="count">2:59:52</div><div class="by">entro le 17:30</div></div>
+      <div class="glass times"><div><span class="k">Attracco</span><b>09:00</b></div><div><span class="k">Partenza</span><b>18:00</b></div><div><span class="k">Sosta</span><b>9h</b></div></div>
+      <div class="glass sea"><div><span class="k">A terra</span><b>Poco nuvoloso</b><span style="font-size:14px;opacity:.9">Mare mosso · onda 0,8 m</span></div><div class="t">28°</div></div>
+      <div class="glass prov">Orario pubblicato dalla compagnia</div>
+      <div class="tabs"><span class="on">Oggi</span><span>Itinerario</span><span>Nave</span><span>Diario</span></div>
+    </div></div>
+    <div class="phone sky night" role="img" aria-label="Mock di Cielo di bordo, di notte"><div class="scale">
+      <div class="island"></div><div class="status"><span>9:41</span><i></i></div>
+      <div class="wave"></div>
+      <div class="head"><b>Stella Australe</b><span>Giorno 5 di 9 · in mare</span></div>
+      <div class="big"><div class="port">verso Grand Turk · arrivo</div><div class="count">7:12:40</div><div class="by">alle 08:00, ora di bordo</div></div>
+      <div class="glass times"><div><span class="k">Velocità</span><b>18 kn</b></div><div><span class="k">Rotta</span><b>352°</b></div><div><span class="k">Alla meta</span><b>112 mn</b></div></div>
+      <div class="glass sea"><div><span class="k">Mare</span><b>Poco mosso</b><span style="font-size:14px;opacity:.9">Non lo sentirai</span></div><div class="t">26°</div></div>
+      <div class="glass prov">Stanotte alle 02:00 l'orologio va indietro di un'ora</div>
+      <div class="tabs"><span class="on">Oggi</span><span>Itinerario</span><span>Nave</span><span>Diario</span></div>
+    </div></div>
+  </div>
+  <div class="copy">
+    <p class="label">Direzione A</p>
+    <h2>Cielo di bordo</h2>
+    <p class="idea">Come l'app Meteo di Apple, ma il cielo è quello sopra la nave: luminoso a mezzogiorno, rosa al tramonto, stellato di notte, sempre all'ora di bordo. È quello che avevi chiesto sui fondi.</p>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#2C7FD0"></div><b>Cielo</b><span>#2C7FD0</span></div>
+      <div class="swatch"><div class="chip" style="background:#13809F"></div><b>Mare</b><span>#13809F</span></div>
+      <div class="swatch"><div class="chip" style="background:#0D1738"></div><b>Notte</b><span>#0D1738</span></div>
+      <div class="swatch"><div class="chip" style="background:rgba(255,255,255,.2);background-color:#8FC3E6"></div><b>Vetro</b><span>bianco 18%</span></div>
+    </div>
+    <dl class="spec">
+      <dt>Caratteri</dt><dd>SF Pro di sistema, sottilissimo per il countdown come la temperatura in Meteo. Niente da includere nell'app.</dd>
+      <dt>Mosse</dt><dd><ul>
+        <li>Lo sfondo è una scena viva — cielo, orizzonte, mare, sole o luna — disegnata a partire dall'ora di bordo e dalla posizione della nave.</li>
+        <li>Tutto il resto sta su vetro Liquid Glass, che adatta da solo il contrasto a quello che ha dietro.</li>
+        <li>Un numero enorme e leggero al centro, e niente altro sopra la linea dell'orizzonte.</li>
+      </ul></dd>
+      <dt>Costo</dt><dd><ul>
+        <li>Il contrasto non è più una tinta fissa ma dipende dall'ora: va verificato di giorno col sole, e serve un ripiego per Riduci trasparenza.</li>
+        <li>La scena animata va disegnata bene, o sembra un salvaschermo. Batteria: poca, se si ferma quando l'app non è in primo piano.</li>
+      </ul></dd>
+    </dl>
+  </div>
+</section>
+
+<!-- B -->
+<section class="direction" aria-labelledby="b">
+  <div class="stage">
+    <div class="phone chart" role="img" aria-label="Mock di Carta nautica"><div class="scale">
+      <svg class="map" viewBox="0 0 340 300" aria-hidden="true">
+        <rect width="340" height="300" fill="#FFFFFF"/>
+        <path d="M0 150 C 60 140, 120 175, 190 160 S 300 120, 340 140 L340 300 L0 300 Z" fill="#E8F4FA"/>
+        <path d="M0 190 C 70 182, 130 214, 200 200 S 300 170, 340 185 L340 300 L0 300 Z" fill="#D2EAF5"/>
+        <path d="M0 232 C 60 222, 140 262, 210 244 S 300 218, 340 230 L340 300 L0 300 Z" fill="#F1E3B3" stroke="#6E5F33" stroke-width="1.3"/>
+        <path d="M0 150 C 60 140, 120 175, 190 160 S 300 120, 340 140" fill="none" stroke="#8FB9CC" stroke-width="0.8"/>
+        <path d="M0 190 C 70 182, 130 214, 200 200 S 300 170, 340 185" fill="none" stroke="#8FB9CC" stroke-width="0.8"/>
+        <path d="M-10 60 L 168 232" fill="none" stroke="#A3166F" stroke-width="1.8" stroke-dasharray="7 5"/>
+        <circle cx="168" cy="232" r="6" fill="#fff" stroke="#A3166F" stroke-width="2"/>
+        <text x="180" y="236" font-family="Barlow Semi Condensed, sans-serif" font-weight="700" font-size="13" fill="#151515">PUERTO PLATA</text>
+        <text x="62" y="128" font-family="Barlow Semi Condensed, sans-serif" font-weight="600" font-size="12" fill="#A3166F" transform="rotate(44 62 128)">284°  11,8 kn</text>
+        <g class="soundings"><text x="40" y="90">42</text><text x="250" y="70">55</text><text x="286" y="160">18</text><text x="110" y="196">9</text><text x="230" y="212">6</text><text x="20" y="176">14</text></g>
+        <g transform="translate(290 86)" stroke="#A3166F" fill="none">
+          <circle r="26" stroke-width="1"/><circle r="20" stroke-width="0.6"/>
+          <path d="M0 -30 L4 -6 L0 0 L-4 -6 Z" fill="#A3166F" stroke="none"/>
+          <text y="-34" text-anchor="middle" font-size="9" fill="#A3166F" stroke="none" font-family="Barlow Semi Condensed, sans-serif" font-weight="700">N</text>
+        </g>
+      </svg>
+      <div class="island"></div><div class="status"><span>9:41</span><i></i></div>
+      <div class="head"><b>Stella Australe</b><span>G5/9 · UTC−4</span></div>
+      <div class="note"><span class="tag">Rientro a bordo</span><div class="count">2:59:52</div><div class="by">entro le <em>17:30</em> · orario pubblicato</div></div>
+      <table class="tbl" aria-hidden="true">
+        <tr><th>Attracco</th><td>09:00</td></tr>
+        <tr><th>Partenza</th><td>18:00</td></tr>
+        <tr><th>Mare a terra</th><td>mosso · 0,8 m · 28 °C</td></tr>
+      </table>
+      <div class="tabs"><span class="on"><span>Oggi</span></span><span>Rotta</span><span>Nave</span><span>Diario</span></div>
+    </div></div>
+  </div>
+  <div class="copy">
+    <p class="label">Direzione B</p>
+    <h2>Carta nautica</h2>
+    <p class="idea">L'app come una carta nautica vera: sfondo chiaro, i celesti delle batimetriche, la terra color sabbia, e il magenta che sulle carte segna le informazioni che contano.</p>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#FFFFFF"></div><b>Acqua fonda</b><span>#FFFFFF</span></div>
+      <div class="swatch"><div class="chip" style="background:#D2EAF5"></div><b>Bassofondo</b><span>#D2EAF5</span></div>
+      <div class="swatch"><div class="chip" style="background:#F1E3B3"></div><b>Terra</b><span>#F1E3B3</span></div>
+      <div class="swatch"><div class="chip" style="background:#A3166F"></div><b>Magenta</b><span>#A3166F</span></div>
+      <div class="swatch"><div class="chip" style="background:#151515"></div><b>Inchiostro</b><span>#151515</span></div>
+    </div>
+    <dl class="spec">
+      <dt>Caratteri</dt><dd>Barlow Semi Condensed per nomi ed etichette, Spline Sans Mono per i numeri. Entrambi con licenza OFL, si includono nell'app.</dd>
+      <dt>Mosse</dt><dd><ul>
+        <li>La carta non è più una scheda nascosta: è la testata di Oggi, e tutto il resto le si annota intorno.</li>
+        <li>Niente vetro e niente ombre. Riquadri a filo, tabelle con righe sottili, come un portolano.</li>
+        <li>Il magenta si usa solo per quello che conta: rientro a bordo, rotta, avvisi.</li>
+      </ul></dd>
+      <dt>Costo</dt><dd><ul>
+        <li>Chiara di notte in cabina abbaglia: serve una versione notturna, come quella degli ECDIS di bordo, rossa e scura.</li>
+        <li>Rompe con il look scuro di iOS e di tutte le app di viaggio. È il suo pregio e il suo rischio: o piace molto, o sembra un gestionale.</li>
+      </ul></dd>
+    </dl>
+  </div>
+</section>
+
+<!-- C -->
+<section class="direction" aria-labelledby="c">
+  <div class="stage">
+    <div class="phone bridge" role="img" aria-label="Mock di Plancia di notte"><div class="scale">
+      <div class="island"></div><div class="status"><span>9:41</span><i></i></div>
+      <div class="head"><span><b>STELLA AUSTRALE</b> · G5/9</span><span>IN PORTO · UTC−4</span></div>
+      <div class="dial"><div class="ticks"></div><div class="arc"></div><div class="mark"></div>
+        <div class="face"><span class="k">RIENTRO A BORDO</span><span class="count">2<span class="c">:</span>59<span class="c">:</span>52</span><span class="by">ENTRO 17:30 · PUBBL.</span></div></div>
+      <div class="cells"><div><span>ATTRACCO</span><b>09:00</b></div><div><span>PARTENZA</span><b>18:00</b></div><div><span>SOSTA</span><b>09h00</b></div></div>
+      <div class="sea">MARE <b>MOSSO</b> · ONDA <b>0,8 M</b><br>VENTO <b>11 KN E/NE</b> · ARIA <b>28 °C</b></div>
+      <div class="modes"><span>GIORNO</span><span>NOTTE</span><span class="on">LUCE ROSSA</span></div>
+      <div class="tabs"><span class="on">OGGI</span><span>ITIN.</span><span>NAVE</span><span>DIARIO</span></div>
+    </div></div>
+  </div>
+  <div class="copy">
+    <p class="label">Direzione C</p>
+    <h2>Plancia di notte</h2>
+    <p class="idea">Gli strumenti del ponte di comando: nero, numeri ambra che non abbagliano, e un quadrante dove l'arco è la sosta che si consuma e la tacca rossa è il rientro a bordo.</p>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#000000"></div><b>Nero OLED</b><span>#000000</span></div>
+      <div class="swatch"><div class="chip" style="background:#FFB000"></div><b>Ambra</b><span>#FFB000</span></div>
+      <div class="swatch"><div class="chip" style="background:#FF453A"></div><b>Allarme</b><span>#FF453A</span></div>
+      <div class="swatch"><div class="chip" style="background:#8E8E93"></div><b>Etichette</b><span>#8E8E93</span></div>
+    </div>
+    <dl class="spec">
+      <dt>Caratteri</dt><dd>B612 Mono, disegnato da Airbus per gli schermi di cabina di pilotaggio: fatto apposta per leggere numeri stanchi e al buio. Licenza OFL.</dd>
+      <dt>Mosse</dt><dd><ul>
+        <li>Il countdown diventa un quadrante: si capisce quanto manca anche senza leggere le cifre.</li>
+        <li>Niente carte e niente vetro: pannelli a filo, tutto maiuscolo, densità da strumento.</li>
+        <li>Un modo «luce rossa» per la cabina di notte, come sulle plance vere.</li>
+      </ul></dd>
+      <dt>Costo</dt><dd><ul>
+        <li>Fredda e tecnica per chi è in vacanza: bellissima alle 3 di notte, meno sul ponte piscina a mezzogiorno.</li>
+        <li>Il rosso notturno sta sotto il contrasto normale per scelta: va offerto come modo, mai imposto.</li>
+      </ul></dd>
+    </dl>
+  </div>
+</section>
+
+<!-- D -->
+<section class="direction" aria-labelledby="d">
+  <div class="stage">
+    <div class="phone ticket" role="img" aria-label="Mock di Biglietto d'imbarco"><div class="scale">
+      <div class="island"></div><div class="status"><span>9:41</span><i></i></div>
+      <div class="head"><b>Stella Australe</b><span>Giorno 5 di 9</span></div>
+      <div class="behind">Grand Turk · domani 08:00</div>
+      <div class="pass">
+        <div class="top"><div class="eyebrow">Rientro a bordo</div><div class="when">17:30</div><div class="where">Puerto Plata · Amber Cove</div>
+          <div class="stamp">IN<br>PORTO</div></div>
+        <div class="perf"></div>
+        <div class="stub">
+          <div class="count"><span>Mancano</span><b>2:59:52</b></div>
+          <div><span>Attracco</span><b>09:00</b></div><div><span>Partenza</span><b>18:00</b></div>
+          <div><span>Sosta</span><b>9 h</b></div><div><span>Orario</span><b>Pubblicato</b></div>
+        </div>
+      </div>
+      <div class="wx"><span>Mosso · 0,8 m</span><span>28°</span><span>Tender: no</span></div>
+      <div class="tabs"><span class="on">Oggi</span><span>Rotta</span><span>Nave</span><span>Diario</span></div>
+    </div></div>
+  </div>
+  <div class="copy">
+    <p class="label">Direzione D</p>
+    <h2>Biglietto d'imbarco</h2>
+    <p class="idea">I documenti di bordo come linguaggio: ogni scalo è una carta d'imbarco, l'ora del rientro è stampata grande come su un biglietto, e il prossimo porto si intravede dietro.</p>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#0E2A47"></div><b>Livrea</b><span>#0E2A47</span></div>
+      <div class="swatch"><div class="chip" style="background:#FFFFFF"></div><b>Carta</b><span>#FFFFFF</span></div>
+      <div class="swatch"><div class="chip" style="background:#E4570F"></div><b>Arancio SOLAS</b><span>#E4570F</span></div>
+      <div class="swatch"><div class="chip" style="background:#5D7389"></div><b>Campi</b><span>#5D7389</span></div>
+    </div>
+    <dl class="spec">
+      <dt>Caratteri</dt><dd>Archivo, un grottesco con l'asse della larghezza: stretto e nero per l'ora, normale per il resto. Licenza OFL.</dd>
+      <dt>Mosse</dt><dd><ul>
+        <li>L'ora del rientro è il titolo, il countdown la sua conseguenza: si ricorda l'ora, non i secondi.</li>
+        <li>L'itinerario diventa una pila di biglietti: quello di oggi davanti, il prossimo dietro.</li>
+        <li>L'arancio è quello dei salvagente e delle scialuppe, e si usa solo per il rientro e i timbri.</li>
+      </ul></dd>
+      <dt>Costo</dt><dd><ul>
+        <li>Il biglietto calza in porto; in navigazione va reinventato, per esempio come carta d'imbarco verso il prossimo scalo.</li>
+        <li>Molti componenti su misura e un po' di scheumorfismo: è la più costosa da fare bene.</li>
+      </ul></dd>
+    </dl>
+  </div>
+</section>
+
+<section class="verdict">
+  <p class="label">Confronto</p>
+  <h2>Come si comportano dove conta</h2>
+  <p>Il mio giudizio, non una misura.</p>
+</section>
+<div class="compare-wrap" style="margin-top:-64px">
+<table>
+  <tr><th>Direzione</th><th>Col sole in banchina</th><th>Di notte in cabina</th><th>Quanto è iOS</th><th>Lavoro</th><th>Rischio</th></tr>
+  <tr><td>A · Cielo di bordo</td><td>Buona, se il vetro regge il contrasto</td><td>Molto buona</td><td>Moltissimo</td><td>Medio</td><td>Sembrare una copia di Meteo</td></tr>
+  <tr><td>B · Carta nautica</td><td>Ottima: nero su bianco</td><td>Serve il modo notte</td><td>Poco</td><td>Medio</td><td>Sembrare un gestionale</td></tr>
+  <tr><td>C · Plancia di notte</td><td>Discreta: ambra su nero</td><td>Ottima</td><td>Poco</td><td>Medio</td><td>Troppo tecnica per chi è in vacanza</td></tr>
+  <tr><td>D · Biglietto d'imbarco</td><td>Ottima: il biglietto è bianco</td><td>Buona</td><td>Poco</td><td>Alto</td><td>Il giorno di mare non ha un biglietto</td></tr>
+</table>
+</div>
+
+<section class="verdict">
+  <p class="label">Se dovessi scegliere io</p>
+  <h2>A di giorno, C di notte</h2>
+  <p>La A è la più vicina a quello che hai già chiesto — fondi vivi che seguono l'ora — ed è quella che iOS 26 regge meglio da solo, perché il vetro adatta il contrasto a quello che ha dietro. La C risolve l'unico momento in cui la A è debole: la cabina buia alle tre di notte, prima di una sveglia per il tender. Insieme sono un'idea sola, cioè l'app come finestra sul cielo sopra la nave, che di notte diventa lo strumento.</p>
+  <p>Ma è una scelta di gusto, e il gusto qui è tuo.</p>
+</section>
+
+</main>

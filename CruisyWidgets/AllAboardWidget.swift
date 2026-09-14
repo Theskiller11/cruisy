@@ -1,7 +1,7 @@
 import WidgetKit
 import SwiftUI
 
-/// Il countdown sulla schermata Home.
+/// Il countdown sulla schermata Home: una matrice di biglietto.
 ///
 /// Il numero **non** lo disegna il widget: lo disegna il sistema, con
 /// `Text(timerInterval:)`. In un widget non si può far girare un timer, e ricaricare
@@ -9,14 +9,17 @@ import SwiftUI
 /// che sconveniente. Consegnare al sistema due date e lasciarlo contare è l'unico
 /// modo che funziona — e il motivo per cui, in tutta l'app, un countdown è una coppia
 /// di istanti e mai un contatore.
+///
+/// Parla la lingua dell'app: carta, l'ora stampata grande, l'etichetta in colore
+/// segnale, i campi. La livrea è quella scelta nelle Impostazioni, letta dal
+/// contenitore condiviso, e i token sono dinamici: chiaro e scuro vengono da soli.
 struct AllAboardWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: "it.matteopapini.Cruisy.AllAboard",
                             provider: VoyageTimelineProvider()) { entry in
             AllAboardWidgetView(entry: entry)
-                .containerBackground(for: .widget) {
-                    WidgetBackgroundBridge(entry: entry)
-                }
+                .environment(\.livery, entry.livery)
+                .containerBackground(for: .widget) { entry.livery.paper }
         }
         .configurationDisplayName("Prossimo countdown")
         .description("Quanto manca al rientro a bordo, o all'arrivo nel prossimo porto.")
@@ -36,6 +39,12 @@ struct VoyageEntry: TimelineEntry {
         if case .allAboard = focus.kind { return true }
         if case .sailAway = focus.kind { return true }
         return false
+    }
+
+    /// La livrea come la vede l'app: la scelta condivisa e la compagnia della nave.
+    var livery: Livery {
+        Livery.resolve(LiveryChoice.stored(),
+                       operatorName: voyage.flatMap { ShipDirectory.shared.lookup($0.shipName)?.operatorName })
     }
 }
 
@@ -84,67 +93,17 @@ struct VoyageTimelineProvider: TimelineProvider {
 
 // MARK: Aspetto
 
-/// Legge la famiglia dall'ambiente e la passa allo sfondo, che ne ha bisogno per
-/// sapere se disegnare la carta.
-private struct WidgetBackgroundBridge: View {
-    let entry: VoyageEntry
-    @Environment(\.widgetFamily) private var family
-
-    var body: some View { WidgetBackground(entry: entry, family: family) }
-}
-
-/// Lo sfondo del widget.
-///
-/// Sul medio è la **carta**, a tutto riquadro. Non è decorazione: è la stessa
-/// geometria che l'app disegna, quindi dice davvero dove sei — e non costa rete,
-/// perché le coste viaggiano nel bundle dell'estensione.
-///
-/// Sopra ci va una velatura scura con un gradiente da sinistra a destra: il testo
-/// deve restare leggibile dove sta, e la nave deve respirare dove finisce il testo.
-private struct WidgetBackground: View {
-    let entry: VoyageEntry
-    let family: WidgetFamily
-
-    private var tint: Color { entry.isInPort ? Palette.ashore : Palette.underway }
-
-    var body: some View {
-        ZStack {
-            if family == .systemMedium, let voyage = entry.voyage {
-                SeaChart(voyage: voyage,
-                         fix: voyage.scheduledFix(at: entry.date),
-                         now: entry.date,
-                         // La nave finisce a destra, nello spazio che il testo lascia
-                         // libero, invece che al centro sotto le cifre.
-                         framing: .shipAnchored(spanDegrees: entry.isInPort ? 1.6 : 7.5,
-                                                at: UnitPoint(x: 0.76, y: 0.52)),
-                         showsPortNames: false, showsGraticule: false)
-
-                // Esposizione ridotta: la carta resta leggibile ma smette di
-                // competere col countdown, che è il motivo per cui il widget esiste.
-                LinearGradient(
-                    stops: [.init(color: Palette.abyss.opacity(0.92), location: 0),
-                            .init(color: Palette.abyss.opacity(0.74), location: 0.45),
-                            .init(color: Palette.abyss.opacity(0.34), location: 1)],
-                    startPoint: .leading, endPoint: .trailing)
-            } else {
-                LinearGradient(colors: entry.isInPort
-                               ? [Color(hex: 0x2A1E0E), Color(hex: 0x0B1725)]
-                               : [Color(hex: 0x0D3350), Color(hex: 0x061826)],
-                               startPoint: .topLeading, endPoint: .bottomTrailing)
-            }
-        }
-    }
-}
-
 struct AllAboardWidgetView: View {
     let entry: VoyageEntry
     @Environment(\.widgetFamily) private var family
-
-    private var tint: Color { entry.isInPort ? Palette.ashore : Palette.underway }
+    @Environment(\.livery) private var livery
 
     var body: some View {
         if let voyage = entry.voyage, let focus = entry.focus {
-            content(voyage: voyage, focus: focus)
+            switch family {
+            case .systemMedium: medium(voyage: voyage, focus: focus)
+            default: small(voyage: voyage, focus: focus)
+            }
         } else {
             empty
         }
@@ -152,73 +111,152 @@ struct AllAboardWidgetView: View {
 
     private var empty: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Image(systemName: "ferry")
+            Image(systemName: "ticket")
                 .font(.title3)
-                .foregroundStyle(Palette.underway)
+                .foregroundStyle(livery.field)
             Text("Nessuna crociera")
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(Palette.inkPrimary)
+                .font(.system(.caption, weight: .bold).width(.condensed))
+                .textCase(.uppercase)
+                .foregroundStyle(livery.ink)
             Text("Aggiungi il tuo itinerario in Cruisy.")
                 .font(.caption2)
-                .foregroundStyle(Palette.inkSecondary)
+                .foregroundStyle(livery.field)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
     }
 
-    @ViewBuilder
-    private func content(voyage: Voyage, focus: Voyage.Focus) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Label {
-                Text(headline(focus: focus))
-                    .font(.system(size: 10, weight: .semibold))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-            } icon: {
-                Image(systemName: entry.isInPort ? "figure.walk.departure" : "water.waves")
-                    .font(.system(size: 9, weight: .semibold))
-            }
-            .foregroundStyle(tint)
+    // MARK: Piccolo: l'ora stampata e il conto
 
-            Spacer(minLength: 4)
-
+    private func small(voyage: Voyage, focus: Voyage.Focus) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            eyebrow(focus: focus)
+            hour(voyage: voyage, focus: focus)
+            place(focus: focus)
+            Spacer(minLength: 2)
             // Il sistema conta da sé, senza ricaricare la timeline.
             Text(timerInterval: focus.countdown.range,
                  pauseTime: nil, countsDown: true, showsHours: true)
-                .font(.system(size: family == .systemSmall ? 28 : 32,
-                              weight: .semibold, design: .default))
+                .font(.system(size: 22, weight: .black).width(.condensed))
                 .monospacedDigit()
                 .minimumScaleFactor(0.6)
                 .lineLimit(1)
-                .foregroundStyle(Palette.inkPrimary)
+                .foregroundStyle(livery.ink)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .widgetURL(URL(string: "cruisy://today"))
+    }
 
-            Text(subtitle(voyage: voyage, focus: focus))
-                .font(.system(size: 11, weight: .medium))
-                .foregroundStyle(Palette.inkSecondary)
-                .lineLimit(2)
-                .padding(.top, 2)
+    // MARK: Medio: biglietto e matrice, con la perforazione in mezzo
 
-            if let miles = milesRemaining(voyage: voyage) {
-                Text("\(Format.nauticalMiles(miles)) alla meta")
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(tint)
-                    .padding(.top, 3)
+    private func medium(voyage: Voyage, focus: Voyage.Focus) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
+                eyebrow(focus: focus)
+                hour(voyage: voyage, focus: focus)
+                place(focus: focus)
+                Spacer(minLength: 0)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
 
-            if family == .systemMedium {
+            VerticalPerforation()
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Mancano")
+                    .font(.system(size: 9, weight: .bold))
+                    .tracking(1)
+                    .textCase(.uppercase)
+                    .foregroundStyle(livery.field)
+                Text(timerInterval: focus.countdown.range,
+                     pauseTime: nil, countsDown: true, showsHours: true)
+                    .font(.system(size: 24, weight: .black).width(.condensed))
+                    .monospacedDigit()
+                    .minimumScaleFactor(0.6)
+                    .lineLimit(1)
+                    .foregroundStyle(livery.ink)
                 ProgressView(timerInterval: focus.countdown.range, countsDown: false) {
                     EmptyView()
                 } currentValueLabel: {
                     EmptyView()
                 }
                 .progressViewStyle(.linear)
-                .tint(tint)
-                .padding(.top, 8)
+                .tint(livery.signal)
+                fields(voyage: voyage, focus: focus)
+                Spacer(minLength: 0)
+            }
+            .frame(width: 118, alignment: .leading)
+        }
+        .widgetURL(URL(string: "cruisy://today"))
+    }
+
+    // MARK: I pezzi
+
+    private func eyebrow(focus: Voyage.Focus) -> some View {
+        Text(headline(focus: focus))
+            .font(.system(size: 9, weight: .bold))
+            .tracking(1.2)
+            .textCase(.uppercase)
+            .lineLimit(1)
+            .minimumScaleFactor(0.8)
+            .foregroundStyle(livery.signalInk)
+    }
+
+    private func hour(voyage: Voyage, focus: Voyage.Focus) -> some View {
+        Text(voyage.clock.time(focus.countdown.target))
+            .font(.system(size: family == .systemSmall ? 40 : 44, weight: .black).width(.compressed))
+            .monospacedDigit()
+            .minimumScaleFactor(0.6)
+            .lineLimit(1)
+            .foregroundStyle(livery.ink)
+    }
+
+    private func place(focus: Voyage.Focus) -> some View {
+        Text(focus.port.name)
+            .font(.system(size: 12, weight: .bold).width(.condensed))
+            .textCase(.uppercase)
+            .lineLimit(2)
+            .minimumScaleFactor(0.8)
+            .foregroundStyle(livery.ink)
+    }
+
+    /// Due campi della matrice: quelli che servono per non perdere la nave.
+    @ViewBuilder
+    private func fields(voyage: Voyage, focus: Voyage.Focus) -> some View {
+        let clock = voyage.clock
+        HStack(alignment: .top, spacing: 10) {
+            switch focus.kind {
+            case .allAboard(let call), .sailAway(let call):
+                if let departure = call.departure {
+                    field(String(localized: "Partenza"), clock.time(departure))
+                }
+                field(String(localized: "Molo"), call.berth.name ?? call.berth.label.capitalized)
+            case .arrival(let call):
+                if let miles = milesRemaining(voyage: voyage) {
+                    field(String(localized: "Alla meta"), Format.nauticalMiles(miles))
+                }
+                field(String(localized: "Molo"), call.berth.name ?? call.berth.label.capitalized)
+            case .boarding(let call):
+                field(String(localized: "Imbarco dalle"), clock.time(call.arrival))
+                field(String(localized: "Orario"), call.scheduleOrigin.fieldValue)
             }
         }
-        .frame(maxWidth: family == .systemMedium ? 178 : .infinity,
-               maxHeight: .infinity, alignment: .leading)
+    }
+
+    private func field(_ label: String, _ value: String) -> some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text(label)
+                .font(.system(size: 8, weight: .bold))
+                .tracking(0.8)
+                .textCase(.uppercase)
+                .foregroundStyle(livery.field)
+                .lineLimit(1)
+            Text(value)
+                .font(.system(size: 12, weight: .bold))
+                .monospacedDigit()
+                .foregroundStyle(livery.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+        }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .widgetURL(URL(string: "cruisy://today"))
     }
 
     /// Le miglia che restano, ricavate dagli orari: senza GPS il widget non ha altro,
@@ -230,14 +268,32 @@ struct AllAboardWidgetView: View {
 
     private func headline(focus: Voyage.Focus) -> String {
         switch focus.kind {
-        case .allAboard: String(localized: "ALL ABOARD")
-        case .sailAway: String(localized: "PARTENZA")
-        case .arrival: String(localized: "ARRIVO")
-        case .boarding: String(localized: "IMBARCO")
+        case .allAboard: String(localized: "Rientro a bordo")
+        case .sailAway: String(localized: "Partenza")
+        case .arrival: String(localized: "Arrivo")
+        case .boarding: String(localized: "Imbarco")
         }
     }
+}
 
-    private func subtitle(voyage: Voyage, focus: Voyage.Focus) -> String {
-        "\(focus.port.name) · \(voyage.clock.time(focus.countdown.target))"
+/// La perforazione in verticale: nel widget medio biglietto e matrice stanno
+/// affiancati, non uno sopra l'altro.
+private struct VerticalPerforation: View {
+    @Environment(\.livery) private var livery
+
+    var body: some View {
+        Line()
+            .stroke(livery.perforation, style: StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
+            .frame(width: 1.5)
+            .accessibilityHidden(true)
+    }
+
+    private struct Line: Shape {
+        func path(in rect: CGRect) -> Path {
+            var path = Path()
+            path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+            return path
+        }
     }
 }

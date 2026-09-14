@@ -212,12 +212,16 @@ matrice di stato), stato vuoto.
 5. `OnboardingFlow`, `DisclaimerSheet` — fondo di sistema, `.borderedProminent` con
    `livery.tint`; la pagina «Come funziona» come `List`.
 6. `LiveActivityRow` / `LiveActivitySetting` — **cancellati** (vedi 1).
-7. **Widget e Live Activity** — stessa lingua: carta con `livery.paper`, `ink`, `signalInk`
-   per «RIENTRO A BORDO», ora grande, countdown con `Text(timerInterval:)`. I token sono
-   dinamici, quindi il widget segue da solo chiaro e scuro. Il widget medio con
-   perforazione e matrice. La livrea si legge con `LiveryChoice.stored()` +
-   `ShipDirectory.shared.lookup(voyage.shipName)?.operatorName`. Rispettare i vincoli in
-   `CLAUDE.md` (niente `ProgressView` a larghezza infinita nella Dynamic Island).
+7. **Widget e Live Activity** — **fatti nel codice, mai visti a schermo**: su questo Mac
+   non si possono aggiungere widget al simulatore. Carta con `livery.paper`, `ink`,
+   `signalInk` per «RIENTRO A BORDO», ora grande compressed, countdown con
+   `Text(timerInterval:)`; il widget medio ha biglietto e matrice affiancati con una
+   perforazione verticale; la schermata di blocco è una matrice di biglietto; la Dynamic
+   Island resta bianca e segnale sul nero. La livrea si legge con `LiveryChoice.stored()`
+   + `ShipDirectory.shared.lookup(shipName)?.operatorName`; i token sono dinamici, quindi
+   chiaro e scuro vengono da soli. I vincoli di `CLAUDE.md` sono rispettati (niente
+   `ProgressView` a larghezza infinita nella Dynamic Island, larghezza finita sul
+   contatore). **Da provare sul telefono per primi.**
 8. Poi **cancellare** `Palette.swift`, `Typography.swift`, `GlassSurface.swift`,
    `AdaptiveStack.swift` (se non più usato), `InfoRow.swift`, `MetricRow.swift`,
    `ProvenanceChip.swift`, `VoyageStore+Legacy.swift`, e `PaletteContrastTests` (sostituito
@@ -331,7 +335,7 @@ imparate. **Difetto trovato e corretto**: `LoggedVoyage` non nominava `track` fr
 ## Da fare (in ordine)
 
 1. Editor, importazione, riesame, onboarding nativi (7.2–7.5).
-2. Widget e Live Activity nel linguaggio del biglietto (7.7).
+2. Provare widget e Live Activity sul telefono (7.7): sono scritti, non visti.
 3. Cancellare il design vecchio (7.8) e `PaletteContrastTests`.
 4. `scripts/sync-strings.sh`, traduzioni inglesi, `LocalizationTests` verde.
 5. Screenshot `--lang it`, `--lang en`, `--size AX5` e `--appearance dark` su tutte le
@@ -342,10 +346,10 @@ imparate. **Difetto trovato e corretto**: `LoggedVoyage` non nominava `track` fr
 **Cosa resta da convertire in scuro.** Le schermate rifatte usano solo token dinamici e
 sono già a posto in entrambe le modalità (verificate nel quarto giro: Oggi, Itinerario,
 Scalo, Nave, Diario). I `Form` (Impostazioni, editor, importazione, onboarding) sono di
-sistema e seguono la modalità da soli. Restano **widget e Live Activity**, ancora con la
-palette vecchia (`Palette`), da rifare coi token: lì il chiaro/scuro arriverà con la
-conversione. Da guardare a mano, in scuro, dopo la conversione: la Carta (scrim e
-matrice di stato) e la pagina dei Porti toccati, che nel quarto giro non c'erano.
+sistema e seguono la modalità da soli. Widget e Live Activity usano i token dinamici,
+ma vanno **visti sul telefono** in entrambe le modalità. Da guardare a mano, in scuro,
+anche la Carta (scrim e matrice di stato) e la pagina dei Porti toccati, che nei giri
+in scuro non c'erano.
 
 ## Domande per Matteo
 
@@ -363,8 +367,9 @@ matrice di stato) e la pagina dei Porti toccati, che nel quarto giro non c'erano
 
 ## Da provare sul telefono
 
-- Dynamic Island espansa e Live Activity; widget della schermata Home (ancora nel design
-  vecchio).
+- **Widget della schermata Home, Live Activity e Dynamic Island**, rifatti nel linguaggio
+  del biglietto senza poterli vedere: `-sample deviceTest` per il widget, `-liveActivity`
+  per l'attività. Guardarli in chiaro e in scuro, e con una livrea di compagnia.
 - La rotta registrata col telefono in tasca **col profilo nuovo** (`LocationProfile.recording`):
   consumo in una giornata di mare e qualità della traccia nel diario.
 - Il collegamento a Meteo di Apple (`weather://`).

@@ -23,6 +23,12 @@ enum DebugLaunch {
     /// `importazione`, `impostazioni`, `onboarding`.
     static var open: String? { value("open") }
 
+    /// `-ora 6.5` finge che a bordo siano le sei e mezza: serve a guardare la scena del
+    /// giorno di mare all'alba, al tramonto e di notte senza aspettare che lo siano.
+    static var hour: Double? {
+        value("ora").flatMap(Double.init)
+    }
+
     /// `-livrea rosso` veste l'app con una livrea del catalogo, per nome (`Livery.id`).
     ///
     /// Esiste perché la nave di prova non è nell'elenco, quindi senza questo non si

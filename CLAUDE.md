@@ -78,7 +78,9 @@ Simulatore: **iPhone 17 Pro**, iOS 27.
     (`Cruisy/Services/DebugLaunch.swift`);
   - `-cruisy.hasSeenDisclaimer YES` salta l'onboarding, `-AppleLanguages "(en)"` cambia lingua;
   - `-livrea rosso` veste l'app con una livrea del catalogo (`Livery.id`), perché la nave di prova
-    non è nell'elenco e da sola resterebbe sempre quella di Cruisy.
+    non è nell'elenco e da sola resterebbe sempre quella di Cruisy;
+  - `-ora 6.5` finge l'ora di bordo, per vedere la scena del giorno di mare all'alba, al tramonto
+    e di notte.
   `scripts/screenshots.sh` li usa tutti (`--appearance dark` per la modalità scura). Guarda
   `foglio.jpg`, che le mette in griglia.
 - **I gesti si verificano con i test di interfaccia**, non a occhio: `CruisyUITests/`.

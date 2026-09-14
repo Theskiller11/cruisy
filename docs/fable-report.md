@@ -45,6 +45,9 @@ rapporto dice cosa c'è, cosa manca, e **come continuare senza perdere coerenza*
   con l'argomento in più.
 - La barra delle schede: `screenshots/dopo-7-barra/foglio.jpg` — la scheda selezionata con
   `tabTint` su Cruisy, «Rosso», «Blu notte e oro» e «Blu e giallo», in chiaro e in scuro.
+- Il cielo alle sei ore: `screenshots/dopo-8-ore/foglio.jpg` — notte con luna e stelle,
+  alba, mattina, tramonto, sera, e il tramonto in scuro. Fatte con `-ora <h>`, l'argomento
+  DEBUG che finge l'ora di bordo.
 - Giri `--lang en` e `--size AX5`: **non fatti** (vedi «Da fare»).
 
 La cartella `screenshots/` è ignorata da git: si rigenera con `scripts/screenshots.sh`.

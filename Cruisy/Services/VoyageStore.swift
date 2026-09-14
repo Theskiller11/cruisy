@@ -154,6 +154,9 @@ final class VoyageStore {
     /// dice mezzogiorno mentre a bordo sono le sei sarebbe la stessa bugia dei
     /// countdown sbagliati.
     var shipHour: Double {
+        #if DEBUG
+        if let forced = DebugLaunch.hour { return forced }
+        #endif
         guard let clock = voyage?.clock else { return 21 }   // senza crociera: sera
         let parts = clock.calendar(at: now).dateComponents([.hour, .minute], from: now)
         return Double(parts.hour ?? 21) + Double(parts.minute ?? 0) / 60

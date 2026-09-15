@@ -1,12 +1,13 @@
 import SwiftUI
 
-/// La carta ridotta a card: mostra dove si è, e si tocca per aprirla a tutto schermo.
+/// La carta ridotta a cartolina: mostra dove si è, e si tocca per aprirla.
 ///
-/// Esiste in due punti — nel pannello di Oggi, attorno alla nave, e nella schermata
-/// d'attesa, su tutta la rotta — e deve essere **la stessa card**: porta alla stessa
-/// carta, e due card leggermente diverse per la stessa destinazione sembrerebbero due
-/// cose diverse.
+/// Non è un'immagine: è lo stesso disegnatore della schermata a tutto schermo,
+/// con meno dettagli. Così l'anteprima non può mai raccontare una posizione
+/// diversa da quella vera. La cornice di carta la fa stare nel linguaggio del
+/// biglietto: un ritaglio di carta nautica spillato al biglietto.
 struct ChartPreviewCard: View {
+    @Environment(\.livery) private var livery
     let voyage: Voyage
     var fix: ShipFix?
     let now: Date
@@ -15,36 +16,33 @@ struct ChartPreviewCard: View {
     let title: String
     var showsPortNames = false
     var showsGraticule = false
-    var height: CGFloat = 178
+    var height: CGFloat = 168
 
     var body: some View {
-        ZStack(alignment: .bottomLeading) {
+        VStack(spacing: 0) {
             SeaChart(voyage: voyage, fix: fix, now: now,
                      framing: framing,
                      showsPortNames: showsPortNames,
                      showsGraticule: showsGraticule)
                 .frame(height: height)
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .padding(6)
 
-            LinearGradient(colors: [.clear, Palette.abyss.opacity(0.85)],
-                           startPoint: .center, endPoint: .bottom)
-
-            HStack(alignment: .bottom) {
+            HStack(alignment: .firstTextBaseline) {
                 Text(title)
-                    .font(Type.rowTitle)
-                    .foregroundStyle(Palette.inkPrimary)
+                    .font(TicketType.rowTitle)
+                    .foregroundStyle(livery.ink)
+                    .lineLimit(1)
                 Spacer(minLength: 8)
-                Text("Carta")
-                    .font(Type.metricLabel.weight(.semibold))
-                    .foregroundStyle(Palette.inkPrimary)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 5)
-                    .glassCapsule(prominence: .chip)
+                HStack(spacing: 4) {
+                    Text("Carta").ticketFieldLabel(livery.field)
+                    PaperDisclosure()
+                }
             }
-            .padding(14)
+            .padding(.horizontal, 14)
+            .padding(.bottom, 12)
+            .padding(.top, 4)
         }
-        .frame(height: height)
-        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 24, style: .continuous)
-            .stroke(Palette.hairline, lineWidth: 0.5))
+        .paperCard()
     }
 }

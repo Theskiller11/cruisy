@@ -3,46 +3,53 @@ import SwiftUI
 /// Lo stato iniziale: nessuna crociera inserita.
 ///
 /// Niente dati finti a riempire il vuoto. Un'app che si presenta con una crociera
-/// inventata addosso è contenuto segnaposto, e non supera la revisione.
+/// inventata addosso è contenuto segnaposto, e non supera la revisione. Il posto
+/// del biglietto è un biglietto vuoto, tratteggiato: si capisce cosa ci andrà.
 struct NoVoyageView: View {
     @Environment(VoyageStore.self) private var store
+    @Environment(\.livery) private var livery
     @State private var isEditing = false
     @State private var isImporting = false
 
     var body: some View {
         VStack(spacing: 22) {
-            Image(systemName: "ferry")
-                .font(.system(size: 44, weight: .light))
-                .foregroundStyle(Palette.underway)
-
-            VStack(spacing: 8) {
+            VStack(spacing: 10) {
+                Image(systemName: "ticket")
+                    .font(.system(size: 40, weight: .light))
+                    .foregroundStyle(livery.onHullMuted)
                 Text("Nessuna crociera")
-                    .font(.title2.weight(.semibold))
-                    .foregroundStyle(Palette.inkPrimary)
+                    .font(TicketType.place)
+                    .tracking(0.6)
+                    .textCase(.uppercase)
+                    .foregroundStyle(livery.onHull)
                 Text("Incolla o fotografa la conferma della compagnia: Cruisy ne ricava l'itinerario e da lì calcola i countdown, anche senza rete a bordo.")
-                    .font(Type.rowDetail)
-                    .foregroundStyle(Palette.inkSecondary)
+                    .font(TicketType.rowDetail)
+                    .foregroundStyle(livery.onHullMuted)
                     .multilineTextAlignment(.center)
             }
+            .padding(24)
+            .frame(maxWidth: .infinity)
+            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(livery.onHull.opacity(0.35), style: StrokeStyle(lineWidth: 1.5, dash: [6, 6])))
 
             VStack(spacing: 10) {
                 Button {
                     isImporting = true
                 } label: {
                     Label("Importa l'itinerario", systemImage: "text.viewfinder")
-                        .font(Type.rowTitle)
+                        .font(TicketType.rowTitle)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
+                        .padding(.vertical, 10)
                 }
                 .buttonStyle(.glassProminent)
-                .tint(Palette.underway)
+                .tint(livery.signal)
 
                 Button("Inserisci a mano") { isEditing = true }
-                    .font(Type.rowDetail)
-                    .tint(Palette.action)
+                    .font(TicketType.rowTitle)
+                    .tint(livery.onHull)
             }
         }
-        .padding(.horizontal, 32)
+        .padding(.horizontal, 28)
         .sheet(isPresented: $isEditing) {
             VoyageEditor(voyage: nil) { store.replace(with: $0) }
         }
@@ -61,7 +68,7 @@ struct NoVoyageView: View {
 
 #Preview {
     ZStack {
-        Palette.seaBackground.ignoresSafeArea()
+        Livery.cruisy.hull.ignoresSafeArea()
         NoVoyageView().environment(VoyageStore.previewEmpty)
     }
     .preferredColorScheme(.dark)

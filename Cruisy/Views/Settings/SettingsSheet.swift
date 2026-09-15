@@ -1,10 +1,15 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// Le impostazioni: condivisione della crociera, unità, avvisi, fonti.
+/// Le impostazioni: livrea, condivisione della crociera, unità, avvisi, fonti.
+///
+/// Un `Form` di sistema e basta: il biglietto è il contenuto, la cornice resta iOS.
 struct SettingsSheet: View {
     @Environment(VoyageStore.self) private var store
+    @Environment(Preferences.self) private var preferences
     @Environment(PositionService.self) private var position
+    @Environment(LiveActivityController.self) private var activities
+    @Environment(\.livery) private var livery
     @Environment(\.dismiss) private var dismiss
 
     @State private var exported: URL?
@@ -18,6 +23,7 @@ struct SettingsSheet: View {
     var body: some View {
         NavigationStack {
             Form {
+                liverySection
                 sharingSection
                 liveActivitySection
                 trackingSection
@@ -29,6 +35,7 @@ struct SettingsSheet: View {
             }
             .navigationTitle("Impostazioni")
             .navigationBarTitleDisplayMode(.inline)
+            .tint(livery.tint)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button("Fine") { dismiss() } }
             }
@@ -59,6 +66,31 @@ struct SettingsSheet: View {
             } message: {
                 if let problem { Text(problem) }
             }
+        }
+    }
+
+    // MARK: Livrea
+
+    /// I colori dell'app: quelli di Cruisy, o quelli ispirati alla compagnia.
+    ///
+    /// Sono palette **ispirate**, non marchi: niente loghi, niente caratteri, niente
+    /// nome della compagnia qui — solo il nome dei colori. Con una nave che non è
+    /// nell'elenco resta la livrea di Cruisy, e lo si dice.
+    private var liverySection: some View {
+        Section {
+            Picker("Livrea", selection: Binding(
+                get: { preferences.livery },
+                set: { preferences.livery = $0 })) {
+                    Text("Cruisy").tag(LiveryChoice.cruisy)
+                    Text("Colori della compagnia").tag(LiveryChoice.company)
+                }
+            LabeledContent("Adesso", value: livery.name)
+        } header: {
+            Text("Livrea")
+        } footer: {
+            Text(store.shipRecord?.operatorName.isEmpty == false
+                 ? "I colori della compagnia sono una palette ispirata alla sua livrea, ricavata dalla nave della crociera. Nessun logo e nessun marchio: solo i colori."
+                 : "La nave di questa crociera non è nell'elenco, quindi la livrea resta quella di Cruisy anche scegliendo i colori della compagnia.")
         }
     }
 
@@ -101,24 +133,41 @@ struct SettingsSheet: View {
 
     /// Il countdown sulla schermata di blocco.
     ///
-    /// Sta qui e non più nella schermata Oggi: era una riga in mezzo ai dati, e
-    /// un'impostazione in mezzo ai dati è rumore quando non ti serve e introvabile
-    /// quando ti serve.
+    /// **Un interruttore solo.** Fino al 14 settembre 2026 ce n'erano due: la
+    /// preferenza e, sotto, la riga di controllo dell'attività in corso, che diceva
+    /// la stessa cosa con un altro interruttore. Adesso c'è la preferenza, e una riga
+    /// di stato che dice che cosa sta succedendo davvero: l'attività si accende e si
+    /// spegne da sé quando è il momento (`RootTabView`), e da qui si sceglie solo se
+    /// la si vuole.
     private var liveActivitySection: some View {
         Section {
             Toggle(isOn: Binding(
-                get: { store.wantsLiveActivity },
-                set: { store.wantsLiveActivity = $0 })) {
+                get: { preferences.wantsLiveActivity },
+                set: { wanted in
+                    preferences.wantsLiveActivity = wanted
+                    if !wanted { Task { await activities.end() } }
+                })) {
                     Text("Countdown sulla schermata di blocco")
                 }
-            LiveActivitySetting()
-                .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0))
-                .listRowBackground(Color.clear)
+            LabeledContent("Adesso", value: liveActivityStatus)
         } header: {
             Text("Schermata di blocco")
         } footer: {
-            Text("Si accende in porto nelle ultime otto ore prima dell'all aboard, e in mare nell'ultima ora e mezza prima dell'attracco.")
+            Text("Si accende in porto nelle ultime otto ore prima dell'all aboard, e in mare nell'ultima ora e mezza prima dell'attracco. Resta visibile anche con Full Immersion attivo.")
         }
+    }
+
+    private var liveActivityStatus: String {
+        guard activities.areActivitiesAllowed else {
+            return String(localized: "Disattivata nelle Impostazioni di sistema")
+        }
+        if activities.isRunning { return String(localized: "Attiva") }
+        guard preferences.wantsLiveActivity else { return String(localized: "Spenta") }
+        guard let focus = store.focus else { return String(localized: "Nessun countdown in corso") }
+        let atSea = if case .arrival = focus.kind { true } else { false }
+        return activities.isTooEarly(for: focus.countdown, at: store.now, atSea: atSea)
+            ? String(localized: "Si accenderà quando sarà il momento")
+            : String(localized: "Pronta")
     }
 
     /// La registrazione della rotta.
@@ -131,15 +180,15 @@ struct SettingsSheet: View {
     private var trackingSection: some View {
         Section {
             Toggle(isOn: Binding(
-                get: { store.wantsTracking },
+                get: { preferences.wantsTracking },
                 set: { wanted in
-                    store.wantsTracking = wanted
+                    preferences.wantsTracking = wanted
                     if wanted { position.requestAlwaysAccess() }
                 })) {
                     Text("Registra la rotta percorsa")
                 }
 
-            if store.wantsTracking, !position.canTrackInBackground {
+            if preferences.wantsTracking, !position.canTrackInBackground {
                 // Distinguere "non l'hai ancora dato" da "l'hai negato": la prima si
                 // risolve qui, la seconda solo in Impostazioni di sistema.
                 Label {
@@ -148,15 +197,15 @@ struct SettingsSheet: View {
                          : "Manca il permesso «Sempre». Senza, la rotta si registra solo mentre l'app è aperta.")
                 } icon: {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundStyle(Palette.ashore)
+                        .foregroundStyle(livery.signalInk)
                 }
-                .font(Type.rowDetail)
+                .font(.footnote)
             }
 
-            if !store.track.isEmpty {
-                LabeledContent("Punti registrati", value: "\(store.track.points.count)")
+            if !store.recorder.track.isEmpty {
+                LabeledContent("Punti registrati", value: "\(store.recorder.track.points.count)")
                 LabeledContent("Miglia vere",
-                               value: Format.nauticalMiles(store.track.nauticalMiles))
+                               value: Format.nauticalMiles(store.recorder.track.nauticalMiles))
             }
         } header: {
             Text("Rotta")
@@ -168,8 +217,8 @@ struct SettingsSheet: View {
     private var unitsSection: some View {
         Section("Unità") {
             Picker("Velocità", selection: Binding(
-                get: { store.speedUnit },
-                set: { store.speedUnit = $0 })) {
+                get: { preferences.speedUnit },
+                set: { preferences.speedUnit = $0 })) {
                     ForEach(SpeedUnit.allCases, id: \.self) { Text($0.label).tag($0) }
                 }
         }

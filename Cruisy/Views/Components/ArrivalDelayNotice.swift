@@ -12,6 +12,6 @@ struct ArrivalDelayNotice: View {
     let clock: ShipClock
 
     var body: some View {
-        StaleDataNotice(message: "All'andatura di queste ore arriverete a \(port.name) verso le \(clock.time(estimate.expected)), \(Format.duration(estimate.delay)) dopo l'orario pubblicato. Gli orari che contano restano quelli annunciati a bordo.")
+        HullNotice("All'andatura di queste ore arriverete a \(port.name) verso le \(clock.time(estimate.expected)), \(Format.duration(estimate.delay)) dopo l'orario pubblicato. Gli orari che contano restano quelli annunciati a bordo.")
     }
 }

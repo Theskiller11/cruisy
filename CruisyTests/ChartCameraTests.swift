@@ -5,6 +5,7 @@ import CoreGraphics
 
 /// Il comportamento del gesto sulla carta, provato senza far girare l'interfaccia.
 @Suite("Telecamera della carta")
+@MainActor
 struct ChartCameraTests {
 
     private let size = CGSize(width: 400, height: 800)

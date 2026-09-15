@@ -1,18 +1,17 @@
 import SwiftUI
 
-/// Le tre schede di Cruisy.
+/// Le quattro schede di Cruisy.
 ///
-/// `TabView` nativa e non la pillola di vetro disegnata a mano del brief: su iOS 26
-/// la barra è già Liquid Glass, si rimpicciolisce da sola allo scorrimento, rispetta
-/// l'inset dell'indicatore Home e porta con sé l'accessibilità. Rifarla a mano
-/// significherebbe rifare peggio anche quelle cose, comprese le etichette a 9,5 px
-/// che l'audit ha bocciato.
+/// `TabView` nativa, con la barra Liquid Glass di iOS 26: si rimpicciolisce da sola
+/// allo scorrimento, rispetta l'inset dell'indicatore Home e porta con sé
+/// l'accessibilità. Il biglietto è il contenuto; la cornice resta iOS.
 ///
-/// Tre e non cinque: "Nave" e "Logbook" non servono in banchina, e il deck plan di
-/// una nave reale è materiale di terzi.
+/// Qui si decide anche la **livrea**: dalla scelta nelle Impostazioni e dalla
+/// compagnia della nave, e da qui scende nell'ambiente di ogni schermata.
 struct RootTabView: View {
     @Environment(LiveActivityController.self) private var activities
     @Environment(VoyageStore.self) private var store
+    @Environment(Preferences.self) private var preferences
     @Environment(NotificationScheduler.self) private var notifications
     @Environment(PositionService.self) private var position
     @State private var selection: Section = .today
@@ -25,7 +24,14 @@ struct RootTabView: View {
     /// Cambia solo quando cambia qualcosa che riguarda la registrazione, così il
     /// `task` non riparte a ogni battito dei trenta secondi.
     private var trackingKey: String {
-        "\(store.wantsTracking)-\(store.voyage?.id.uuidString ?? "-")-\(store.moment == .completed)-\(position.canTrackInBackground)"
+        "\(preferences.wantsTracking)-\(store.voyage?.id.uuidString ?? "-")-\(store.moment == .completed)-\(position.canTrackInBackground)"
+    }
+
+    private var livery: Livery {
+        #if DEBUG
+        if let forced = DebugLaunch.livery { return forced }
+        #endif
+        return Livery.resolve(preferences.livery, operatorName: store.shipRecord?.operatorName)
     }
 
     enum Section: Hashable {
@@ -60,7 +66,13 @@ struct RootTabView: View {
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
-        .tint(store.accent)
+        .tint(livery.tabTint)
+        .environment(\.livery, livery)
+        // L'app segue l'aspetto del telefono: in chiaro biglietti bianchi sullo
+        // scafo blu, in scuro biglietti di carta scura sullo scafo quasi nero. Le
+        // barre stanno sempre sullo scafo, che è scuro in entrambe le modalità:
+        // per questo si tengono scure, così le loro scritte restano bianche.
+        .toolbarColorScheme(.dark, for: .tabBar)
         // Un file .cruisy ricevuto per AirDrop, messaggio o email apre qui.
         .onOpenURL { url in
             do { incoming = try VoyageFile.read(from: url) }
@@ -90,14 +102,15 @@ struct RootTabView: View {
             Text("Questo file non contiene una crociera che riesco a leggere.")
         }
         .sheet(isPresented: $showsDisclaimer) {
-            OnboardingFlow { store.hasSeenDisclaimer = true }
+            OnboardingFlow { preferences.hasSeenDisclaimer = true }
+                .environment(\.livery, livery)
         }
         // La registrazione della rotta segue la preferenza **e** lo stato della
         // crociera: si spegne da sola quando sbarchi. Una crociera finita che
         // continua a tenere il GPS acceso è la ragione per cui la gente disinstalla.
         .task(id: trackingKey) {
             let sailing = store.voyage != nil && store.moment != .completed
-            position.setTracking(store.wantsTracking && sailing) { fix in
+            position.setTracking(preferences.wantsTracking && sailing) { fix in
                 store.record(fix: Coordinate(latitude: fix.coordinate.latitude,
                                              longitude: fix.coordinate.longitude),
                              at: fix.timestamp)
@@ -106,7 +119,7 @@ struct RootTabView: View {
         // Andando in secondo piano si scrive subito: se no gli ultimi punti — fino
         // a venti, cioè quasi un'ora di navigazione — se ne andrebbero al riavvio.
         .onChange(of: scenePhase) { _, phase in
-            if phase != .active { store.persistTrack() }
+            if phase != .active { store.recorder.persist() }
         }
         // Sta qui e non nella riga dell'interruttore, che vive solo finché la
         // schermata Oggi è a video: l'attività va chiusa anche se sei sulla Carta.
@@ -118,7 +131,7 @@ struct RootTabView: View {
             // una domanda a vuoto: quando la finestra si apre l'attività si accende
             // da sé. Spegnerla a mano la spegne e basta — `wantsLiveActivity` resta
             // vero, ma `reconcile` non la riaccende finché il traguardo è lo stesso.
-            guard store.wantsLiveActivity, !activities.isRunning,
+            guard preferences.wantsLiveActivity, !activities.isRunning,
                   let voyage = store.voyage, let focus = store.focus else { return }
             let atSea = if case .arrival = focus.kind { true } else { false }
             _ = activities.start(voyage: voyage, call: focus.port, countdown: focus.countdown,
@@ -142,13 +155,10 @@ struct RootTabView: View {
             default: break
             }
         }
-        #endif
-        #if DEBUG
         // `-liveActivity` accende l'attività all'avvio. Esiste perché per vederla
         // bisogna altrimenti trovare l'interruttore, e la Dynamic Island espansa
         // vuole una pressione lunga: senza questo, l'unico modo di verificarla è
-        // chiederlo a qualcuno con un telefono in mano — che è come ci si accorge
-        // di un renderer caduto solo dopo averlo consegnato.
+        // chiederlo a qualcuno con un telefono in mano.
         .task {
             guard ProcessInfo.processInfo.arguments.contains("-liveActivity"),
                   let voyage = store.voyage, let focus = store.focus else { return }
@@ -160,28 +170,17 @@ struct RootTabView: View {
         #endif
         .task {
             #if DEBUG
-            // `-tab carta|itinerario` apre direttamente una scheda, per pilotare
-            // la verifica dal simulatore senza toccare lo schermo.
-            switch ProcessInfo.processInfo.arguments.last(where: { ["itinerario","oggi","nave","diario"].contains($0) }) {
-            case "itinerario": selection = .itinerary
-            case "nave": selection = .ship
-            case "diario": selection = .logbook
-            default: break
-            }
-            #endif
-            #if DEBUG
             // Due fogli che si presentano insieme non ne mostrano nessuno: i flag di
             // prova che aprono altro devono saltare l'onboarding.
             let skipping = ProcessInfo.processInfo.arguments.contains("-importDemo")
                 || ProcessInfo.processInfo.arguments.contains("-skipOnboarding")
-            showsDisclaimer = (!store.hasSeenDisclaimer && !skipping)
+            showsDisclaimer = (!preferences.hasSeenDisclaimer && !skipping)
                 || DebugLaunch.open == "onboarding"
             #else
-            showsDisclaimer = !store.hasSeenDisclaimer
+            showsDisclaimer = !preferences.hasSeenDisclaimer
             #endif
             await notifications.refreshAuthorization()
             await notifications.reschedule(for: store.voyage)
-
         }
         // Un solo posto in cui riprogrammare gli avvisi: qualunque schermata cambi
         // la crociera, le notifiche si riscrivono di conseguenza. Sparpagliare questa
@@ -195,10 +194,11 @@ struct RootTabView: View {
 #Preview {
     RootTabView()
         .environment(VoyageStore.preview)
+        .environment(Preferences.ephemeral)
         .environment(PositionService())
         .environment(NotificationScheduler())
         .environment(LiveActivityController())
         .environment(Reachability())
-        .environment(NotificationScheduler())
-        .preferredColorScheme(.dark)
+        .environment(MarineWeatherService())
+        .environment(ShipLookupService())
 }

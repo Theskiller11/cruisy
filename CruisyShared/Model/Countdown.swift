@@ -23,6 +23,15 @@ public enum CountdownOrigin: String, Codable, Sendable, CaseIterable {
         }
     }
 
+    /// La provenienza come valore di un campo del biglietto: «Pubblicato».
+    public var fieldValue: String {
+        switch self {
+        case .publishedSchedule: String(localized: "Pubblicato", comment: "Campo Orario del biglietto")
+        case .userEdited: String(localized: "Corretto da te", comment: "Campo Orario del biglietto")
+        case .estimated: String(localized: "Stimato", comment: "Campo Orario del biglietto")
+        }
+    }
+
     /// Quanto ci si può appoggiare a questo orario. Governa il glifo mostrato, così
     /// la provenienza non è affidata al solo colore.
     public var isAuthoritative: Bool {
@@ -84,9 +93,13 @@ public struct Countdown: Equatable, Sendable, Codable {
     }
 
     /// "2:58:04" oppure "58:04" sotto l'ora. Cifre a larghezza fissa in resa.
-    public func formatted(at now: Date) -> String {
+    ///
+    /// Con `alwaysHours` le ore ci sono sempre: «0:19:55». Sul biglietto, accanto a
+    /// un'ora stampata come «17:30», un «19:55» si leggerebbe come un altro orario
+    /// del giorno e non come diciannove minuti — l'ha notato Matteo al primo giro.
+    public func formatted(at now: Date, alwaysHours: Bool = false) -> String {
         let c = components(at: now)
-        return c.hours > 0
+        return c.hours > 0 || alwaysHours
             ? String(format: "%d:%02d:%02d", c.hours, c.minutes, c.seconds)
             : String(format: "%d:%02d", c.minutes, c.seconds)
     }

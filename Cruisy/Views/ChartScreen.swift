@@ -8,10 +8,12 @@ import SwiftUI
 /// manca l'app lo dice invece di lasciare un rettangolo vuoto.
 struct ChartScreen: View {
     @Environment(VoyageStore.self) private var store
+    @Environment(Preferences.self) private var preferences
     @Environment(PositionService.self) private var position
     @Environment(Reachability.self) private var reachability
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.livery) private var livery
 
     /// Inquadratura iniziale, così il collegamento dalla Home arriva già dove serve.
     var initialFraming: SeaChart.Framing = .ship(spanDegrees: 7.5)
@@ -44,7 +46,7 @@ struct ChartScreen: View {
                     Spacer(minLength: 0)
                     controls
                     if layer == .satellite, !reachability.isOnline {
-                        StaleDataNotice(message: "Senza rete le immagini satellitari non si caricano. La carta nautica funziona lo stesso.")
+                        HullNotice("Senza rete le immagini satellitari non si caricano. La carta nautica funziona lo stesso.")
                     }
                     statusCard(voyage: voyage)
                         .background(GeometryReader { proxy in
@@ -54,7 +56,7 @@ struct ChartScreen: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom, 12)
             } else {
-                store.background.ignoresSafeArea()
+                livery.hull.ignoresSafeArea()
                 NoVoyageView()
             }
         }
@@ -194,7 +196,7 @@ struct ChartScreen: View {
         .buttonStyle(.glass)
         // Tondi davvero: senza, il vetro prende la forma a pastiglia del sistema.
         .buttonBorderShape(.circle)
-        .tint(Palette.inkPrimary)
+        .tint(livery.onHull)
         .accessibilityLabel(Text(label))
     }
 
@@ -214,10 +216,10 @@ struct ChartScreen: View {
 
     private var scrim: some View {
         LinearGradient(
-            stops: [.init(color: Palette.abyss.opacity(0.72), location: 0),
+            stops: [.init(color: livery.hullDeep.opacity(0.78), location: 0),
                     .init(color: .clear, location: 0.24),
-                    .init(color: .clear, location: 0.55),
-                    .init(color: Palette.abyss.opacity(0.88), location: 0.94)],
+                    .init(color: .clear, location: 0.6),
+                    .init(color: livery.hullDeep.opacity(0.7), location: 0.94)],
             startPoint: .top, endPoint: .bottom)
         .ignoresSafeArea()
         .allowsHitTesting(false)
@@ -236,12 +238,16 @@ struct ChartScreen: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(voyage.shipName)
-                    .font(.title3.weight(.semibold))
-                    .foregroundStyle(Palette.inkPrimary)
+                    .font(TicketType.masthead)
+                    .tracking(TicketType.mastheadTracking)
+                    .textCase(.uppercase)
+                    .foregroundStyle(livery.onHull)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
                 if let identifiers = identifiers(voyage) {
                     Text(identifiers)
-                        .font(Type.technical)
-                        .foregroundStyle(Palette.inkSecondary)
+                        .font(TicketType.technical)
+                        .foregroundStyle(livery.onHullMuted)
                 }
             }
             Spacer(minLength: 8)
@@ -254,30 +260,31 @@ struct ChartScreen: View {
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
 
+    /// La matrice di stato: dove si è, con quale fiducia, e i numeri della rotta.
+    /// Su carta, come la matrice di un biglietto: è la stessa lingua di Oggi.
     @ViewBuilder
     private func statusCard(voyage: Voyage) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            AdaptiveHStack(verticalAlignment: .firstTextBaseline) {
-                Text(headline(voyage: voyage))
-                    .font(Type.rowTitle)
-                    .foregroundStyle(Palette.inkPrimary)
-                AdaptiveSpacer()
-                if let fix {
-                    ProvenanceChip(origin: fix.origin == .schedule ? .estimated : .publishedSchedule,
-                                   freshness: fix.freshness(at: store.now))
-                }
-            }
+            Text(headline(voyage: voyage))
+                .font(TicketType.place)
+                .tracking(0.4)
+                .textCase(.uppercase)
+                .foregroundStyle(livery.ink)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
 
             if let fix {
-                MetricRow(metrics: metrics(voyage: voyage, fix: fix))
+                TicketRule()
+                TicketMatrix(fields: fields(voyage: voyage, fix: fix), columns: 3)
                 Text(Format.coordinate(fix.coordinate))
-                    .font(Type.technical)
-                    .foregroundStyle(Palette.inkSecondary)
+                    .font(TicketType.technical)
+                    .foregroundStyle(livery.field)
                     .accessibilityLabel(Text("Posizione \(Format.coordinate(fix.coordinate))"))
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
-        .glassSurface(cornerRadius: 28, prominence: .chrome)
+        .paperCard()
     }
 
     private func headline(voyage: Voyage) -> String {
@@ -289,28 +296,32 @@ struct ChartScreen: View {
         }
     }
 
-    /// Come nel pannello di Oggi: quando il GPS è fermo non dà velocità né rotta, e
-    /// invece di inventarle si mostra un'altra grandezza col suo nome vero.
-    private func metrics(voyage: Voyage, fix: ShipFix) -> [Metric] {
-        var metrics: [Metric] = []
+    /// Come sul biglietto di Oggi: quando il GPS è fermo non dà velocità né rotta,
+    /// e invece di inventarle si mostra un'altra grandezza col suo nome vero. La
+    /// provenienza della posizione è un campo come gli altri.
+    private func fields(voyage: Voyage, fix: ShipFix) -> [TicketField] {
+        var fields: [TicketField] = []
         if let speed = fix.speed, speed > 0.2 {
-            metrics.append(Metric(value: Format.speed(knots: speed, unit: store.speedUnit),
-                                  label: String(localized: "Velocità")))
+            fields.append(TicketField(label: String(localized: "Velocità"),
+                                      value: Format.speed(knots: speed, unit: preferences.speedUnit)))
         }
         if let course = fix.course {
-            metrics.append(Metric(value: Format.bearing(course),
-                                  label: String(localized: "Rotta"),
-                                  spoken: Format.course(course)))
+            fields.append(TicketField(label: String(localized: "Rotta"), value: Format.bearing(course),
+                                      spoken: Format.course(course)))
         } else if case .atSea(_, let to) = store.moment {
             let bearing = Geo.bearing(from: fix.coordinate, to: to.coordinate)
-            metrics.append(Metric(value: Format.bearing(bearing),
-                                  label: String(localized: "Rilevamento"),
-                                  spoken: Format.course(bearing)))
+            fields.append(TicketField(label: String(localized: "Rilevamento"), value: Format.bearing(bearing),
+                                      spoken: Format.course(bearing)))
         }
         if let miles = voyage.milesRemaining(from: fix, at: store.now) {
-            metrics.append(Metric(value: Format.nauticalMiles(miles),
-                                  label: String(localized: "Alla meta")))
+            fields.append(TicketField(label: String(localized: "Alla meta"), value: Format.nauticalMiles(miles)))
         }
-        return metrics
+        let freshness = fix.freshness(at: store.now)
+        fields.append(TicketField(label: String(localized: "Posizione"),
+                                  value: fix.origin.isMeasured
+                                    ? "\(fix.origin.label) · \(freshness.label)"
+                                    : fix.origin.label,
+                                  isSignal: !fix.origin.isMeasured || freshness.needsCaveat))
+        return fields
     }
 }

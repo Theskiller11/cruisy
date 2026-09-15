@@ -268,7 +268,7 @@ struct SeaChart: View {
 /// - l'ampiezza passa per il **logaritmo**, perché lo zoom si percepisce in rapporti
 ///   e non in differenze: da 1,6° a 60° in scala lineare si spalancherebbe subito per
 ///   poi strisciare, mentre in scala logaritmica la crescita si sente costante.
-extension SeaChart: Animatable {
+extension SeaChart: @preconcurrency Animatable {
     var animatableData: AnimatablePair<AnimatablePair<Double, Double>, Double> {
         get {
             guard case .camera(let camera) = framing else { return .init(.init(0, 0), 0) }

@@ -175,8 +175,8 @@ struct LogbookStoreTests {
         let store = VoyageStore(voyage: nil, now: Date(timeIntervalSince1970: 1_700_000_100),
                                 autoload: false)
         store.replace(with: voyage())
-        #expect(store.logbook.voyages.count == 1)
-        #expect(store.logbook.stamps.contains { $0.port.name == "Genova" })
+        #expect(store.logbook.logbook.voyages.count == 1)
+        #expect(store.logbook.logbook.stamps.contains { $0.port.name == "Genova" })
     }
 
     @Test("Togliere una crociera la fa sparire dai totali")
@@ -184,9 +184,9 @@ struct LogbookStoreTests {
         let store = VoyageStore(voyage: nil, now: Date(timeIntervalSince1970: 1_700_000_100),
                                 autoload: false)
         store.replace(with: voyage())
-        let entry = try #require(store.logbook.voyages.first)
-        store.forget(entry)
-        #expect(store.logbook.isEmpty)
-        #expect(store.logbook.nauticalMiles == 0)
+        let entry = try #require(store.logbook.logbook.voyages.first)
+        store.logbook.forget(entry)
+        #expect(store.logbook.logbook.isEmpty)
+        #expect(store.logbook.logbook.nauticalMiles == 0)
     }
 }

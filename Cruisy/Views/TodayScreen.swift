@@ -2,13 +2,21 @@ import SwiftUI
 
 /// La schermata che si apre per prima e che risponde a una domanda sola:
 /// quanto manca, e a che cosa.
+///
+/// Sullo scafo c'è il nome della nave; sotto, la pila dei biglietti: quello di
+/// oggi davanti, il prossimo scalo che si intravede dietro. In giorno di mare, sopra
+/// la pila c'è il cielo di bordo con le onde che si muovono.
 struct TodayScreen: View {
     @Environment(VoyageStore.self) private var store
+    @Environment(Preferences.self) private var preferences
     @Environment(PositionService.self) private var position
     @Environment(MarineWeatherService.self) private var weather
+    @Environment(Reachability.self) private var reachability
+    @Environment(\.livery) private var livery
     @Environment(\.scenePhase) private var scenePhase
 
     @State private var route: [Route] = []
+    @State private var photos = ShipPhotoService()
 
     /// Cambia quando cambia il punto di cui chiedere il meteo, o quando scatta l'ora.
     private var weatherKey: String {
@@ -27,20 +35,16 @@ struct TodayScreen: View {
     var body: some View {
         NavigationStack(path: $route) {
             ZStack {
-                store.background.ignoresSafeArea()
-
-                if let voyage = store.voyage, store.isAwaitingDeparture,
-                   case .beforeVoyage(let call)? = store.moment, let focus = store.focus {
-                    // A crociera ancora lontana la schermata cambia forma: non c'è
-                    // niente da misurare, quindi non si mostrano strumenti.
-                    AwaitingDepartureScreen(voyage: voyage, call: call,
-                                            countdown: focus.countdown, now: store.now)
-                } else if let voyage = store.voyage, let moment = store.moment {
+                livery.hull.ignoresSafeArea()
+                if let voyage = store.voyage, let moment = store.moment {
                     content(voyage: voyage, moment: moment)
                 } else {
                     NoVoyageView()
                 }
             }
+            .toolbar(.hidden, for: .navigationBar)
+            // Le barre sullo scafo restano scure in entrambe le modalità.
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .port(let call):
@@ -52,16 +56,10 @@ struct TodayScreen: View {
                         // e uno a trascinamento, e SwiftUI non espone nessuna opzione
                         // per spegnerli: il pinch per rimpicciolire la carta la
                         // chiudeva. Col push normale si torna indietro solo dal bordo
-                        // sinistro o col tasto, e il pinch resta alla carta. Si perde
-                        // l'animazione dalla card, e va bene così: una carta che si
-                        // chiude mentre la usi è peggio di una carta che entra da destra.
+                        // sinistro o col tasto, e il pinch resta alla carta.
                         .toolbar(.hidden, for: .navigationBar)
-                        // **Niente barra delle schede sopra la carta.** Stava in basso,
-                        // sopra il disegno, e il dito di sotto di un pinch per
-                        // rimpicciolire ci finiva sopra: la barra di iOS 26 cambia
-                        // scheda anche se ci trascini il dito, e la carta "si
-                        // chiudeva" — in realtà si passava alla scheda Nave. Una carta
-                        // a tutto schermo è a tutto schermo.
+                        // **Niente barra delle schede sopra la carta.** Il dito di
+                        // sotto di un pinch ci finiva sopra e cambiava scheda.
                         .toolbar(.hidden, for: .tabBar)
                 }
             }
@@ -80,7 +78,7 @@ struct TodayScreen: View {
             }
         }
         // La posizione si chiede quando serve davvero: in porto, dove alimenta il
-        // "sei a 1,9 km dalla nave". Chiederla al primo avvio — dietro l'onboarding,
+        // «sei a 1,9 km dalla nave». Chiederla al primo avvio — dietro l'onboarding,
         // per giunta — significa chiederla senza che si veda a cosa serve, ed è il
         // modo migliore per farsela negare.
         .task(id: store.isInPort) {
@@ -94,55 +92,133 @@ struct TodayScreen: View {
                   weatherMoment(moment) != nil else { return }
             await weather.load(for: point, now: store.now)
         }
+        // La foto della nave, solo prima della crociera: è il momento in cui la si
+        // guarda, e in cui non c'è ancora una posizione da mostrare al suo posto.
+        .task(id: "\(store.shipRecord?.imageFile ?? "")|\(reachability.isExpensive)|\(store.isAwaitingDeparture)") {
+            guard store.isAwaitingDeparture, let record = store.shipRecord else { return }
+            await photos.load(record, allowsDownload: PhotoDownloadPolicy.allows(isMetered: reachability.isExpensive))
+        }
     }
+
+    // MARK: La pagina
+
+    private var isAtSea: Bool {
+        if case .atSea = store.moment { return true }
+        return false
+    }
+
+    /// Quanto il biglietto entra nell'acqua della scena, in giorno di mare.
+    private let ticketDraft: CGFloat = 54
 
     @ViewBuilder
     private func content(voyage: Voyage, moment: Voyage.Moment) -> some View {
         ScrollView {
+            // Una sola colonna, con i pezzi condizionali direttamente dentro: un
+            // gruppo vuoto in una `VStack` con spaziatura è comunque un figlio, e
+            // al primo giro lasciava un vuoto di quaranta punti sotto il biglietto.
             VStack(spacing: 12) {
-                header(voyage: voyage, moment: moment)
+                Masthead(voyage.shipName, detail: dayLine(voyage: voyage))
+                    .padding(.horizontal, 22)
+                    .padding(.top, 12)
+                    .padding(.bottom, isAtSea ? 0 : 6)
 
-                ShipClockBanner(clock: voyage.clock, now: store.now)
+                if isAtSea {
+                    // La scena: una fascia di cielo e mare che parte dallo scafo,
+                    // col sole o la luna all'ora di bordo e una nave che passa. Il
+                    // biglietto ci si appoggia sopra, con la prua nell'acqua.
+                    SeaScene(hour: store.shipHour)
+                        .frame(height: 250)
+                        .frame(maxWidth: .infinity)
+                        .padding(.bottom, -ticketDraft)
+                }
+
+                VStack(spacing: 0) {
+                    if let behind = behindText(voyage: voyage, moment: moment) {
+                        TicketBehind(behind)
+                            .padding(.bottom, -14)
+                    }
+                    BoardingPass(voyage: voyage, moment: moment, focus: store.focus,
+                                 now: store.now, offset: store.timeOffset,
+                                 fix: position.shipFix(for: voyage, at: store.now),
+                                 speedUnit: preferences.speedUnit)
+                        .padding(.horizontal, 16)
+                }
 
                 ClockChangeNotice(clock: voyage.clock, now: store.now)
-
+                    .padding(.horizontal, 16)
                 if case .atSea(_, let destination) = moment,
-                   let estimate = ArrivalEstimate.estimate(track: store.track,
+                   let estimate = ArrivalEstimate.estimate(track: store.recorder.track,
                                                            destination: destination, now: store.now),
                    estimate.isLate {
                     ArrivalDelayNotice(estimate: estimate, port: destination, clock: voyage.clock)
+                        .padding(.horizontal, 16)
                 }
 
-                hero(voyage: voyage, moment: moment)
-
+                chips(moment: moment)
+                photoCard
                 chartCard(voyage: voyage)
-
-                seaCard(moment: moment)
-
-                if case .inPort = moment { AppleWeatherLink() }
-
-                ashoreRow(voyage: voyage, moment: moment)
-
-                tiles(voyage: voyage, moment: moment)
-
+                ashoreRow(voyage: voyage)
                 nextCallRow(voyage: voyage, moment: moment)
+                if case .inPort = moment { AppleWeatherLink().padding(.horizontal, 16) }
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 96)
+            .padding(.bottom, 16)
         }
         .scrollBounceBehavior(.basedOnSize)
+    }
+
+    private func dayLine(voyage: Voyage) -> String? {
+        if let day = store.today {
+            return String(localized: "Giorno \(day.number) di \(store.days.count)")
+        }
+        if case .beforeVoyage = store.moment {
+            return String(localized: "\(voyage.nights) notti · \(voyage.intermediateCalls.count) scali")
+        }
+        return nil
+    }
+
+    /// Il biglietto di dietro: il prossimo scalo, o l'imbarco.
+    private func behindText(voyage: Voyage, moment: Voyage.Moment) -> String? {
+        let clock = voyage.clock
+        switch moment {
+        case .inPort(let call):
+            guard let index = voyage.calls.firstIndex(where: { $0.id == call.id }),
+                  index + 1 < voyage.calls.count else { return nil }
+            let next = voyage.calls[index + 1]
+            return "\(next.name) · \(relativeDay(next.arrival, clock: clock)) \(clock.time(next.arrival))"
+        case .atSea(_, let to):
+            // Il biglietto davanti è già verso `to`: dietro c'è lo scalo dopo.
+            guard let index = voyage.calls.firstIndex(where: { $0.id == to.id }),
+                  index + 1 < voyage.calls.count else { return nil }
+            let next = voyage.calls[index + 1]
+            return "\(next.name) · \(relativeDay(next.arrival, clock: clock)) \(clock.time(next.arrival))"
+        case .beforeVoyage:
+            guard voyage.calls.count > 1 else { return nil }
+            let next = voyage.calls[1]
+            return "\(next.name) · \(Format.dayMonth(next.arrival, clock: clock))"
+        case .completed:
+            return nil
+        }
+    }
+
+    /// «oggi», «domani», o la data.
+    private func relativeDay(_ date: Date, clock: ShipClock) -> String {
+        let today = clock.startOfDay(for: store.now)
+        let day = clock.startOfDay(for: date)
+        let calendar = clock.calendar(at: today)
+        if day == today { return String(localized: "oggi") }
+        if let tomorrow = calendar.date(byAdding: .day, value: 1, to: today), day == tomorrow {
+            return String(localized: "domani")
+        }
+        return Format.dayMonth(date, clock: clock)
     }
 
     // MARK: Che mare c'è
 
     /// Il punto di cui chiedere il meteo: dove sei adesso in mare, il porto dove sei
-    /// ormeggiato, quello dove ti imbarcherai. Sempre un posto solo — chiedere il
-    /// meteo di tutta la rotta costerebbe una chiamata per scalo e non servirebbe a
-    /// niente: la previsione oltre i tre giorni non è una previsione.
+    /// ormeggiato, quello dove ti imbarcherai. Sempre un posto solo.
     private func weatherPoint(moment: Voyage.Moment) -> Coordinate? {
         switch moment {
         case .atSea(let from, let to):
-            // A metà traversata il mare intorno alla nave, non quello dei porti.
             store.scheduledFix?.coordinate ?? Geo.interpolate(from: from.coordinate,
                                                               to: to.coordinate, fraction: 0.5)
         case .inPort(let call), .beforeVoyage(let call):
@@ -152,12 +228,18 @@ struct TodayScreen: View {
         }
     }
 
-    /// L'ora di cui ha senso chiedere il meteo, e come chiamarla.
-    ///
-    /// Prima dell'imbarco l'ora giusta non è adesso: è quando sali. E se salire è
-    /// fra due mesi, non c'è nessuna previsione da dare — i modelli arrivano a tre
-    /// giorni. Meglio niente che il tempo di oggi in un porto dove non sei.
-    /// Dove sta la nave rispetto al mare di cui parla la scheda del meteo.
+    /// L'ora di cui ha senso chiedere il meteo. Prima dell'imbarco è quando sali;
+    /// e se salire è fra due mesi non c'è previsione da dare — i modelli arrivano a
+    /// tre giorni.
+    private func weatherMoment(_ moment: Voyage.Moment) -> Date? {
+        switch moment {
+        case .atSea, .inPort: store.now
+        case .beforeVoyage(let call):
+            call.arrival <= store.now.addingTimeInterval(3 * 86_400) ? call.arrival : nil
+        case .completed: nil
+        }
+    }
+
     private func mooring(_ moment: Voyage.Moment) -> SeaState.Mooring {
         switch moment {
         case .atSea: .underway
@@ -167,112 +249,41 @@ struct TodayScreen: View {
         }
     }
 
-    private func weatherMoment(_ moment: Voyage.Moment) -> (at: Date, title: String)? {
-        switch moment {
-        case .atSea:
-            (store.now, String(localized: "Mare"))
-        case .inPort:
-            (store.now, String(localized: "In porto"))
-        case .beforeVoyage(let call):
-            call.arrival <= store.now.addingTimeInterval(3 * 86_400)
-                ? (call.arrival, String(localized: "All'imbarco")) : nil
-        case .completed:
-            nil
-        }
-    }
-
     @ViewBuilder
-    private func seaCard(moment: Voyage.Moment) -> some View {
+    private func chips(moment: Voyage.Moment) -> some View {
         if let point = weatherPoint(moment: moment), let when = weatherMoment(moment),
-           let conditions = weather.conditions(for: point, at: when.at), !conditions.isEmpty,
-           // La previsione deve riguardare davvero quell'ora: se la più vicina è a
-           // ore di distanza vuol dire che siamo fuori dalla finestra dei modelli.
-           abs(conditions.time.timeIntervalSince(when.at)) < 3 * 3600 {
-            SeaStateCard(conditions: conditions, now: store.now, title: when.title,
-                         mooring: mooring(moment))
-                .transition(.opacity)
-        }
-    }
-
-    // MARK: Testata
-
-    @ViewBuilder
-    private func header(voyage: Voyage, moment: Voyage.Moment) -> some View {
-        AdaptiveHStack(verticalAlignment: .top, spacing: 12) {
-            VStack(alignment: .leading, spacing: 3) {
-                Text(voyage.shipName)
-                    .font(Type.screenTitle)
-                    .tracking(Type.titleTracking)
-                    .foregroundStyle(Palette.inkPrimary)
-                if let day = store.today {
-                    Text("Giorno \(day.number) di \(store.days.count)")
-                        .font(Type.screenSubtitle)
-                        .foregroundStyle(Palette.inkSecondary)
-                }
-            }
-            AdaptiveSpacer()
-            StatusPill(moment: moment)
-        }
-        .padding(.top, 8)
-        .padding(.bottom, 4)
-    }
-
-    // MARK: Il pannello principale
-
-    @ViewBuilder
-    private func hero(voyage: Voyage, moment: Voyage.Moment) -> some View {
-        switch moment {
-        case .inPort(let call):
-            if let focus = store.focus, case .allAboard = focus.kind {
-                AllAboardHero(call: call, countdown: focus.countdown,
-                              clock: voyage.clock, now: store.now, offset: store.timeOffset)
-            } else {
-                SimpleHero(
-                    glyph: "ferry.fill", tint: Palette.ashore,
-                    title: String(localized: "All aboard passato"),
-                    message: String(localized: "La nave lascia \(call.name) alle \(voyage.clock.time(call.castOff))."))
-            }
-
-        case .atSea(let from, let to):
-            if let focus = store.focus {
-                CrossingHero(from: from, to: to, countdown: focus.countdown,
-                             clock: voyage.clock, now: store.now, offset: store.timeOffset,
-                             fix: position.shipFix(for: voyage, at: store.now),
-                             speedUnit: store.speedUnit)
-            }
-
-        case .beforeVoyage(let call):
-            if let focus = store.focus {
-                BoardingHero(call: call, countdown: focus.countdown,
-                             clock: voyage.clock, now: store.now, offset: store.timeOffset)
-            }
-
-        case .completed:
-            SimpleHero(
-                glyph: "checkmark.seal.fill", tint: Palette.action,
-                title: String(localized: "Crociera conclusa"),
-                message: String(localized: "\(voyage.calls.count) scali, \(voyage.nights) notti a bordo."))
+           let conditions = weather.conditions(for: point, at: when), !conditions.isEmpty,
+           abs(conditions.time.timeIntervalSince(when)) < 3 * 3600 {
+            WeatherChips(conditions: conditions, now: store.now, mooring: mooring(moment))
+                .padding(.horizontal, 16)
+                .padding(.top, 4)
         }
     }
 
     // MARK: Righe di contorno
 
+    /// La foto della nave, prima della crociera. Una sola volta: se la foto non
+    /// c'è, sotto c'è già la rotta, e non la si ripete.
+    @ViewBuilder
+    private var photoCard: some View {
+        if store.isAwaitingDeparture, let photo = photos.photo {
+            ShipPhotoCard(photo: photo).padding(.horizontal, 16)
+        }
+    }
+
     /// Quanto sei lontano dalla nave. Compare solo quando la domanda ha una risposta:
     /// sei sceso a terra, in un porto, col permesso di posizione concesso.
     @ViewBuilder
-    private func ashoreRow(voyage: Voyage, moment: Voyage.Moment) -> some View {
+    private func ashoreRow(voyage: Voyage) -> some View {
         if let distance = position.distanceToShip(for: voyage, at: store.now) {
-            InfoRow(glyph: "figure.walk", tint: Palette.underway,
-                    title: String(localized: "Sei a \(Format.distance(metres: distance)) dalla nave"),
-                    subtitle: String(localized: "in linea d'aria, non lungo la strada"))
+            PaperRow(glyph: "figure.walk",
+                     title: String(localized: "Sei a \(Format.distance(metres: distance)) dalla nave"),
+                     subtitle: String(localized: "in linea d'aria, non lungo la strada"))
+                .padding(.horizontal, 16)
         }
     }
 
     /// L'anteprima della carta, che porta alla carta intera.
-    ///
-    /// Non è un'immagine: è lo stesso disegnatore della schermata a tutto schermo,
-    /// con meno dettagli. Così l'anteprima non può mai raccontare una posizione
-    /// diversa da quella vera.
     @ViewBuilder
     private func chartCard(voyage: Voyage) -> some View {
         NavigationLink(value: Route.chart) {
@@ -280,16 +291,17 @@ struct TodayScreen: View {
                              fix: position.shipFix(for: voyage, at: store.now),
                              now: store.now,
                              framing: chartFraming,
-                             title: seaArea(voyage: voyage))
+                             title: seaArea(voyage: voyage),
+                             showsPortNames: store.isAwaitingDeparture,
+                             showsGraticule: store.isAwaitingDeparture)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text("Apri la carta"))
+        .padding(.horizontal, 16)
     }
 
     /// Con che inquadratura si apre la carta: **la stessa della card da cui si
-    /// arriva**. Prima la card mostrava il porto da vicino e la carta si apriva a
-    /// 7,5°: l'ingrandimento partiva da un'immagine e arrivava a un'altra, e si
-    /// vedeva. Prima della partenza non c'è ancora una nave da inquadrare, quindi
+    /// arriva**. Prima della partenza non c'è ancora una nave da inquadrare, quindi
     /// si guarda tutta la rotta.
     private var chartFraming: SeaChart.Framing {
         store.isAwaitingDeparture
@@ -302,27 +314,8 @@ struct TodayScreen: View {
         switch store.moment {
         case .inPort(let call): call.name
         case .atSea(_, let to): String(localized: "Verso \(to.name)")
-        case .beforeVoyage(let call): call.name
+        case .beforeVoyage: String(localized: "La rotta")
         case .completed, .none: voyage.calls.last?.name ?? ""
-        }
-    }
-
-    /// Due riquadri: l'ora di bordo e dove si è.
-    ///
-    /// Non ripetono ciò che il pannello sopra già dice. La prima versione metteva qui
-    /// "Partenza 18:00" mentre il pannello lo mostrava a tre centimetri di distanza:
-    /// due volte lo stesso dato è rumore, e toglie spazio a quello che manca.
-    @ViewBuilder
-    private func tiles(voyage: Voyage, moment: Voyage.Moment) -> some View {
-        HStack(alignment: .top, spacing: 10) {
-            MetricTile(label: String(localized: "Ora di bordo"),
-                       value: voyage.clock.time(store.now),
-                       detail: voyage.clock.offsetLabel(at: store.now),
-                       spoken: voyage.clock.time(store.now))
-
-            if let fix = position.shipFix(for: voyage, at: store.now) {
-                CoordinateTile(fix: fix, now: store.now)
-            }
         }
     }
 
@@ -331,13 +324,13 @@ struct TodayScreen: View {
     private func nextCallRow(voyage: Voyage, moment: Voyage.Moment) -> some View {
         if let next = upcoming(voyage: voyage, moment: moment) {
             NavigationLink(value: Route.port(next)) {
-                InfoRow(glyph: "mappin.and.ellipse", tint: Palette.action,
-                        title: next.name,
-                        subtitle: subtitle(for: next, clock: voyage.clock)) {
-                    Disclosure()
+                PaperRow(glyph: "mappin.and.ellipse", title: next.name,
+                         subtitle: subtitle(for: next, clock: voyage.clock)) {
+                    PaperDisclosure()
                 }
             }
             .buttonStyle(.plain)
+            .padding(.horizontal, 16)
         }
     }
 
@@ -360,71 +353,57 @@ struct TodayScreen: View {
     }
 }
 
-/// Un pannello semplice per gli stati in cui non c'è un countdown da mostrare.
-struct SimpleHero: View {
-    let glyph: String
-    let tint: Color
-    let title: String
-    let message: String
+/// La fotografia della nave, su carta, col credito che l'autore chiede.
+struct ShipPhotoCard: View {
+    @Environment(\.livery) private var livery
+    let photo: CommonsPhoto
 
     var body: some View {
-        VStack(spacing: 10) {
-            Image(systemName: glyph)
-                .font(.system(size: 30, weight: .semibold))
-                .foregroundStyle(tint)
-            Text(title)
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(Palette.inkPrimary)
-            Text(message)
-                .font(Type.rowDetail)
-                .foregroundStyle(Palette.inkSecondary)
-                .multilineTextAlignment(.center)
+        VStack(spacing: 0) {
+            // Nell'`overlay` e non figlia diretta: un'immagine `.fill` come figlia
+            // detta la larghezza alla colonna e taglia i nomi lunghi.
+            Color.clear
+                .frame(height: 190)
+                .overlay {
+                    Image(uiImage: photo.image).resizable().aspectRatio(contentMode: .fill)
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .padding(6)
+            Text(photo.credit)
+                .font(.caption2)
+                .foregroundStyle(livery.field)
+                .lineLimit(2)
+                .multilineTextAlignment(.trailing)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 10)
         }
-        .frame(maxWidth: .infinity)
-        .padding(26)
-        .glassSurface(cornerRadius: 30, prominence: .card, tint: tint)
+        .paperCard()
         .accessibilityElement(children: .combine)
-    }
-}
-
-/// La striscia che compare quando il telefono e la nave non segnano la stessa ora.
-///
-/// È il momento in cui l'app rischia di più: chi legge crede di stare guardando
-/// l'ora del porto, e invece a bordo l'orologio dice un'altra cosa. Meglio dirlo
-/// forte che lasciarlo dedurre.
-struct ShipClockBanner: View {
-    let clock: ShipClock
-    let now: Date
-
-    var body: some View {
-        if !clock.matchesDevice(at: now) {
-            let drift = clock.deviceDrift(at: now)
-            let hours = abs(drift) / 3600
-            let direction = drift > 0
-                ? String(localized: "avanti", comment: "Il telefono rispetto alla nave")
-                : String(localized: "indietro", comment: "Il telefono rispetto alla nave")
-
-            StaleDataNotice(message: "Il telefono è \(hours) ore \(direction) rispetto all'ora di bordo. Gli orari qui sono in ora di bordo.")
-        }
+        .accessibilityLabel(Text("Fotografia della nave, \(photo.credit)"))
     }
 }
 
 #Preview("In porto") {
     TodayScreen()
         .environment(VoyageStore.preview)
+        .environment(Preferences.ephemeral)
         .environment(PositionService())
         .environment(NotificationScheduler())
         .environment(LiveActivityController())
         .environment(Reachability())
+        .environment(MarineWeatherService())
         .preferredColorScheme(.dark)
 }
 
 #Preview("In mare") {
     TodayScreen()
         .environment(VoyageStore.previewAtSea)
+        .environment(Preferences.ephemeral)
         .environment(PositionService())
         .environment(NotificationScheduler())
         .environment(LiveActivityController())
         .environment(Reachability())
+        .environment(MarineWeatherService())
         .preferredColorScheme(.dark)
 }

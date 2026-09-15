@@ -42,7 +42,7 @@ final class MarineWeatherService {
     private(set) var lastError: String?
 
     private var series: [String: Series] = [:]
-    private let session: URLSession
+    private let client: NetworkClient
     private let directory: URL?
 
     /// Le previsioni restano valide un'ora: i modelli globali girano ogni sei ore,
@@ -50,7 +50,7 @@ final class MarineWeatherService {
     private let timeToLive: TimeInterval = 3600
 
     init(session: URLSession = .shared, directory: URL? = nil) {
-        self.session = session
+        client = NetworkClient(session: session)
         if let directory {
             self.directory = directory
         } else {
@@ -195,14 +195,11 @@ final class MarineWeatherService {
     }
 
     private func decode(_ url: URL) async throws -> [MarineConditions] {
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 12
-        request.cachePolicy = .reloadIgnoringLocalCacheData
-        let (data, response) = try await session.data(for: request)
-        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
-            throw URLError(.badServerResponse)
-        }
-        guard let hourly = try JSONDecoder().decode(Payload.self, from: data).hourly else { return [] }
+        // Mai dalla cache HTTP: la finestra la teniamo noi su disco, con la sua età
+        // dichiarata; una copia della cache di sistema non saprebbe dire quanto è vecchia.
+        let payload = try await client.decode(Payload.self, from: url,
+                                              cachePolicy: .reloadIgnoringLocalCacheData)
+        guard let hourly = payload.hourly else { return [] }
 
         let now = Date()
         return hourly.time.indices.map { index in

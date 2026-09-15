@@ -12,6 +12,12 @@
 	<array>
 		<string>location</string>
 	</array>
+	<!-- La barra di stato è sempre a testo chiaro: sotto c'è sempre lo scafo, che è
+	     scuro in entrambe le modalità. Con l'aspetto gestito dai controller, in
+	     modalità chiara SwiftUI la farebbe nera sul blu. `UIStatusBarStyle` sta nel
+	     progetto (è fra le chiavi che Xcode conosce); questa no, e va qui. -->
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 	<!-- Per chiedere a iOS se Meteo di Apple si può aprire: senza questa voce
 	     `canOpenURL` risponde sempre di no. Vedi AppleWeatherLink.swift. -->
 	<key>LSApplicationQueriesSchemes</key>

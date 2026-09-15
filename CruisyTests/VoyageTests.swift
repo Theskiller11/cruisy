@@ -168,6 +168,7 @@ struct VoyageTests {
 
 /// La soglia fra "attesa" e "viaggio".
 @Suite("Soglia della vista normale")
+@MainActor
 struct DepartureThresholdTests {
 
     private func store(hoursBeforeBoarding hours: Double) -> VoyageStore {

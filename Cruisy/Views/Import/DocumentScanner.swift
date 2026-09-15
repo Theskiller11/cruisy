@@ -19,7 +19,10 @@ struct DocumentScanner: UIViewControllerRepresentable {
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
 
-    final class Coordinator: NSObject, VNDocumentCameraViewControllerDelegate {
+    /// `@preconcurrency`: VisionKit chiama il delegato sul thread principale, e
+    /// la conformanza lo dichiara, così i metodi restano isolati come la vista.
+    @MainActor
+    final class Coordinator: NSObject, @preconcurrency VNDocumentCameraViewControllerDelegate {
         private let parent: DocumentScanner
         init(_ parent: DocumentScanner) { self.parent = parent }
 

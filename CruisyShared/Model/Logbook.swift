@@ -102,8 +102,14 @@ public struct LoggedVoyage: Codable, Hashable, Sendable, Identifiable {
     // Un diario scritto prima che esistesse l'ora di bordo si legge lo stesso: il
     // campo mancante vale UTC. Meglio una data leggermente spostata che un file
     // che non si apre più.
+    //
+    // `track` **deve** stare in questo elenco. Fino al 14 settembre 2026 non c'era:
+    // la rotta registrata entrava nel diario alla chiusura della crociera, ma
+    // l'elenco delle chiavi non la nominava, quindi non veniva né scritta né
+    // riletta — e una settimana di traccia spariva in silenzio al primo riavvio.
+    // L'ha trovato `PersistenceCompatibilityTests`, non un occhio.
     private enum CodingKeys: String, CodingKey {
-        case id, shipName, ports, nauticalMiles, seaDays, secondsFromGMT
+        case id, shipName, ports, nauticalMiles, seaDays, secondsFromGMT, track
     }
 
     public init(from decoder: Decoder) throws {
@@ -114,6 +120,7 @@ public struct LoggedVoyage: Codable, Hashable, Sendable, Identifiable {
         nauticalMiles = try c.decode(Double.self, forKey: .nauticalMiles)
         seaDays = try c.decode(Int.self, forKey: .seaDays)
         secondsFromGMT = try c.decodeIfPresent(Int.self, forKey: .secondsFromGMT) ?? 0
+        track = try c.decodeIfPresent(Track.self, forKey: .track)
     }
 }
 

@@ -57,7 +57,7 @@ final class PortPhotoService {
         let key = key(call)
         guard !attempted.contains(key) else { return }
 
-        if let cached = Commons.readCache(cache, key: key) {
+        if let cached = await Commons.readCache(cache, key: key) {
             attempted.insert(key)
             photos[key] = cached
             return
@@ -75,7 +75,7 @@ final class PortPhotoService {
 
             let photo = CommonsPhoto(image: image, author: author, licence: licence)
             photos[key] = photo
-            Commons.writeCache(photo, to: cache, key: key)
+            await Commons.writeCache(photo, to: cache, key: key)
             return
         }
     }

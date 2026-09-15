@@ -8,6 +8,7 @@ import Observation
 /// `Activity.activities`, cioè dal sistema. Una Live Activity la si può chiudere dalla
 /// schermata di blocco, senza passare dall'app: un interruttore appoggiato su uno
 /// stato locale prima o poi mostrerebbe "attiva" mentre non c'è più niente.
+@MainActor
 @Observable
 final class LiveActivityController {
 
@@ -89,7 +90,10 @@ final class LiveActivityController {
     /// correzione. Senza questo, la Live Activity conterebbe verso l'orario vecchio.
     func update(countdown: Countdown, kind: AllAboardAttributes.Kind = .allAboard,
                 milesRemaining: Double? = nil) async {
-        guard let activity = current else { return }
+        // Letta qui e non da `current`: un valore preso da una proprietà dell'attore
+        // resta legato all'attore, e `Activity.update` — che gira fuori — non lo
+        // accetterebbe. Un valore locale appena letto dal sistema è libero.
+        guard let activity = Activity<AllAboardAttributes>.activities.first else { return }
         let state = AllAboardAttributes.ContentState(
             start: countdown.start, target: countdown.target, origin: countdown.origin,
             kind: kind, milesRemaining: milesRemaining)

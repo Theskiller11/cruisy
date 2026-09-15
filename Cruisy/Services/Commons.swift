@@ -63,7 +63,8 @@ enum PhotoDownloadPolicy {
 /// cache.
 enum Commons {
 
-    private static let agent = "Cruisy/1.0 (app iOS personale)"
+    /// Il client di rete. Sostituibile per i test.
+    nonisolated(unsafe) static var client = NetworkClient.shared
 
     /// I titoli di Commons possono contenere `&`, `+`, `?`: dentro un URL vanno
     /// codificati tutti, o la query si spezza e il percorso porta altrove. Il `%`
@@ -75,28 +76,21 @@ enum Commons {
             .replacingOccurrences(of: " ", with: "%20")
     }
 
-    static func request(_ url: URL) -> URLRequest {
-        var request = URLRequest(url: url, timeoutInterval: 12)
-        request.setValue(agent, forHTTPHeaderField: "User-Agent")
-        return request
-    }
-
+    /// Un oggetto JSON da un'API di Wikimedia, o niente: qui un errore di rete non
+    /// è un errore da raccontare, è una foto in meno.
     static func json(_ url: URL) async -> [String: Any]? {
-        guard let (data, _) = try? await URLSession.shared.data(for: request(url)) else { return nil }
-        return try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+        try? await client.json(url)
     }
 
     static func downloadImage(file: String, width: Int = 900) async -> UIImage? {
         guard let encoded = escape(file),
               let url = URL(string: "https://commons.wikimedia.org/wiki/Special:FilePath/\(encoded)?width=\(width)")
         else { return nil }
-        guard let (data, _) = try? await URLSession.shared.data(for: request(url)) else { return nil }
-        return UIImage(data: data)
+        return try? await client.image(url)
     }
 
     static func downloadImage(at url: URL) async -> UIImage? {
-        guard let (data, _) = try? await URLSession.shared.data(for: request(url)) else { return nil }
-        return UIImage(data: data)
+        try? await client.image(url)
     }
 
     /// Autore e licenza di un file, dai metadati di Commons.
@@ -177,6 +171,11 @@ enum Commons {
     }
 
     // MARK: Cache
+    //
+    // Lettura e scrittura sono `@concurrent`: girano fuori dall'attore principale.
+    // Fino al 14 settembre 2026 decodificare un JPEG da 900 pixel e ricomprimerlo
+    // succedeva sul thread principale, dentro un `load` chiamato da ogni riga di un
+    // elenco che scorre — e la schermata dei porti scattava a ogni riga nuova.
 
     /// La chiave del file su disco. **Non** `hashValue`: quello cambia seme a ogni
     /// processo, e una cache che non si ritrova al riavvio non è una cache. FNV-1a
@@ -200,7 +199,8 @@ enum Commons {
         return folder
     }
 
-    static func readCache(_ folder: URL?, key: String) -> CommonsPhoto? {
+    @concurrent
+    static func readCache(_ folder: URL?, key: String) async -> CommonsPhoto? {
         guard let folder else { return nil }
         let stem = stem(for: key)
         guard let data = try? Data(contentsOf: folder.appendingPathComponent(stem + ".jpg")),
@@ -215,7 +215,8 @@ enum Commons {
                             licence: parts.count > 1 ? parts[1] : "")
     }
 
-    static func writeCache(_ photo: CommonsPhoto, to folder: URL?, key: String) {
+    @concurrent
+    static func writeCache(_ photo: CommonsPhoto, to folder: URL?, key: String) async {
         guard let folder, let data = photo.image.jpegData(compressionQuality: 0.8) else { return }
         let stem = stem(for: key)
         try? data.write(to: folder.appendingPathComponent(stem + ".jpg"))

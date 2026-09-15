@@ -11,6 +11,7 @@ import Observation
 ///
 /// Osserva soltanto lo stato del percorso di rete: non manda niente e non contatta
 /// nessuno.
+@MainActor
 @Observable
 final class Reachability {
     private(set) var isOnline = true

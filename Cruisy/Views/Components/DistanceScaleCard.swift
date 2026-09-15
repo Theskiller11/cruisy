@@ -2,15 +2,15 @@ import SwiftUI
 
 /// Le miglia percorse, messe in scala con qualcosa che si può immaginare.
 ///
-/// «1.216 miglia nautiche» è un numero senza appigli. Il diario lo mostrava e basta,
-/// e non diceva niente a nessuno. Qui diventa **una frazione di traversata
-/// atlantica**, con la barra che dice quanto manca al traguardo dopo.
+/// «1.216 miglia nautiche» è un numero senza appigli. Qui diventa **una frazione di
+/// traversata atlantica**, con la barra che dice quanto manca al traguardo dopo.
 ///
 /// I paragoni si scelgono da soli, e questa è la parte che conta: mostrarli tutti e
 /// sette darebbe «68 volte il Canale della Manica» accanto a «0,00005 volte il giro
 /// del mondo», che sono due modi diversi di non dire niente. Restano solo quelli in
 /// cui il numero è leggibile a occhio.
 struct DistanceScaleCard: View {
+    @Environment(\.livery) private var livery
     let logbook: Logbook
     /// L'anno mostrato, o nullo per tutto.
     @Binding var year: Int?
@@ -35,39 +35,51 @@ struct DistanceScaleCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            header
-
-            if miles > 0 {
-                milestoneBar
-                if !comparisons.isEmpty { comparisonRows }
-            } else {
-                Text("Le miglia si contano da sole mentre navighi.")
-                    .font(Type.rowDetail)
-                    .foregroundStyle(Palette.inkSecondary)
+        Ticket {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("Miglia percorse").ticketEyebrow(livery.signalInk)
+                    Spacer(minLength: 8)
+                    yearPicker
+                }
+                Text(Format.nauticalMiles(miles))
+                    .ticketNumeral(size: 58, cap: 84)
+                    .foregroundStyle(livery.ink)
+                totals
             }
+            .padding(.horizontal, 18)
+            .padding(.top, 16)
+            .padding(.bottom, 14)
+        } stub: {
+            VStack(alignment: .leading, spacing: 14) {
+                if miles > 0 {
+                    milestoneBar
+                    if !comparisons.isEmpty { comparisonRows }
+                } else {
+                    Text("Le miglia si contano da sole mentre navighi.")
+                        .font(TicketType.rowDetail)
+                        .foregroundStyle(livery.field)
+                }
+            }
+            .padding(.horizontal, 18)
+            .padding(.top, 14)
+            .padding(.bottom, 18)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(18)
-        .glassSurface(cornerRadius: 26, prominence: .card)
     }
 
-    // MARK: Il numero e l'interruttore
-
-    private var header: some View {
-        AdaptiveHStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(Format.nauticalMiles(miles))
-                    .font(.system(.largeTitle, design: .rounded, weight: .semibold))
-                    .monospacedDigit()
-                    .foregroundStyle(Palette.inkPrimary)
-                    .minimumScaleFactor(0.6)
-                    .lineLimit(1)
-                Text("Miglia percorse").eyebrow()
-            }
-            Spacer(minLength: 0)
-            yearPicker
-        }
+    /// I tre conteggi, in una riga: giorni di mare, porti, crociere.
+    private var totals: some View {
+        Text([
+            logbook.seaDays == 1 ? String(localized: "1 giorno di mare") : String(localized: "\(logbook.seaDays) giorni di mare"),
+            logbook.stamps.count == 1 ? String(localized: "1 porto") : String(localized: "\(logbook.stamps.count) porti"),
+            logbook.voyages.count == 1 ? String(localized: "1 crociera") : String(localized: "\(logbook.voyages.count) crociere"),
+        ].joined(separator: " · "))
+            .font(TicketType.place)
+            .tracking(0.4)
+            .textCase(.uppercase)
+            .foregroundStyle(livery.ink)
+            .lineLimit(2)
+            .minimumScaleFactor(0.8)
     }
 
     /// Anno per anno, o tutto.
@@ -84,16 +96,16 @@ struct DistanceScaleCard: View {
                     Button(String(anno)) { year = anno }
                 }
             } label: {
-                HStack(spacing: 5) {
+                HStack(spacing: 4) {
                     Text(year.map(String.init) ?? String(localized: "Tutto"))
-                        .font(Type.metricLabel.weight(.semibold))
+                        .ticketFieldLabel(livery.ink)
                     Image(systemName: "chevron.up.chevron.down")
-                        .font(.system(size: 9, weight: .semibold))
+                        .font(.system(.caption2, weight: .bold))
+                        .foregroundStyle(livery.field)
                 }
-                .foregroundStyle(Palette.inkPrimary)
-                .padding(.horizontal, 11)
-                .padding(.vertical, 6)
-                .glassCapsule(prominence: .chip)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .overlay(Capsule().stroke(livery.rule, lineWidth: 1))
             }
             .accessibilityLabel(Text("Periodo mostrato"))
         }
@@ -106,39 +118,41 @@ struct DistanceScaleCard: View {
         VStack(alignment: .leading, spacing: 9) {
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
-                    Capsule().fill(Palette.inkPrimary.opacity(0.10))
+                    Capsule().fill(livery.rule)
                     Capsule()
-                        .fill(LinearGradient(colors: [Palette.underway, Palette.action],
-                                             startPoint: .leading, endPoint: .trailing))
+                        .fill(livery.signal)
                         .frame(width: max(6, geometry.size.width * progress))
                 }
             }
-            .frame(height: 10)
+            .frame(height: 8)
 
             if let next {
                 let remaining = next.nauticalMiles - miles
-                HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    Image(systemName: next.glyph)
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(Palette.action)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(next.name)
-                            .font(Type.rowTitle)
-                            .foregroundStyle(Palette.inkPrimary)
-                        Text("mancano \(Format.nauticalMiles(remaining))")
-                            .font(Type.rowDetail)
-                            .foregroundStyle(Palette.inkSecondary)
+                // Ai corpi accessibili il nome va a capo sulle parole, non sulle
+                // lettere: il moltiplicatore scende sotto invece di stringerlo.
+                AdaptiveHStack(verticalAlignment: .firstTextBaseline, spacing: 8) {
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Image(systemName: next.glyph)
+                            .font(.system(.caption, weight: .semibold))
+                            .foregroundStyle(livery.signalInk)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(next.name)
+                                .font(TicketType.rowTitle)
+                                .foregroundStyle(livery.ink)
+                            Text("mancano \(Format.nauticalMiles(remaining))")
+                                .font(TicketType.rowDetail)
+                                .foregroundStyle(livery.field)
+                        }
                     }
-                    Spacer(minLength: 0)
+                    AdaptiveSpacer(minLength: 0)
                     Text(Format.multiplier(next.times(miles)))
-                        .font(Type.metricValue)
-                        .monospacedDigit()
-                        .foregroundStyle(Palette.action)
+                        .font(TicketType.fieldValue)
+                        .foregroundStyle(livery.signalInk)
                 }
             } else {
                 Text("Hai superato tutti i traguardi. Complimenti sinceri.")
-                    .font(Type.rowDetail)
-                    .foregroundStyle(Palette.underway)
+                    .font(TicketType.rowDetail)
+                    .foregroundStyle(livery.ink)
             }
         }
         .accessibilityElement(children: .combine)
@@ -148,28 +162,29 @@ struct DistanceScaleCard: View {
 
     private var comparisonRows: some View {
         VStack(spacing: 0) {
-            Divider().overlay(Palette.hairline).padding(.bottom, 2)
+            TicketRule().padding(.bottom, 2)
             ForEach(comparisons) { milestone in
-                HStack(alignment: .firstTextBaseline, spacing: 10) {
-                    Image(systemName: milestone.glyph)
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundStyle(Palette.inkTertiary)
-                        .frame(width: 16)
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(milestone.name)
-                            .font(Type.rowDetail)
-                            .foregroundStyle(Palette.inkSecondary)
-                        if typeSize.isAccessibilitySize {
-                            Text(milestone.detail)
-                                .font(.caption2)
-                                .foregroundStyle(Palette.inkTertiary)
+                AdaptiveHStack(verticalAlignment: .firstTextBaseline, spacing: 10) {
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        Image(systemName: milestone.glyph)
+                            .font(.system(.caption2, weight: .semibold))
+                            .foregroundStyle(livery.field)
+                            .frame(width: 16)
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(milestone.name)
+                                .font(TicketType.rowDetail)
+                                .foregroundStyle(livery.ink)
+                            if typeSize.isAccessibilitySize {
+                                Text(milestone.detail)
+                                    .font(.caption2)
+                                    .foregroundStyle(livery.field)
+                            }
                         }
                     }
-                    Spacer(minLength: 8)
+                    AdaptiveSpacer(minLength: 8)
                     Text(Format.multiplier(milestone.times(miles)))
-                        .font(Type.rowDetail.weight(.semibold))
-                        .monospacedDigit()
-                        .foregroundStyle(Palette.inkPrimary)
+                        .font(TicketType.fieldValue)
+                        .foregroundStyle(livery.ink)
                 }
                 .padding(.vertical, 7)
                 .accessibilityElement(children: .combine)

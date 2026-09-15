@@ -10,6 +10,7 @@
 #   scripts/screenshots.sh                     # tutte, in italiano, corpo normale
 #   scripts/screenshots.sh --lang en           # in inglese
 #   scripts/screenshots.sh --size AX5          # corpo accessibile più grande
+#   scripts/screenshots.sh --appearance dark   # in modalità scura
 #   scripts/screenshots.sh --only diario,porti # solo alcune
 #   scripts/screenshots.sh --no-build          # riusa l'ultima build
 #   scripts/screenshots.sh --out /percorso     # cartella di uscita
@@ -23,6 +24,7 @@ cd "$(dirname "$0")/.."
 
 LANG_CODE="it"
 SIZE="default"
+APPEARANCE="light"
 ONLY=""
 BUILD=1
 DEVICE="${SIMULATOR:-iPhone 17 Pro}"
@@ -32,6 +34,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --lang) LANG_CODE="$2"; shift 2 ;;
     --size) SIZE="$2"; shift 2 ;;
+    --appearance) APPEARANCE="$2"; shift 2 ;;
     --only) ONLY="$2"; shift 2 ;;
     --no-build) BUILD=0; shift ;;
     --out) OUT="$2"; shift 2 ;;
@@ -59,7 +62,7 @@ case "$SIZE" in
   *) CATEGORY="$SIZE" ;;
 esac
 
-OUT="${OUT:-screenshots/$(date +%Y%m%d-%H%M%S)-$LANG_CODE-$SIZE}"
+OUT="${OUT:-screenshots/$(date +%Y%m%d-%H%M%S)-$LANG_CODE-$SIZE-$APPEARANCE}"
 mkdir -p "$OUT"
 
 # nome | attesa in secondi | argomenti di avvio
@@ -101,7 +104,8 @@ xcrun simctl install "$UDID" "$APP"
 xcrun simctl status_bar "$UDID" override --time "9:41" --batteryState charged \
   --batteryLevel 100 --wifiBars 3 --cellularMode notSupported >/dev/null 2>&1 || true
 xcrun simctl ui "$UDID" content_size "$CATEGORY"
-trap 'xcrun simctl ui "$UDID" content_size large >/dev/null 2>&1 || true' EXIT
+xcrun simctl ui "$UDID" appearance "$APPEARANCE"
+trap 'xcrun simctl ui "$UDID" content_size large >/dev/null 2>&1 || true; xcrun simctl ui "$UDID" appearance light >/dev/null 2>&1 || true' EXIT
 
 for entry in "${SHOTS[@]}"; do
   IFS='|' read -r name wait args <<< "$entry"

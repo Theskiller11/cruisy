@@ -1,25 +1,33 @@
 import SwiftUI
 
-/// Il numero grande.
+/// Le cifre che scorrono: «2:59:52».
 ///
 /// Rende un `Countdown`, cioè due istanti, non un contatore. `TimelineView` chiede
 /// a SwiftUI di ridisegnare **solo questa vista** ogni secondo: la schermata attorno
 /// resta ferma. Le cifre non sono animate di proposito — a 1 Hz un'animazione
 /// produce sfarfallio invece di fluidità.
+///
+/// Sul biglietto è la conseguenza dell'ora stampata, non il titolo: si ricorda
+/// un'ora, non dei secondi. Per questo sta nella matrice, stretta e nera ma più
+/// piccola dell'ora.
 struct CountdownView: View {
+    @Environment(\.livery) private var livery
     let countdown: Countdown
-    var size: CGFloat = 52
-    var cap: CGFloat = 76
-    var colour: Color = Palette.inkPrimary
+    var font: Font = TicketType.count
+    var colour: Color?
     /// Scarto fra l'ora vera e il punto di osservazione: zero in produzione.
     var offset: TimeInterval = 0
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1)) { context in
             let instant = context.date.addingTimeInterval(offset)
-            Text(countdown.formatted(at: instant))
-                .displayNumeral(size: size, cap: cap)
-                .foregroundStyle(colour)
+            // Sempre con le ore: «0:19:55», mai «19:55», che accanto a un'ora
+            // stampata si leggerebbe come un orario.
+            Text(countdown.formatted(at: instant, alwaysHours: true))
+                .font(font)
+                .foregroundStyle(colour ?? livery.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
                 .contentTransition(.identity)
                 .accessibilityLabel(spokenLabel(at: instant))
         }
@@ -37,22 +45,5 @@ struct CountdownView: View {
             return String(localized: "\(c.minutes) minuti", comment: "Countdown letto da VoiceOver")
         }
         return String(localized: "meno di un minuto", comment: "Countdown letto da VoiceOver")
-    }
-}
-
-/// L'unità sotto il countdown, che spiega che cosa sono quelle cifre.
-///
-/// Prende l'istante da chi la usa invece di leggersi l'ora da sola: prima teneva un
-/// `now` catturato alla comparsa e senza lo scarto di osservazione, quindi accanto a
-/// un countdown di dieci ore scriveva "m · s".
-struct CountdownUnits: View {
-    let countdown: Countdown
-    let now: Date
-
-    var body: some View {
-        Text(countdown.components(at: now).hours > 0 ? "h · m · s" : "m · s")
-            .font(Type.metricLabel)
-            .foregroundStyle(Palette.inkTertiary)
-            .accessibilityHidden(true)
     }
 }

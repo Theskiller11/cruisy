@@ -1,221 +1,161 @@
 {
-  "features" : [
-    "refractivity"
-  ],
-  "fill" : {
-    "automatic-gradient" : "display-p3:0.06925,0.16233,0.30108,1.00000"
-  },
-  "groups" : [
+  "fill-specializations" : [
     {
-      "layers" : [
-        {
-          "image-name" : "Cruisy-anello-pieno.svg",
-          "name" : "Cruisy-anello-pieno",
-          "position" : {
-            "scale" : 0.99,
-            "translation-in-points" : [
-              0.005383433109614089,
-              3.814341198449256e-08
-            ]
-          }
-        }
-      ],
-      "opacity" : 1,
-      "position" : {
-        "scale" : 1.12,
-        "translation-in-points" : [
-          0,
-          0
-        ]
-      },
-      "refractivity" : {
-        "depth" : 0.456171875,
-        "enabled" : false,
-        "strength" : -0.0251953125
-      },
-      "shadow" : {
-        "kind" : "neutral",
-        "opacity" : 0.6
-      },
-      "translucency" : {
-        "enabled" : true,
-        "value" : 0.34
+      "value" : {
+        "automatic-gradient" : "srgb:0.05490,0.16471,0.27843,1.00000"
       }
     },
     {
+      "appearance" : "dark",
+      "value" : {
+        "automatic-gradient" : "srgb:0.03922,0.07843,0.13333,1.00000"
+      }
+    }
+  ],
+  "groups" : [
+    {
+      "blend-mode" : "normal",
+      "blur-material" : 0,
       "layers" : [
         {
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "srgb:0.94118,0.47843,0.22745,1.00000"
+              }
+            }
+          ],
           "glass" : true,
-          "image-name" : "Risorsa 3Cruisy assets.svg",
-          "name" : "Risorsa 3Cruisy assets",
+          "image-name" : "timbro.svg",
+          "name" : "timbro",
           "position" : {
-            "scale" : 5.5,
+            "scale" : 1,
             "translation-in-points" : [
-              67.56911812567097,
-              226.39281249999988
-            ]
-          }
-        },
-        {
-          "glass" : true,
-          "image-name" : "Risorsa 2Cruisy assets.svg",
-          "name" : "Risorsa 2Cruisy assets",
-          "position" : {
-            "scale" : 6,
-            "translation-in-points" : [
-              -135.98088187432887,
-              -272.4478125000001
-            ]
-          }
-        },
-        {
-          "glass" : true,
-          "image-name" : "Risorsa 1Cruisy assets.svg",
-          "name" : "Risorsa 1Cruisy assets",
-          "position" : {
-            "scale" : 6,
-            "translation-in-points" : [
-              -21.620881874328916,
-              -48.372812500000066
+              8,
+              -7
             ]
           }
         }
       ],
       "lighting" : "combined",
-      "name" : "Deck Nave",
-      "position" : {
-        "scale" : 0.67,
-        "translation-in-points" : [
-          0,
-          0
-        ]
-      },
+      "name" : "Timbro",
+      "opacity" : 1,
       "refractivity" : {
-        "depth" : 0.826328125,
-        "enabled" : true,
-        "strength" : 0.800625
+        "depth" : 0.2161328125,
+        "enabled" : false,
+        "strength" : 0.625546875
       },
       "shadow" : {
         "kind" : "layer-color",
-        "opacity" : 0.12
+        "opacity" : 0.35
       },
+      "specular" : true,
       "translucency" : {
         "enabled" : true,
-        "value" : 0.32
+        "value" : 0.21
       }
     },
     {
-      "hidden" : true,
+      "blur-material" : 0.72,
       "layers" : [
         {
-          "image-name" : "Risorsa 11Cruisy assets.svg",
-          "name" : "Risorsa 11Cruisy assets",
-          "position" : {
-            "scale" : 1,
-            "translation-in-points" : [
-              -48.94543860220799,
-              13.320000000000007
-            ]
-          }
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "srgb:0.94902,0.96078,0.97255,1.00000"
+              }
+            }
+          ],
+          "glass" : false,
+          "image-name" : "ora.svg",
+          "name" : "ora"
         },
         {
-          "image-name" : "Risorsa 10Cruisy assets.svg",
-          "name" : "Risorsa 10Cruisy assets",
-          "position" : {
-            "scale" : 1,
-            "translation-in-points" : [
-              -31.692719301104,
-              13.320000000000007
-            ]
-          }
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "srgb:0.94118,0.47843,0.22745,1.00000"
+              }
+            }
+          ],
+          "glass" : false,
+          "image-name" : "etichetta.svg",
+          "name" : "etichetta"
         },
         {
-          "image-name" : "Risorsa 9Cruisy assets.svg",
-          "name" : "Risorsa 9Cruisy assets",
-          "position" : {
-            "scale" : 1,
-            "translation-in-points" : [
-              -16,
-              13.320000000000007
-            ]
-          }
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "srgb:0.29020,0.37647,0.50196,1.00000"
+              }
+            }
+          ],
+          "glass" : false,
+          "image-name" : "campi.svg",
+          "name" : "campi"
         },
         {
-          "image-name" : "Risorsa 8Cruisy assets.svg",
-          "name" : "Risorsa 8Cruisy assets",
-          "position" : {
-            "scale" : 1,
-            "translation-in-points" : [
-              0.35342235234675456,
-              13.320000000000007
-            ]
-          }
-        },
-        {
-          "image-name" : "Risorsa 7Cruisy assets.svg",
-          "name" : "Risorsa 7Cruisy assets",
-          "position" : {
-            "scale" : 1,
-            "translation-in-points" : [
-              15.054561397792028,
-              13.320000000000007
-            ]
-          }
-        },
-        {
-          "image-name" : "Risorsa 6Cruisy assets.svg",
-          "name" : "Risorsa 6Cruisy assets",
-          "position" : {
-            "scale" : 1,
-            "translation-in-points" : [
-              -48.94543860220799,
-              -32.67999999999999
-            ]
-          }
-        },
-        {
-          "image-name" : "Risorsa 5Cruisy assets.svg",
-          "name" : "Risorsa 5Cruisy assets",
-          "position" : {
-            "scale" : 1,
-            "translation-in-points" : [
-              -35.207719301104014,
-              -32.67999999999999
-            ]
-          }
-        },
-        {
-          "image-name" : "Risorsa 4Cruisy assets.svg",
-          "name" : "Risorsa 4Cruisy assets",
-          "position" : {
-            "scale" : 1,
-            "translation-in-points" : [
-              -19.514999999999986,
-              -32.67999999999999
-            ]
-          }
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "srgb:0.36471,0.45098,0.56471,1.00000"
+              }
+            }
+          ],
+          "glass" : false,
+          "image-name" : "perforazione.svg",
+          "name" : "perforazione"
         }
       ],
       "lighting" : "combined",
-      "position" : {
-        "scale" : 5,
-        "translation-in-points" : [
-          25.924999999999955,
-          -0.39999999999997726
-        ]
-      },
+      "name" : "Stampa",
       "refractivity" : {
-        "depth" : 0,
-        "enabled" : true,
-        "strength" : 0.5
+        "depth" : 0.529609375,
+        "enabled" : false,
+        "strength" : 0.108984375
       },
       "shadow" : {
-        "kind" : "neutral",
-        "opacity" : 0.21
+        "kind" : "none",
+        "opacity" : 0
       },
+      "specular" : false,
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0
+      }
+    },
+    {
+      "blur-material" : null,
+      "layers" : [
+        {
+          "fill-specializations" : [
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "srgb:0.14510,0.22745,0.33333,1.00000"
+              }
+            }
+          ],
+          "glass" : true,
+          "image-name" : "biglietto.svg",
+          "name" : "biglietto"
+        }
+      ],
+      "lighting" : "combined",
+      "name" : "Biglietto",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "specular" : true,
       "translucency" : {
         "enabled" : true,
-        "value" : 0.17
+        "value" : 0.12
       }
     }
   ],

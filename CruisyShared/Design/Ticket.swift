@@ -27,14 +27,18 @@ public struct TicketShape: Shape {
     }
 
     public func path(in rect: CGRect) -> Path {
-        var path = Path(roundedRect: rect, cornerRadius: cornerRadius, style: .continuous)
-        guard let y = perforationY, y > notchRadius, y < rect.height - notchRadius else { return path }
-        // Sottratti con la regola pari/dispari: vedi `TicketPaper`.
-        path.addEllipse(in: CGRect(x: rect.minX - notchRadius, y: rect.minY + y - notchRadius,
-                                   width: notchRadius * 2, height: notchRadius * 2))
-        path.addEllipse(in: CGRect(x: rect.maxX - notchRadius, y: rect.minY + y - notchRadius,
-                                   width: notchRadius * 2, height: notchRadius * 2))
-        return path
+        let paper = Path(roundedRect: rect, cornerRadius: cornerRadius, style: .continuous)
+        guard let y = perforationY, y > notchRadius, y < rect.height - notchRadius else { return paper }
+        var notches = Path()
+        notches.addEllipse(in: CGRect(x: rect.minX - notchRadius, y: rect.minY + y - notchRadius,
+                                      width: notchRadius * 2, height: notchRadius * 2))
+        notches.addEllipse(in: CGRect(x: rect.maxX - notchRadius, y: rect.minY + y - notchRadius,
+                                      width: notchRadius * 2, height: notchRadius * 2))
+        // Sottrazione vera, non la regola pari/dispari. Con i cerchi aggiunti al tracciato
+        // e `eoFill` la metà interna diventava un buco, ma la metà che sporge fuori dal
+        // biglietto era coperta una volta sola e quindi dipinta: una mezzaluna bianca, con
+        // la sua ombra, fuori da ogni incavo.
+        return paper.subtracting(notches)
     }
 }
 
@@ -50,8 +54,8 @@ struct TicketPaper: ViewModifier {
     func body(content: Content) -> some View {
         let shape = TicketShape(cornerRadius: cornerRadius, perforationY: perforationY)
         content
-            .background(shape.fill(livery.paper, style: FillStyle(eoFill: true)))
-            .clipShape(shape, style: FillStyle(eoFill: true))
+            .background(shape.fill(livery.paper))
+            .clipShape(shape)
             .shadow(color: .black.opacity(0.35), radius: 18, x: 0, y: 12)
     }
 }

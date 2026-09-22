@@ -1,4012 +1,4080 @@
 {
-  "sourceLanguage" : "it",
-  "strings" : {
-    "%@ alla meta" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ to go"
-          }
-        }
-      }
-    },
-    "%@ · %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ · %2$@"
+  "sourceLanguage": "it",
+  "strings": {
+    "%@ %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %@"
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ · %2$@"
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ %2$@"
           }
         }
       }
     },
-    "%@ → %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ → %2$@"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ → %2$@"
-          }
-        }
-      }
-    },
-    "%@, %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
+    "%@ alle %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ at %@"
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@, %2$@"
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ alle %2$@"
           }
         }
       }
     },
-    "%@, %lld volte" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$lld times"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@, %2$lld volte"
-          }
-        }
-      }
-    },
-    "%@: %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@: %2$@"
+    "%@ · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@"
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@: %2$@"
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ · %2$@"
           }
         }
       }
     },
-    "%@: %@%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@: %2$@%3$@"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@: %2$@%3$@"
-          }
-        }
-      }
-    },
-    "%lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld"
-          }
-        }
-      }
-    },
-    "%lld giorni in mare" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld days at sea"
-          }
-        }
-      }
-    },
-    "%lld miglia nautiche" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld nautical miles"
-          }
-        }
-      }
-    },
-    "%lld min" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld min"
-          }
-        }
-      }
-    },
-    "%lld min fa" : {
-      "comment" : "Età di un dato in minuti",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld min ago"
-          }
-        }
-      }
-    },
-    "%lld minuti" : {
-      "comment" : "Countdown letto da VoiceOver",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld minutes"
-          }
-        }
-      }
-    },
-    "%lld notti · %lld scali" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld nights · %2$lld ports"
+    "%@, %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@, %2$@"
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld notti · %2$lld scali"
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@, %2$@"
           }
         }
       }
     },
-    "%lld orari di all aboard sono dedotti: confrontali col programma di bordo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld all aboard times were inferred: check them against the daily programme"
-          }
-        }
-      }
-    },
-    "%lld ore" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld hours"
-          }
-        }
-      }
-    },
-    "%lld ore e %lld minuti" : {
-      "comment" : "Countdown letto da VoiceOver",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld hours and %2$lld minutes"
+    "%@, %lld volte": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@, %2$lld times"
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld ore e %2$lld minuti"
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@, %2$lld volte"
           }
         }
       }
     },
-    "%lld per cento" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld per cent"
-          }
-        }
-      }
-    },
-    "%lld righe da sistemare prima di confermare" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld lines to fix before confirming"
-          }
-        }
-      }
-    },
-    "%lld scali · %lld giorni di mare" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld ports · %2$lld sea days"
+    "%@: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@: %2$@"
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld scali · %2$lld giorni di mare"
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@: %2$@"
           }
         }
       }
     },
-    "%lld scali · %lld notti" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld ports · %2$lld nights"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld scali · %2$lld notti"
+    "%lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld"
           }
         }
       }
     },
-    "%lld scali, %lld notti a bordo." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld ports, %2$lld nights aboard."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld scali, %2$lld notti a bordo."
+    "%lld crociere": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld cruises"
           }
         }
       }
     },
-    "1 giorno in mare" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1 day at sea"
+    "%lld giorni di mare": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld sea days"
           }
         }
       }
     },
-    "AIS" : {
-      "comment" : "Provenienza della posizione",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AIS"
+    "%lld miglia nautiche": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld nautical miles"
           }
         }
       }
     },
-    "ALL ABOARD" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ALL ABOARD"
+    "%lld min": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min"
           }
         }
       }
     },
-    "ARRIVO" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ARRIVAL"
+    "%lld min fa": {
+      "comment": "Età di un dato in minuti",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min ago"
           }
         }
       }
     },
-    "Acqua" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Water"
+    "%lld minuti": {
+      "comment": "Countdown letto da VoiceOver",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld minutes"
           }
         }
       }
     },
-    "Aggiungi il tuo itinerario in Cruisy." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add your itinerary in Cruisy."
+    "%lld notti": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld nights"
           }
         }
       }
     },
-    "Aggiungi l'itinerario" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add your itinerary"
-          }
-        }
-      }
-    },
-    "Aggiungi la tua crociera" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add your cruise"
-          }
-        }
-      }
-    },
-    "Aggiungi scalo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add a port call"
-          }
-        }
-      }
-    },
-    "Agitato" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rough"
-          }
-        }
-      }
-    },
-    "AirDrop fra due telefoni sullo stesso ponte non ha bisogno di rete. Una sincronizzazione automatica, in mezzo all'oceano, non sincronizzerebbe niente." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AirDrop between two phones on the same deck needs no network. Automatic syncing, in the middle of the ocean, would sync nothing at all."
-          }
-        }
-      }
-    },
-    "All aboard" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All aboard"
-          }
-        }
-      }
-    },
-    "All aboard alle %@, ora di bordo, a %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All aboard at %1$@ ship's time, in %2$@."
+    "%lld notti · %lld scali": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld nights · %2$lld ports"
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "All aboard alle %1$@, ora di bordo, a %2$@."
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld notti · %2$lld scali"
           }
         }
       }
     },
-    "All aboard dedotto" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All aboard inferred"
+    "%lld orari di all aboard sono dedotti: confrontali col programma di bordo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld all aboard times were inferred: check them against the daily programme"
           }
         }
       }
     },
-    "All aboard passato" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All aboard has passed"
+    "%lld ore": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld hours"
           }
         }
       }
     },
-    "All'andatura di queste ore arriverete a %@ verso le %@, %@ dopo l'orario pubblicato. Gli orari che contano restano quelli annunciati a bordo." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "At the pace of the last few hours you'll reach %1$@ around %2$@, %3$@ after the published time. The times that count are still the ones announced on board."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "All'andatura di queste ore arriverete a %1$@ verso le %2$@, %3$@ dopo l'orario pubblicato. Gli orari che contano restano quelli annunciati a bordo."
-          }
-        }
-      }
-    },
-    "All'arrivo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To arrival"
-          }
-        }
-      }
-    },
-    "All'arrivo a %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To arrival in %@"
-          }
-        }
-      }
-    },
-    "All'imbarco" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "At boarding"
-          }
-        }
-      }
-    },
-    "Alla meta" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To go"
-          }
-        }
-      }
-    },
-    "Alle %@ e alle %@, ora di bordo." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "At %1$@ and %2$@, ship's time."
+    "%lld ore e %lld minuti": {
+      "comment": "Countdown letto da VoiceOver",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld hours and %2$lld minutes"
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Alle %1$@ e alle %2$@, ora di bordo."
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld ore e %2$lld minuti"
           }
         }
       }
     },
-    "Alle %@, ora di bordo." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "At %@, ship's time."
+    "%lld porti": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld ports"
           }
         }
       }
     },
-    "Annulla" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
+    "%lld righe da sistemare prima di confermare": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld lines to fix before confirming"
           }
         }
       }
     },
-    "Anticipo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lead time"
+    "1 crociera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 cruise"
           }
         }
       }
     },
-    "Apri" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open"
+    "1 giorno di mare": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 sea day"
           }
         }
       }
     },
-    "Apri Meteo di Apple" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open Apple Weather"
+    "1 notte": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 night"
           }
         }
       }
     },
-    "Apri la carta" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open the chart"
+    "1 porto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 port"
           }
         }
       }
     },
-    "Apri la carta con tutta la rotta" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open the chart with the whole route"
+    "A\nbordo": {
+      "comment": "Timbro",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On\nboard"
           }
         }
       }
     },
-    "Apri una crociera da file" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open a cruise from a file"
+    "A\nterra": {
+      "comment": "Timbro",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On\nshore"
           }
         }
       }
     },
-    "Aprire questa crociera?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open this cruise?"
+    "AIS": {
+      "comment": "Provenienza della posizione",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AIS"
           }
         }
       }
     },
-    "Arrivo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrival"
+    "Acqua %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Water %@"
           }
         }
       }
     },
-    "Attivo · anche nella Dynamic Island" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "On · also in the Dynamic Island"
+    "Adesso": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Now"
           }
         }
       }
     },
-    "Attracco" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Docking"
+    "Aggiungi il tuo itinerario in Cruisy.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add your itinerary in Cruisy."
           }
         }
       }
     },
-    "Avanti" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Next"
+    "Aggiungi l'itinerario": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add your itinerary"
           }
         }
       }
     },
-    "Avvisami prima dell'all aboard" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remind me before all aboard"
+    "Aggiungi la tua crociera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add your cruise"
           }
         }
       }
     },
-    "Bandiera" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Flag"
+    "Aggiungi scalo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a port call"
           }
         }
       }
     },
-    "Beccheggio avvertibile" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Noticeable pitching"
+    "Agitato": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rough"
           }
         }
       }
     },
-    "Buona attesa. Goditela già da adesso." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enjoy the wait. It has already started."
+    "AirDrop fra due telefoni sullo stesso ponte non ha bisogno di rete. Una sincronizzazione automatica, in mezzo all'oceano, non sincronizzerebbe niente.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AirDrop between two phones on the same deck needs no network. Automatic syncing, in the middle of the ocean, would sync nothing at all."
           }
         }
       }
     },
-    "Calmo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Calm"
+    "All aboard": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All aboard"
           }
         }
       }
     },
-    "Carta" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chart"
-          }
-        }
-      }
-    },
-    "Carta di %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chart of %@"
-          }
-        }
-      }
-    },
-    "Carta e countdown si calcolano sul telefono. In mezzo all'oceano, in modalità aereo, continuano a funzionare." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The chart and the countdowns are worked out on your phone. In the middle of the ocean, in aeroplane mode, they keep working."
-          }
-        }
-      }
-    },
-    "Carta nautica" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nautical chart"
-          }
-        }
-      }
-    },
-    "Cerca un porto" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search for a port"
-          }
-        }
-      }
-    },
-    "Cerca «%@» su Wikidata" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Look up “%@” on Wikidata"
-          }
-        }
-      }
-    },
-    "Cercala su Wikidata" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Look it up on Wikidata"
-          }
-        }
-      }
-    },
-    "Cerco su Wikidata…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Looking up on Wikidata…"
-          }
-        }
-      }
-    },
-    "Cerco «%@» su Wikidata…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Looking up “%@” on Wikidata…"
-          }
-        }
-      }
-    },
-    "Chiudi" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Close"
-          }
-        }
-      }
-    },
-    "Ci siamo quasi: prepara la valigia." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nearly there: time to pack."
-          }
-        }
-      }
-    },
-    "Ci siamo. Documenti, passaporto, valigia." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This is it. Documents, passport, suitcase."
-          }
-        }
-      }
-    },
-    "Come Cruisy calcola i suoi countdown, e che cosa non può sapere." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "How Cruisy works out its countdowns, and what it cannot know."
-          }
-        }
-      }
-    },
-    "Come funziona Cruisy" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "How Cruisy works"
-          }
-        }
-      }
-    },
-    "Come si scende" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Going ashore"
-          }
-        }
-      }
-    },
-    "Con questo mare il tender può essere sospeso" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In this sea the tender may be suspended"
-          }
-        }
-      }
-    },
-    "Condividi la crociera" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Share the cruise"
-          }
-        }
-      }
-    },
-    "Conferma e salva" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Confirm and save"
-          }
-        }
-      }
-    },
-    "Controlla" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check"
-          }
-        }
-      }
-    },
-    "Coperto" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overcast"
-          }
-        }
-      }
-    },
-    "Correggi gli orari" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Correct the times"
-          }
-        }
-      }
-    },
-    "Correggi nave, orari e ora di bordo, o reimporta l'itinerario" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Correct the ship, the times and ship's time, or import the itinerary again"
-          }
-        }
-      }
-    },
-    "Coste" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Coastlines"
-          }
-        }
-      }
-    },
-    "Coste, porti e dati delle navi sono di pubblico dominio e viaggiano dentro l'app: la carta si disegna anche senza rete. Il meteo arriva da Open-Meteo; le fotografie delle navi da Wikimedia Commons, con il credito del loro autore." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Coastlines, ports and ship data are in the public domain and travel inside the app: the chart draws itself with no network. The weather comes from Open-Meteo; ship photographs from Wikimedia Commons, credited to their authors."
-          }
-        }
-      }
-    },
-    "Countdown e carta si calcolano sul telefono. In mezzo all'oceano, in modalità aereo, continuano a funzionare." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The countdowns and the chart are worked out on your phone. In the middle of the ocean, in aeroplane mode, they keep working."
-          }
-        }
-      }
-    },
-    "Countdown sulla schermata di blocco" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Countdown on the Lock Screen"
-          }
-        }
-      }
-    },
-    "Crociera" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cruise"
-          }
-        }
-      }
-    },
-    "Crociera conclusa" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cruise finished"
-          }
-        }
-      }
-    },
-    "Crociere" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cruises"
-          }
-        }
-      }
-    },
-    "Cruisy" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cruisy"
-          }
-        }
-      }
-    },
-    "Cruisy conta a partire dagli orari che hai inserito tu. Se a bordo annunciano un orario diverso, quello vince: correggilo dal dettaglio del porto." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cruisy counts from the times you entered. If a different time is announced on board, that one wins: correct it from the port detail."
-          }
-        }
-      }
-    },
-    "Cruisy conta dagli orari che le hai dato. Se a bordo ne annunciano altri, quelli vincono: correggili dal dettaglio del porto." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cruisy counts from the times you gave it. If others are announced on board, those win: correct them from the port detail."
-          }
-        }
-      }
-    },
-    "DOMANI" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TOMORROW"
-          }
-        }
-      }
-    },
-    "Data mancante" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Missing date"
-          }
-        }
-      }
-    },
-    "Dati" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Data"
-          }
-        }
-      }
-    },
-    "Dati da Wikidata, di pubblico dominio. Le fotografie vengono da Wikimedia Commons e restano dei rispettivi autori." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Data from Wikidata, in the public domain. Photographs come from Wikimedia Commons and remain their authors' own."
-          }
-        }
-      }
-    },
-    "Diario" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Logbook"
-          }
-        }
-      }
-    },
-    "Dimentica le navi cercate" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Forget the ships you looked up"
-          }
-        }
-      }
-    },
-    "Domani si parte." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tomorrow you sail."
-          }
-        }
-      }
-    },
-    "E" : {
-      "comment" : "Punto cardinale: est",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E"
-          }
-        }
-      }
-    },
-    "Fine" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Done"
-          }
-        }
-      }
-    },
-    "Fonte dell'orario: %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Time source: %@"
-          }
-        }
-      }
-    },
-    "Foto" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Photos"
-          }
-        }
-      }
-    },
-    "Funziona anche in mezzo al mare" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "It works in the middle of the sea"
-          }
-        }
-      }
-    },
-    "Funziona senza rete" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Works with no network"
-          }
-        }
-      }
-    },
-    "GPS del telefono" : {
-      "comment" : "Provenienza della posizione",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Phone GPS"
-          }
-        }
-      }
-    },
-    "Giorni di mare" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sea days"
-          }
-        }
-      }
-    },
-    "Giorno %lld di %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Day %1$lld of %2$lld"
+    "All aboard alle %@, ora di bordo, a %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All aboard at %1$@ ship's time, in %2$@."
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Giorno %1$lld di %2$lld"
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "All aboard alle %1$@, ora di bordo, a %2$@."
           }
         }
       }
     },
-    "Giorno di mare" : {
-      "comment" : "Stato del viaggio",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sea day"
+    "All aboard dedotto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All aboard inferred"
           }
         }
       }
     },
-    "Gli annunci di bordo fanno fede" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Onboard announcements are what count"
-          }
-        }
-      }
-    },
-    "Gli orari degli scali sono ora locale di ogni porto. L'app sposta l'orologio alle 02:00 della notte che apre l'ultimo giorno di mare, come fanno le compagnie." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Port call times are local time at each port. The app moves the clock at 02:00 on the night that begins the last sea day, as cruise lines do."
-          }
-        }
-      }
-    },
-    "Grosso" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "High"
-          }
-        }
-      }
-    },
-    "Hai negato la posizione. Serve «Sempre» in Impostazioni › Cruisy › Posizione." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You denied location access. Allow “Always” in Settings › Cruisy › Location."
-          }
-        }
-      }
-    },
-    "Hai superato tutti i traguardi. Complimenti sinceri." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You've passed every milestone. Sincere congratulations."
-          }
-        }
-      }
-    },
-    "Ho capito" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Got it"
-          }
-        }
-      }
-    },
-    "I porti dove torni" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ports you keep returning to"
-          }
-        }
-      }
-    },
-    "I tuoi dati restano qui" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your data stays here"
-          }
-        }
-      }
-    },
-    "IMBARCO" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "BOARDING"
-          }
-        }
-      }
-    },
-    "IMO (facoltativo)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "IMO (optional)"
-          }
-        }
-      }
-    },
-    "Il countdown sulla schermata di blocco." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The countdown on your Lock Screen."
-          }
-        }
-      }
-    },
-    "Il diario è ancora bianco" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The logbook is still blank"
-          }
-        }
-      }
-    },
-    "Il telefono è %lld ore %@ rispetto all'ora di bordo. Gli orari qui sono in ora di bordo." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your phone is %1$lld hours %2$@ ship's time. Times here are in ship's time."
+    "All'andatura di queste ore arriverete a %@ verso le %@, %@ dopo l'orario pubblicato. Gli orari che contano restano quelli annunciati a bordo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At the pace of the last few hours you'll reach %1$@ around %2$@, %3$@ after the published time. The times that count are still the ones announced on board."
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Il telefono è %1$lld ore %2$@ rispetto all'ora di bordo. Gli orari qui sono in ora di bordo."
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "All'andatura di queste ore arriverete a %1$@ verso le %2$@, %3$@ dopo l'orario pubblicato. Gli orari che contano restano quelli annunciati a bordo."
           }
         }
       }
     },
-    "Il tempo a terra" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Weather ashore"
+    "All'arrivo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To arrival"
           }
         }
       }
     },
-    "Imbarco" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Boarding"
+    "Alla meta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To go"
           }
         }
       }
     },
-    "Imbarco a %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Boarding in %@"
-          }
-        }
-      }
-    },
-    "Importa di nuovo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import again"
-          }
-        }
-      }
-    },
-    "Importa file" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import a file"
-          }
-        }
-      }
-    },
-    "Importa itinerario" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import itinerary"
-          }
-        }
-      }
-    },
-    "Importa l'itinerario" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import the itinerary"
-          }
-        }
-      }
-    },
-    "Impostazioni" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Settings"
-          }
-        }
-      }
-    },
-    "In giorno di porto conta al rientro obbligatorio a bordo. In giorno di mare, all'arrivo nel prossimo scalo. È tutto quello che fa, e lo fa bene." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "On a port day it counts down to all aboard. On a sea day, to arrival at the next port. That is all it does, and it does it well."
-          }
-        }
-      }
-    },
-    "In navigazione" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Under way"
-          }
-        }
-      }
-    },
-    "In navigazione verso %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Under way to %@"
-          }
-        }
-      }
-    },
-    "In navigazione · %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Under way · %@"
-          }
-        }
-      }
-    },
-    "In porto" : {
-      "comment" : "Stato del viaggio",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In port"
-          }
-        }
-      }
-    },
-    "In questo testo non ho riconosciuto un itinerario. Controlla che ci siano le date e i nomi dei porti." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I couldn't recognise an itinerary in this text. Check that the dates and port names are there."
-          }
-        }
-      }
-    },
-    "In servizio" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In service"
-          }
-        }
-      }
-    },
-    "Incolla la conferma della crociera" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paste your cruise confirmation"
-          }
-        }
-      }
-    },
-    "Incolla o fotografa la conferma della compagnia: Cruisy ne ricava l'itinerario e da lì calcola i countdown, anche senza rete a bordo." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paste or photograph the cruise line's confirmation: Cruisy works out the itinerary from it, and the countdowns from there — with no network on board."
-          }
-        }
-      }
-    },
-    "Incolla, fotografa o importa." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paste, photograph or import."
-          }
-        }
-      }
-    },
-    "Indietro" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Back"
-          }
-        }
-      }
-    },
-    "Inserisci a mano" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enter by hand"
-          }
-        }
-      }
-    },
-    "Itinerario" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Itinerary"
-          }
-        }
-      }
-    },
-    "L'all aboard deve cadere fra l'attracco e la partenza." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All aboard must fall between docking and departure."
-          }
-        }
-      }
-    },
-    "L'elenco che viaggia dentro l'app resta intatto: si tolgono solo le schede scaricate da Wikidata a bordo." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The list that travels inside the app stays intact: this removes only the cards downloaded from Wikidata on board."
-          }
-        }
-      }
-    },
-    "L'email della compagnia, la pagina del sito, una foto del programma di bordo. Basta che ci siano le date e i nomi dei porti: al resto pensa Cruisy, e tutto resta sul telefono." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The cruise line's email, a page from their site, a photo of the daily programme. All it needs is the dates and the port names: Cruisy does the rest, and everything stays on your phone."
-          }
-        }
-      }
-    },
-    "L'email della compagnia, la pagina del sito, una foto del programma di bordo: Cruisy ne ricava l'itinerario e ti fa controllare tutto prima di salvarlo." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The cruise line's email, a page from their site, a photo of the daily programme: Cruisy works out the itinerary and lets you check every line before saving it."
-          }
-        }
-      }
-    },
-    "L'itinerario è già pronto nella scheda Itinerario." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The itinerary is ready in the Itinerary tab."
-          }
-        }
-      }
-    },
-    "L'orologio resta fermo su questo scarto per tutta la crociera. Usalo solo se a bordo hanno annunciato un'ora diversa." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The clock stays on this offset for the whole cruise. Use it only if the ship has announced a different time."
-          }
-        }
-      }
-    },
-    "L'ultima corsa parte prima dell'all aboard: calcola la coda al pontile." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The last tender leaves before all aboard: allow for the queue at the pier."
-          }
-        }
-      }
-    },
-    "La nave lascia %@ alle %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The ship leaves %1$@ at %2$@."
+    "Alle %@ e alle %@, ora di bordo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At %1$@ and %2$@, ship's time."
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "La nave lascia %1$@ alle %2$@."
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Alle %1$@ e alle %2$@, ora di bordo."
           }
         }
       }
     },
-    "La rotta" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The route"
+    "Alle %@, ora di bordo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At %@, ship's time."
           }
         }
       }
     },
-    "La tua crociera" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your cruise"
+    "Annulla": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
           }
         }
       }
     },
-    "Larghezza" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Beam"
+    "Anticipo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lead time"
           }
         }
       }
     },
-    "Le foto di navi e porti arrivano da Wikimedia Commons e Wikipedia. Su rete cellulare, hotspot o Risparmio dati si scaricano solo se lo permetti; quelle già viste restano sempre. Il Wi-Fi della nave per iPhone è un Wi-Fi normale, anche se lo paghi: per risparmiare lì, attiva Risparmio dati su quella rete." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Photos of ships and ports come from Wikimedia Commons and Wikipedia. On cellular, a hotspot or Low Data Mode they download only if you allow it; photos you've already seen always stay. To your iPhone the ship's Wi-Fi is ordinary Wi-Fi, even if you pay for it: to save data there, turn on Low Data Mode for that network."
+    "Apri": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open"
           }
         }
       }
     },
-    "Le miglia e i porti di questa crociera spariranno dai totali." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The miles and ports of this cruise will disappear from the totals."
+    "Apri Meteo di Apple": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Apple Weather"
           }
         }
       }
     },
-    "Le miglia si contano da sole mentre navighi." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Miles add up on their own as you sail."
+    "Apri la carta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the chart"
           }
         }
       }
     },
-    "Le navi tengono la propria ora e non sempre la cambiano in porto. Se il tuo telefono non è allineato, Cruisy te lo dice." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ships keep their own time and don't always change it in port. If your phone isn't aligned, Cruisy tells you."
+    "Apri una crociera da file": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open a cruise from a file"
           }
         }
       }
     },
-    "Le notifiche sono disattivate per Cruisy nelle Impostazioni di sistema: l'avviso non può suonare." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notifications are switched off for Cruisy in system Settings: the alert cannot sound."
+    "Aprire questa crociera?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open this cruise?"
           }
         }
       }
     },
-    "Le tue crociere" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your cruises"
+    "Arrivo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arrival"
           }
         }
       }
     },
-    "Leggi" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Read"
+    "Attiva": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active"
           }
         }
       }
     },
-    "Leggo il documento…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reading the document…"
+    "Attracco": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Docking"
           }
         }
       }
     },
-    "Lo faccio più tardi" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I'll do it later"
+    "Avanti": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next"
           }
         }
       }
     },
-    "Lunghezza" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Length"
+    "Avvisami prima dell'all aboard": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remind me before all aboard"
           }
         }
       }
     },
-    "MMSI (facoltativo)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MMSI (optional)"
+    "Bandiera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Flag"
           }
         }
       }
     },
-    "Manca il permesso «Sempre». Senza, la rotta si registra solo mentre l'app è aperta." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The “Always” permission is missing. Without it, the route is recorded only while the app is open."
+    "Beccheggio avvertibile": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noticeable pitching"
           }
         }
       }
     },
-    "Manca un giorno all'imbarco" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "One day to boarding"
+    "Calmo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calm"
           }
         }
       }
     },
-    "Manca un giorno alla partenza" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "One day to departure"
+    "Carta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chart"
           }
         }
       }
     },
-    "Mancano %lld giorni all'imbarco" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld days to boarding"
+    "Carta di %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chart of %@"
           }
         }
       }
     },
-    "Mancano %lld giorni alla partenza" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld days to departure"
+    "Carta e countdown si calcolano sul telefono. In mezzo all'oceano, in modalità aereo, continuano a funzionare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The chart and the countdowns are worked out on your phone. In the middle of the ocean, in aeroplane mode, they keep working."
           }
         }
       }
     },
-    "Mare" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sea"
+    "Carta nautica": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nautical chart"
           }
         }
       }
     },
-    "Mare impegnativo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Demanding sea"
+    "Carte di bordo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ship's papers"
           }
         }
       }
     },
-    "Mare molto duro" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Very heavy sea"
+    "Cerca un porto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search for a port"
           }
         }
       }
     },
-    "Meteo e onde" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Weather and waves"
+    "Cerca «%@» su Wikidata": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look up “%@” on Wikidata"
           }
         }
       }
     },
-    "Metto in ordine l'itinerario…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sorting out the itinerary…"
+    "Cercala su Wikidata": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look it up on Wikidata"
           }
         }
       }
     },
-    "Miglia percorse" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Miles sailed"
+    "Cerco su Wikidata…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Looking up on Wikidata…"
           }
         }
       }
     },
-    "Miglia vere" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Real miles"
+    "Cerco «%@» su Wikidata…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Looking up “%@” on Wikidata…"
           }
         }
       }
     },
-    "Modifica" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Edit"
+    "Chiudi": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
           }
         }
       }
     },
-    "Modifica a mano" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Edit by hand"
+    "Colori della compagnia": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cruise line colours"
           }
         }
       }
     },
-    "Molo o pontile (facoltativo)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Quay or pier (optional)"
+    "Colori ispirati alla compagnia. Si cambia nelle Impostazioni.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colours inspired by the cruise line. You can change this in Settings."
           }
         }
       }
     },
-    "Molto agitato" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Very rough"
+    "Come Cruisy calcola i suoi countdown, e che cosa non può sapere.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How Cruisy works out its countdowns, and what it cannot know."
           }
         }
       }
     },
-    "Molto grosso" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Very high"
+    "Come funziona Cruisy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How Cruisy works"
           }
         }
       }
     },
-    "Molto mosso" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Moderate"
+    "Come si scende": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Going ashore"
           }
         }
       }
     },
-    "Mosso" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Slight"
+    "Con questo mare il tender può essere sospeso": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In this sea the tender may be suspended"
           }
         }
       }
     },
-    "Mostra tutta la rotta" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show the whole route"
+    "Condividi la crociera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share the cruise"
           }
         }
       }
     },
-    "Mostralo quando serve" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show it when it matters"
+    "Conferma e salva": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirm and save"
           }
         }
       }
     },
-    "Movimento appena percettibile" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Barely noticeable movement"
+    "Controlla": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check"
           }
         }
       }
     },
-    "Movimento evidente" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clearly felt movement"
+    "Coperto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Overcast"
           }
         }
       }
     },
-    "N" : {
-      "comment" : "Punto cardinale: nord",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "N"
+    "Correggi gli orari": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Correct the times"
           }
         }
       }
     },
-    "Nave" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ship"
+    "Correggi nave, orari e ora di bordo, o reimporta l'itinerario": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Correct the ship, the times and ship's time, or import the itinerary again"
           }
         }
       }
     },
-    "Navi" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ships"
+    "Corretto da te": {
+      "comment": "Campo Orario del biglietto",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Corrected by you"
           }
         }
       }
     },
-    "Navi imparate" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ships learned"
+    "Coste": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coastlines"
           }
         }
       }
     },
-    "Nebbia" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fog"
+    "Coste, porti e dati delle navi sono di pubblico dominio e viaggiano dentro l'app: la carta si disegna anche senza rete. Il meteo arriva da Open-Meteo; le fotografie delle navi da Wikimedia Commons, con il credito del loro autore.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coastlines, ports and ship data are in the public domain and travel inside the app: the chart draws itself with no network. The weather comes from Open-Meteo; ship photographs from Wikimedia Commons, credited to their authors."
           }
         }
       }
     },
-    "Nelle ore che contano, Cruisy può tenere il tempo che manca sulla schermata di blocco e nella Dynamic Island: lo guardi senza aprire nulla, anche con le mani occupate." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In the hours that count, Cruisy can keep the time remaining on your Lock Screen and in the Dynamic Island: you see it without opening anything, even with your hands full."
+    "Countdown e carta si calcolano sul telefono. In mezzo all'oceano, in modalità aereo, continuano a funzionare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The countdowns and the chart are worked out on your phone. In the middle of the ocean, in aeroplane mode, they keep working."
           }
         }
       }
     },
-    "Nessuna crociera" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No cruise yet"
+    "Countdown sulla schermata di blocco": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Countdown on the Lock Screen"
           }
         }
       }
     },
-    "Neve" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Snow"
+    "Crociera conclusa": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cruise finished"
           }
         }
       }
     },
-    "Nevischio" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sleet"
+    "Cruisy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cruisy"
           }
         }
       }
     },
-    "Nome" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Name"
+    "Cruisy conta a partire dagli orari che hai inserito tu. Se a bordo annunciano un orario diverso, quello vince: correggilo dal dettaglio del porto.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cruisy counts from the times you entered. If a different time is announced on board, that one wins: correct it from the port detail."
           }
         }
       }
     },
-    "Nome della nave" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ship name"
+    "Cruisy conta dagli orari che le hai dato. Se a bordo ne annunciano altri, quelli vincono: correggili dal dettaglio del porto.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cruisy counts from the times you gave it. If others are announced on board, those win: correct them from the port detail."
           }
         }
       }
     },
-    "Non c'è nessun account e nessun nostro server. Niente esce dal telefono da solo: l'itinerario si sposta soltanto se sei tu a mandarlo a qualcuno, e la tua posizione non esce mai." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "There is no account and no server of ours. Nothing leaves your phone on its own: the itinerary moves only if you send it to someone, and your position never leaves at all."
+    "Da": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From"
           }
         }
       }
     },
-    "Non ci siamo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not quite"
+    "Da Gibilterra a Palma": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gibraltar to Palma"
           }
         }
       }
     },
-    "Non ho trovato testo in questa immagine." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I couldn't find any text in this image."
+    "Data": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Date"
           }
         }
       }
     },
-    "Non ho trovato testo nella scansione." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I couldn't find any text in the scan."
+    "Data mancante": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Missing date"
           }
         }
       }
     },
-    "Non lo sentirai" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You won't feel it"
+    "Date": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dates"
           }
         }
       }
     },
-    "Non riesco ad aprirlo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I can't open it"
+    "Dati": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data"
           }
         }
       }
     },
-    "Non sono riuscito a chiedere a Wikidata: %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I couldn't ask Wikidata: %@"
+    "Dati da Wikidata, di pubblico dominio. Le fotografie vengono da Wikimedia Commons e restano dei rispettivi autori.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data from Wikidata, in the public domain. Photographs come from Wikimedia Commons and remain their authors' own."
           }
         }
       }
     },
-    "Non sono riuscito a leggere l'immagine." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I couldn't read the image."
+    "Diario": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Logbook"
           }
         }
       }
     },
-    "Non sono riuscito a leggere testo da questo PDF." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I couldn't read any text from this PDF."
+    "Dimentica le navi cercate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Forget the ships you looked up"
           }
         }
       }
     },
-    "Non sono riuscito ad aprire il PDF." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "I couldn't open the PDF."
+    "Disattivata nelle Impostazioni di sistema": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turned off in system Settings"
           }
         }
       }
     },
-    "Nuova crociera" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "New cruise"
+    "Domani": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tomorrow"
           }
         }
       }
     },
-    "Nuvoloso" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cloudy"
+    "Dover → Calais": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dover → Calais"
           }
         }
       }
     },
-    "O" : {
-      "comment" : "Punto cardinale: ovest (west)",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "W"
+    "E": {
+      "comment": "Punto cardinale: est",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E"
           }
         }
       }
     },
-    "OGGI" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TODAY"
+    "Fine": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
           }
         }
       }
     },
-    "Oggi" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Today"
+    "Foto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photos"
           }
         }
       }
     },
-    "Ogni porto in cui arrivi ci finisce da solo, con le miglia percorse per raggiungerlo." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Every port you reach lands here by itself, with the miles it took to get there."
+    "Fotografia della nave, %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photograph of the ship, %@"
           }
         }
       }
     },
-    "Onda" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wave"
+    "Funziona anche in mezzo al mare": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It works in the middle of the sea"
           }
         }
       }
     },
-    "Onda %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wave %@"
+    "Funziona senza rete": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Works with no network"
           }
         }
       }
     },
-    "Ora di bordo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ship's time"
+    "GPS del telefono": {
+      "comment": "Provenienza della posizione",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phone GPS"
           }
         }
       }
     },
-    "Orari in ora di %@ · %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Times in %1$@ local time · %2$@"
+    "Gibilterra → Beirut": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gibraltar → Beirut"
+          }
+        }
+      }
+    },
+    "Giorni di mare": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sea days"
+          }
+        }
+      }
+    },
+    "Giorno %lld di %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Day %1$lld of %2$lld"
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Orari in ora di %1$@ · %2$@"
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Giorno %1$lld di %2$lld"
           }
         }
       }
     },
-    "Orari mancanti" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Missing times"
+    "Giorno di mare": {
+      "comment": "Stato del viaggio",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sea day"
           }
         }
       }
     },
-    "Originale" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Original"
+    "Gli annunci di bordo fanno fede": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Onboard announcements are what count"
           }
         }
       }
     },
-    "Ormeggiata a %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Berthed in %@"
+    "Gli orari degli scali sono ora locale di ogni porto. L'app sposta l'orologio alle 02:00 della notte che apre l'ultimo giorno di mare, come fanno le compagnie.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Port call times are local time at each port. The app moves the clock at 02:00 on the night that begins the last sea day, as cruise lines do."
           }
         }
       }
     },
-    "Ormeggio" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Berth"
+    "Grosso": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "High"
           }
         }
       }
     },
-    "Ormeggio in banchina" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alongside the quay"
+    "Hai negato la posizione. Serve «Sempre» in Impostazioni › Cruisy › Posizione.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You denied location access. Allow “Always” in Settings › Cruisy › Location."
           }
         }
       }
     },
-    "PARTENZA" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "DEPARTURE"
+    "Hai superato tutti i traguardi. Complimenti sinceri.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You've passed every milestone. Sincere congratulations."
           }
         }
       }
     },
-    "Paese o regione" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Country or region"
+    "Ho capito": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Got it"
           }
         }
       }
     },
-    "Partenza" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Departure"
+    "I colori della compagnia sono una palette ispirata alla sua livrea, ricavata dalla nave della crociera. Nessun logo e nessun marchio: solo i colori.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The cruise line colours are a palette inspired by its livery, taken from the ship on this cruise. No logos and no trademarks: the colours only."
           }
         }
       }
     },
-    "Parzialmente nuvoloso" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Partly cloudy"
+    "I porti dove torni": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ports you keep returning to"
           }
         }
       }
     },
-    "Passa al satellite" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Switch to satellite"
+    "I tuoi dati restano qui": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your data stays here"
           }
         }
       }
     },
-    "Passa alla carta" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Switch to the chart"
+    "IMO (facoltativo)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "IMO (optional)"
           }
         }
       }
     },
-    "Passo %lld di %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Step %1$lld of %2$lld"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Passo %1$lld di %2$lld"
+    "Il Canale della Manica": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The English Channel"
           }
         }
       }
     },
-    "Periodo mostrato" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Period shown"
+    "Il Canale di Panama": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Panama Canal"
           }
         }
       }
     },
-    "Pioggia" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rain"
+    "Il Mediterraneo intero": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The whole Mediterranean"
           }
         }
       }
     },
-    "Pioggia gelata" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Freezing rain"
+    "Il Pacifico": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Pacific"
           }
         }
       }
     },
-    "Pioviggine" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Drizzle"
+    "Il countdown sulla schermata di blocco.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The countdown on your Lock Screen."
           }
         }
       }
     },
-    "Pioviggine gelata" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Freezing drizzle"
+    "Il diario è ancora bianco": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The logbook is still blank"
           }
         }
       }
     },
-    "Poco mosso" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Smooth"
+    "Il giro del mondo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Around the world"
           }
         }
       }
     },
-    "Poco nuvoloso" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mostly clear"
+    "Il telefono": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your phone"
           }
         }
       }
     },
-    "Portala con te" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Take it with you"
-          }
-        }
-      }
-    },
-    "Porti" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ports"
-          }
-        }
-      }
-    },
-    "Porti toccati" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ports called at"
-          }
-        }
-      }
-    },
-    "Porto" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Port"
-          }
-        }
-      }
-    },
-    "Porto da confermare" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Port to confirm"
-          }
-        }
-      }
-    },
-    "Porto non riconosciuto" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Port not recognised"
-          }
-        }
-      }
-    },
-    "Posizione %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Position %@"
-          }
-        }
-      }
-    },
-    "Posizione, %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Position, %@"
-          }
-        }
-      }
-    },
-    "Prenderai «%@» con %lld scali. La crociera che hai adesso, e le correzioni che le hai fatto, andranno perse." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You'll take “%1$@” with %2$lld ports of call. The cruise you have now, and the corrections you made to it, will be lost."
+    "Il telefono segna %@, %lld ore %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your phone says %@, %lld hours %@"
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Prenderai «%1$@» con %2$lld scali. La crociera che hai adesso, e le correzioni che le hai fatto, andranno perse."
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Il telefono segna %1$@, %2$lld ore %3$@"
           }
         }
       }
     },
-    "Preparati a salpare." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Get ready to sail."
+    "Il tempo a terra": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weather ashore"
           }
         }
       }
     },
-    "Preparati all'imbarco." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Get ready to board."
+    "Imbarco": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boarding"
           }
         }
       }
     },
-    "Prima dell'imbarco" : {
-      "comment" : "Stato del viaggio",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Before boarding"
+    "Imbarco a %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boarding in %@"
           }
         }
       }
     },
-    "Prima di salpare" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Before you sail"
+    "Imbarco dalle": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boarding from"
           }
         }
       }
     },
-    "Prossimo countdown" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Next countdown"
+    "Importa di nuovo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import again"
           }
         }
       }
     },
-    "Proxy meteo (facoltativo)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Weather proxy (optional)"
+    "Importa file": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import a file"
           }
         }
       }
     },
-    "Punti registrati" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recorded points"
+    "Importa itinerario": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import itinerary"
           }
         }
       }
     },
-    "Punto più a nord" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Northernmost point"
+    "Importa l'itinerario": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import the itinerary"
           }
         }
       }
     },
-    "Punto più a sud" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Southernmost point"
+    "Impostazioni": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
           }
         }
       }
     },
-    "Puoi disattivarlo quando vuoi dalle Impostazioni." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You can turn it off at any time in Settings."
+    "In\nmare": {
+      "comment": "Timbro",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At\nsea"
           }
         }
       }
     },
-    "Puoi salvare la crociera come file e mandarla a chi viaggia con te, o al tuo iPad. Chi la riceve la apre e ce l'ha: nessun account, nessuna password, nessun nostro server." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You can save the cruise as a file and send it to whoever is travelling with you, or to your iPad. Whoever receives it opens it and has it: no account, no password, no server of ours."
+    "In\nporto": {
+      "comment": "Timbro",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In\nport"
           }
         }
       }
     },
-    "Quanto manca al rientro a bordo, o all'arrivo nel prossimo porto." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "How long until all aboard, or until you reach the next port."
+    "In\nprogramma": {
+      "comment": "Timbro",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To\ncome"
           }
         }
       }
     },
-    "Quanto manca. Nient'altro." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "How long is left. Nothing else."
+    "In corso": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Under way"
           }
         }
       }
     },
-    "Quasi calmo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rippled"
+    "In giorno di porto conta al rientro obbligatorio a bordo. In giorno di mare, all'arrivo nel prossimo scalo. È tutto quello che fa, e lo fa bene.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On a port day it counts down to all aboard. On a sea day, to arrival at the next port. That is all it does, and it does it well."
           }
         }
       }
     },
-    "Quello che salvi qui vince sugli orari pubblicati." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "What you save here overrides the published times."
+    "In navigazione verso %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Under way to %@"
           }
         }
       }
     },
-    "Questa nave non è nell'elenco che viaggia dentro l'app. I countdown funzionano lo stesso: la scheda è un di più." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This ship isn't in the list that travels inside the app. The countdowns work all the same: this card is a bonus."
+    "In questo testo non ho riconosciuto un itinerario. Controlla che ci siano le date e i nomi dei porti.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I couldn't recognise an itinerary in this text. Check that the dates and port names are there."
           }
         }
       }
     },
-    "Questo file non contiene una crociera che riesco a leggere." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This file doesn't contain a cruise I can read."
+    "In servizio": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In service"
           }
         }
       }
     },
-    "Registra la rotta percorsa" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Record the route sailed"
+    "Incolla la conferma della crociera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paste your cruise confirmation"
           }
         }
       }
     },
-    "Resta visibile anche con Full Immersion attivo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stays visible even with a Focus on"
+    "Incolla o fotografa la conferma della compagnia: Cruisy ne ricava l'itinerario e da lì calcola i countdown, anche senza rete a bordo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paste or photograph the cruise line's confirmation: Cruisy works out the itinerary from it, and the countdowns from there — with no network on board."
           }
         }
       }
     },
-    "Rientro a bordo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Back on board"
+    "Incolla, fotografa o importa.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paste, photograph or import."
           }
         }
       }
     },
-    "Rientro a bordo a %@ entro le %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Back on board in %1$@ by %2$@"
+    "Indietro": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back"
+          }
+        }
+      }
+    },
+    "Inserisci a mano": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter by hand"
+          }
+        }
+      }
+    },
+    "Itinerario": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Itinerary"
+          }
+        }
+      }
+    },
+    "L'all aboard deve cadere fra l'attracco e la partenza.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All aboard must fall between docking and departure."
+          }
+        }
+      }
+    },
+    "L'elenco che viaggia dentro l'app resta intatto: si tolgono solo le schede scaricate da Wikidata a bordo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The list that travels inside the app stays intact: this removes only the cards downloaded from Wikidata on board."
+          }
+        }
+      }
+    },
+    "L'email della compagnia, la pagina del sito, una foto del programma di bordo. Basta che ci siano le date e i nomi dei porti: al resto pensa Cruisy, e tutto resta sul telefono.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The cruise line's email, a page from their site, a photo of the daily programme. All it needs is the dates and the port names: Cruisy does the rest, and everything stays on your phone."
+          }
+        }
+      }
+    },
+    "L'email della compagnia, la pagina del sito, una foto del programma di bordo: Cruisy ne ricava l'itinerario e ti fa controllare tutto prima di salvarlo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The cruise line's email, a page from their site, a photo of the daily programme: Cruisy works out the itinerary and lets you check every line before saving it."
+          }
+        }
+      }
+    },
+    "L'orologio resta fermo su questo scarto per tutta la crociera. Usalo solo se a bordo hanno annunciato un'ora diversa.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The clock stays on this offset for the whole cruise. Use it only if the ship has announced a different time."
+          }
+        }
+      }
+    },
+    "L'ultima corsa parte prima dell'all aboard: calcola la coda al pontile.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The last tender leaves before all aboard: allow for the queue at the pier."
+          }
+        }
+      }
+    },
+    "La livrea di Cruisy. Si cambia nelle Impostazioni.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cruisy's own livery. You can change this in Settings."
+          }
+        }
+      }
+    },
+    "La nave di questa crociera non è nell'elenco, quindi la livrea resta quella di Cruisy anche scegliendo i colori della compagnia.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The ship on this cruise is not in the list, so the livery stays Cruisy's even if you choose the cruise line colours."
+          }
+        }
+      }
+    },
+    "La rotta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The route"
+          }
+        }
+      }
+    },
+    "La rotta della crociera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The cruise route"
+          }
+        }
+      }
+    },
+    "La traversata atlantica": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Atlantic crossing"
+          }
+        }
+      }
+    },
+    "La tua crociera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your cruise"
+          }
+        }
+      }
+    },
+    "Larghezza": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beam"
+          }
+        }
+      }
+    },
+    "Le foto di navi e porti arrivano da Wikimedia Commons e Wikipedia. Su rete cellulare, hotspot o Risparmio dati si scaricano solo se lo permetti; quelle già viste restano sempre. Il Wi-Fi della nave per iPhone è un Wi-Fi normale, anche se lo paghi: per risparmiare lì, attiva Risparmio dati su quella rete.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Photos of ships and ports come from Wikimedia Commons and Wikipedia. On cellular, a hotspot or Low Data Mode they download only if you allow it; photos you've already seen always stay. To your iPhone the ship's Wi-Fi is ordinary Wi-Fi, even if you pay for it: to save data there, turn on Low Data Mode for that network."
+          }
+        }
+      }
+    },
+    "Le miglia e i porti di questa crociera spariranno dai totali.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The miles and ports of this cruise will disappear from the totals."
+          }
+        }
+      }
+    },
+    "Le miglia si contano da sole mentre navighi.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Miles add up on their own as you sail."
+          }
+        }
+      }
+    },
+    "Le navi tengono la propria ora e non sempre la cambiano in porto. Se il tuo telefono non è allineato, Cruisy te lo dice.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ships keep their own time and don't always change it in port. If your phone isn't aligned, Cruisy tells you."
+          }
+        }
+      }
+    },
+    "Le notifiche sono disattivate per Cruisy nelle Impostazioni di sistema: l'avviso non può suonare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications are switched off for Cruisy in system Settings: the alert cannot sound."
+          }
+        }
+      }
+    },
+    "Le tue crociere": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your cruises"
+          }
+        }
+      }
+    },
+    "Leggi": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read"
+          }
+        }
+      }
+    },
+    "Leggo il documento…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reading the document…"
+          }
+        }
+      }
+    },
+    "Letto da": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read from"
+          }
+        }
+      }
+    },
+    "Livrea": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livery"
+          }
+        }
+      }
+    },
+    "Livrea: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livery: %@"
+          }
+        }
+      }
+    },
+    "Lo faccio più tardi": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I'll do it later"
+          }
+        }
+      }
+    },
+    "Lunghezza": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Length"
+          }
+        }
+      }
+    },
+    "MMSI (facoltativo)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MMSI (optional)"
+          }
+        }
+      }
+    },
+    "Manca il permesso «Sempre». Senza, la rotta si registra solo mentre l'app è aperta.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The “Always” permission is missing. Without it, the route is recorded only while the app is open."
+          }
+        }
+      }
+    },
+    "Manca un giorno all'imbarco": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One day to boarding"
+          }
+        }
+      }
+    },
+    "Mancano": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Left"
+          }
+        }
+      }
+    },
+    "Mancano %lld giorni all'imbarco": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld days to boarding"
+          }
+        }
+      }
+    },
+    "Mare impegnativo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demanding sea"
+          }
+        }
+      }
+    },
+    "Mare molto duro": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Very heavy sea"
+          }
+        }
+      }
+    },
+    "Meteo e onde": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weather and waves"
+          }
+        }
+      }
+    },
+    "Metto in ordine l'itinerario…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sorting out the itinerary…"
+          }
+        }
+      }
+    },
+    "Miglia": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Miles"
+          }
+        }
+      }
+    },
+    "Miglia percorse": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Miles sailed"
+          }
+        }
+      }
+    },
+    "Miglia vere": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Real miles"
+          }
+        }
+      }
+    },
+    "Modifica": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit"
+          }
+        }
+      }
+    },
+    "Modifica a mano": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit by hand"
+          }
+        }
+      }
+    },
+    "Molo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Berth"
+          }
+        }
+      }
+    },
+    "Molo o pontile (facoltativo)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quay or pier (optional)"
+          }
+        }
+      }
+    },
+    "Molto agitato": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Very rough"
+          }
+        }
+      }
+    },
+    "Molto grosso": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Very high"
+          }
+        }
+      }
+    },
+    "Molto mosso": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moderate"
+          }
+        }
+      }
+    },
+    "Mosso": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slight"
+          }
+        }
+      }
+    },
+    "Mostra tutta la rotta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show the whole route"
+          }
+        }
+      }
+    },
+    "Mostralo quando serve": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show it when it matters"
+          }
+        }
+      }
+    },
+    "Movimento appena percettibile": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Barely noticeable movement"
+          }
+        }
+      }
+    },
+    "Movimento evidente": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clearly felt movement"
+          }
+        }
+      }
+    },
+    "N": {
+      "comment": "Punto cardinale: nord",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "N"
+          }
+        }
+      }
+    },
+    "Nave": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ship"
+          }
+        }
+      }
+    },
+    "Navi": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ships"
+          }
+        }
+      }
+    },
+    "Navi imparate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ships learned"
+          }
+        }
+      }
+    },
+    "Nebbia": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fog"
+          }
+        }
+      }
+    },
+    "Nelle ore che contano, Cruisy può tenere il tempo che manca sulla schermata di blocco e nella Dynamic Island: lo guardi senza aprire nulla, anche con le mani occupate.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In the hours that count, Cruisy can keep the time remaining on your Lock Screen and in the Dynamic Island: you see it without opening anything, even with your hands full."
+          }
+        }
+      }
+    },
+    "Nessun countdown in corso": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No countdown running"
+          }
+        }
+      }
+    },
+    "Nessuna crociera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No cruise yet"
+          }
+        }
+      }
+    },
+    "Neve": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snow"
+          }
+        }
+      }
+    },
+    "Nevischio": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sleet"
+          }
+        }
+      }
+    },
+    "Nome": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name"
+          }
+        }
+      }
+    },
+    "Nome della nave": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ship name"
+          }
+        }
+      }
+    },
+    "Non c'è nessun account e nessun nostro server. Niente esce dal telefono da solo: l'itinerario si sposta soltanto se sei tu a mandarlo a qualcuno, e la tua posizione non esce mai.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There is no account and no server of ours. Nothing leaves your phone on its own: the itinerary moves only if you send it to someone, and your position never leaves at all."
+          }
+        }
+      }
+    },
+    "Non ci siamo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not quite"
+          }
+        }
+      }
+    },
+    "Non ho trovato testo in questa immagine.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I couldn't find any text in this image."
+          }
+        }
+      }
+    },
+    "Non ho trovato testo nella scansione.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I couldn't find any text in the scan."
+          }
+        }
+      }
+    },
+    "Non lo sentirai": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You won't feel it"
+          }
+        }
+      }
+    },
+    "Non riesco ad aprirlo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I can't open it"
+          }
+        }
+      }
+    },
+    "Non sono riuscito a chiedere a Wikidata: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I couldn't ask Wikidata: %@"
+          }
+        }
+      }
+    },
+    "Non sono riuscito a leggere l'immagine.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I couldn't read the image."
+          }
+        }
+      }
+    },
+    "Non sono riuscito a leggere testo da questo PDF.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I couldn't read any text from this PDF."
+          }
+        }
+      }
+    },
+    "Non sono riuscito ad aprire il PDF.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I couldn't open the PDF."
+          }
+        }
+      }
+    },
+    "Notti": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nights"
+          }
+        }
+      }
+    },
+    "Nuova crociera": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New cruise"
+          }
+        }
+      }
+    },
+    "Nuvoloso": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cloudy"
+          }
+        }
+      }
+    },
+    "O": {
+      "comment": "Punto cardinale: ovest (west)",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "W"
+          }
+        }
+      }
+    },
+    "Oggi": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today"
+          }
+        }
+      }
+    },
+    "Ogni porto in cui arrivi ci finisce da solo, con le miglia percorse per raggiungerlo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every port you reach lands here by itself, with the miles it took to get there."
+          }
+        }
+      }
+    },
+    "Ora di bordo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ship's time"
+          }
+        }
+      }
+    },
+    "Orari in ora di %@ · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Times in %1$@ local time · %2$@"
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Rientro a bordo a %1$@ entro le %2$@"
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Orari in ora di %1$@ · %2$@"
           }
         }
       }
     },
-    "Rientro a bordo fra %lld minuti" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Back on board in %lld minutes"
+    "Orari mancanti": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Missing times"
           }
         }
       }
     },
-    "Rientro a bordo · %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Back on board · %@"
+    "Orario": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Source"
           }
         }
       }
     },
-    "Rilevamento" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bearing"
+    "Originale": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original"
           }
         }
       }
     },
-    "Riprova" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try again"
+    "Ormeggiata a %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Berthed in %@"
           }
         }
       }
     },
-    "Riprova la ricerca su Wikidata" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try the Wikidata lookup again"
+    "Ormeggio": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Berth"
           }
         }
       }
     },
-    "Rotta" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Course"
+    "Ormeggio in banchina": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alongside the quay"
           }
         }
       }
     },
-    "Rovesci" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Showers"
+    "Paese o regione": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Country or region"
           }
         }
       }
     },
-    "Rovesci di neve" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Snow showers"
+    "Panama → Sydney": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Panama → Sydney"
           }
         }
       }
     },
-    "S" : {
-      "comment" : "Punto cardinale: sud",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "S"
+    "Partenza": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Departure"
           }
         }
       }
     },
-    "Sab 15 nov · San Juan · 14:00 → 20:00\nDom 16 nov · Charlotte Amalie · 07:00 → 16:00\n…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sat 15 Nov · San Juan · 14:00 → 20:00\nSun 16 Nov · Charlotte Amalie · 07:00 → 16:00\n…"
+    "Parzialmente nuvoloso": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Partly cloudy"
           }
         }
       }
     },
-    "Salva" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save"
+    "Passa al satellite": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Switch to satellite"
           }
         }
       }
     },
-    "Salvala come file e mandala a chi viaggia con te, o al tuo iPad: la apre e ce l'ha. Nessun account, nessun nostro server. Su una nave conviene anche di più della sincronizzazione automatica, perché AirDrop funziona senza rete." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save it as a file and send it to whoever is travelling with you, or to your iPad: they open it and they have it. No account, no server of ours. On a ship it beats automatic syncing anyway, because AirDrop works with no network."
+    "Passa alla carta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Switch to the chart"
           }
         }
       }
     },
-    "Sbarcati" : {
-      "comment" : "Stato del viaggio",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disembarked"
-          }
-        }
-      }
-    },
-    "Sbarco con tender" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ashore by tender"
-          }
-        }
-      }
-    },
-    "Scali" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ports of call"
-          }
-        }
-      }
-    },
-    "Scansiona" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scan"
-          }
-        }
-      }
-    },
-    "Scarica le foto anche su rete a consumo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Download photos on metered networks too"
-          }
-        }
-      }
-    },
-    "Scarto da UTC" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Offset from UTC"
-          }
-        }
-      }
-    },
-    "Scegli il porto" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choose the port"
-          }
-        }
-      }
-    },
-    "Schermata di blocco" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lock Screen"
-          }
-        }
-      }
-    },
-    "Scrivi il nome: se la nave è nell'elenco, identificativi e misure si compilano da soli." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Type the name: if the ship is in the list, the identifiers and measurements fill themselves in."
-          }
-        }
-      }
-    },
-    "Se a bordo hanno annunciato orari diversi, questi vincono su quelli pubblicati." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If different times were announced on board, these override the published ones."
-          }
-        }
-      }
-    },
-    "Segna dove passa la nave anche col telefono in tasca, per disegnare la traversata nel diario e contare le miglia vere invece di quelle in linea retta fra i porti. Consuma batteria e si spegne da sola quando sbarchi." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Records where the ship goes even with your phone in your pocket, to draw the crossing in the logbook and count the real miles instead of straight lines between ports. It uses battery, and switches itself off when you disembark."
-          }
-        }
-      }
-    },
-    "Segui i porti" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Follow the ports"
-          }
-        }
-      }
-    },
-    "Sei a %@ dalla nave" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You are %@ from the ship"
-          }
-        }
-      }
-    },
-    "Senza creare nessun account." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Without creating any account."
-          }
-        }
-      }
-    },
-    "Senza nome" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unnamed"
-          }
-        }
-      }
-    },
-    "Senza rete le immagini satellitari non si caricano. La carta nautica funziona lo stesso." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "With no network the satellite imagery won't load. The nautical chart works all the same."
-          }
-        }
-      }
-    },
-    "Sereno" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clear"
-          }
-        }
-      }
-    },
-    "Si accende in porto nelle ultime otto ore prima dell'all aboard, e in mare nell'ultima ora e mezza prima dell'attracco." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "It turns on in port during the last eight hours before all aboard, and at sea during the last hour and a half before docking."
-          }
-        }
-      }
-    },
-    "Si accende in porto nelle ultime otto ore prima dell'all aboard, e in mare nell'ultima ora e mezza prima dell'attracco. Fuori da quelle finestre non ci sarebbe niente da contare." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "It turns on in port during the last eight hours before all aboard, and at sea during the last hour and a half before docking. Outside those windows there would be nothing to count down."
-          }
-        }
-      }
-    },
-    "Si accende in porto prima dell'all aboard, e in mare prima dell'attracco." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "It turns on in port before all aboard, and at sea before docking."
-          }
-        }
-      }
-    },
-    "Si accende nell'ultima ora e mezza prima dell'attracco." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "It comes on in the last hour and a half before docking."
-          }
-        }
-      }
-    },
-    "Si accenderà quando avrai una crociera in corso." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "It will turn on once you have a cruise under way."
-          }
-        }
-      }
-    },
-    "Si potrà attivare nelle ultime otto ore prima dell'all aboard." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You'll be able to turn it on in the last eight hours before all aboard."
-          }
-        }
-      }
-    },
-    "Si scende a piedi dalla passerella." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You walk ashore down the gangway."
-          }
-        }
-      }
-    },
-    "Sistema le righe segnate" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fix the marked lines"
-          }
-        }
-      }
-    },
-    "Sosta" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stay"
-          }
-        }
-      }
-    },
-    "Sostituire la crociera?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Replace the cruise?"
-          }
-        }
-      }
-    },
-    "Sostituisci" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Replace"
-          }
-        }
-      }
-    },
-    "Stanotte alle %@ l'orologio di bordo torna indietro di %@. Guadagni un'ora: gli orari di domani non cambiano, cambia l'orologio." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tonight at %1$@ the ship's clock goes back %2$@. You gain time: tomorrow's times don't change, the clock does."
+    "Passo %lld di %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Step %1$lld of %2$lld"
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Stanotte alle %1$@ l'orologio di bordo torna indietro di %2$@. Guadagni un'ora: gli orari di domani non cambiano, cambia l'orologio."
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Passo %1$lld di %2$lld"
           }
         }
       }
     },
-    "Stanotte alle %@ l'orologio di bordo va avanti di %@. Dormirai di meno: la sveglia del telefono non si sposta da sola." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tonight at %1$@ the ship's clock goes forward %2$@. You'll sleep less: your phone's alarm won't move by itself."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Stanotte alle %1$@ l'orologio di bordo va avanti di %2$@. Dormirai di meno: la sveglia del telefono non si sposta da sola."
+    "Periodo mostrato": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Period shown"
           }
         }
       }
     },
-    "Stazza" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tonnage"
+    "Pioggia": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rain"
           }
         }
       }
     },
-    "Su Wikidata non c'è nessuna nave con questo nome." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "There is no ship by that name on Wikidata."
+    "Pioggia gelata": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freezing rain"
           }
         }
       }
     },
-    "Su Wikidata non c'è nessuna nave con questo nome. Controlla come è scritto: conta la grafia, non le maiuscole." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "There is no ship by that name on Wikidata. Check the spelling: it matters, capitals don't."
+    "Pioviggine": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drizzle"
           }
         }
       }
     },
-    "Tempestoso" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Phenomenal"
+    "Pioviggine gelata": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Freezing drizzle"
           }
         }
       }
     },
-    "Temporale" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Thunderstorm"
+    "Poco mosso": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smooth"
           }
         }
       }
     },
-    "Temporale con grandine" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Thunderstorm with hail"
+    "Poco nuvoloso": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostly clear"
           }
         }
       }
     },
-    "Tender" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tender"
+    "Portala con te": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Take it with you"
           }
         }
       }
     },
-    "Tender con un po' d'onda" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tender ride with a little swell"
+    "Porti": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ports"
           }
         }
       }
     },
-    "Tender tranquillo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Calm tender ride"
+    "Porti toccati": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ports called at"
           }
         }
       }
     },
-    "Testo originale" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Original text"
+    "Porto da confermare": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Port to confirm"
           }
         }
       }
     },
-    "Togli dal diario" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove from the logbook"
+    "Porto non riconosciuto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Port not recognised"
           }
         }
       }
     },
-    "Togliere questa crociera dal diario?" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove this cruise from the logbook?"
+    "Posizione": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Position"
           }
         }
       }
     },
-    "Torna alla nave" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Back to the ship"
+    "Posizione %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Position %@"
           }
         }
       }
     },
-    "Traversata da %@ a %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Crossing from %1$@ to %2$@"
+    "Prenderai «%@» con %lld scali. La crociera che hai adesso, e le correzioni che le hai fatto, andranno perse.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You'll take “%1$@” with %2$lld ports of call. The cruise you have now, and the corrections you made to it, will be lost."
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Traversata da %1$@ a %2$@"
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Prenderai «%1$@» con %2$lld scali. La crociera che hai adesso, e le correzioni che le hai fatto, andranno perse."
           }
         }
       }
     },
-    "Traversata più lunga" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Longest crossing"
+    "Prima di salpare": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Before you sail"
           }
         }
       }
     },
-    "Tre cose da sapere" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Three things to know"
+    "Primati": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Records"
           }
         }
       }
     },
-    "Trovi «Condividi la crociera» nelle Impostazioni, dal menu dell'Itinerario." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You'll find “Share the cruise” in Settings, from the Itinerary menu."
+    "Pronta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ready"
           }
         }
       }
     },
-    "Tutti e %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All %lld"
+    "Prossimo countdown": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next countdown"
           }
         }
       }
     },
-    "Tutti gli orari sono in ora di bordo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Every time is in ship's time"
+    "Proxy meteo (facoltativo)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weather proxy (optional)"
           }
         }
       }
     },
-    "Tutto" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All"
+    "Pubblicato": {
+      "comment": "Campo Orario del biglietto",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Published"
           }
         }
       }
     },
-    "Tutto agganciato" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Everything matched"
+    "Punti registrati": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recorded points"
           }
         }
       }
     },
-    "Ultima chiamata: %lld minuti" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Last call: %lld minutes"
+    "Punto più a nord": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Northernmost point"
           }
         }
       }
     },
-    "Unità" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Units"
+    "Punto più a sud": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Southernmost point"
           }
         }
       }
     },
-    "Va bene" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
+    "Puoi disattivarlo quando vuoi dalle Impostazioni.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can turn it off at any time in Settings."
           }
         }
       }
     },
-    "Velocità" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speed"
+    "Puoi salvare la crociera come file e mandarla a chi viaggia con te, o al tuo iPad. Chi la riceve la apre e ce l'ha: nessun account, nessuna password, nessun nostro server.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can save the cruise as a file and send it to whoever is travelling with you, or to your iPad. Whoever receives it opens it and has it: no account, no password, no server of ours."
           }
         }
       }
     },
-    "Velocità media" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Average speed"
+    "Quanto manca al rientro a bordo, o all'arrivo nel prossimo porto.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How long until all aboard, or until you reach the next port."
           }
         }
       }
     },
-    "Vento" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wind"
+    "Quanto manca. Nient'altro.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How long is left. Nothing else."
           }
         }
       }
     },
-    "Verso %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To %@"
+    "Quasi calmo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rippled"
           }
         }
       }
     },
-    "Verso %@ · %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To %1$@ · %2$@"
+    "Quello che salvi qui vince sugli orari pubblicati.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What you save here overrides the published times."
+          }
+        }
+      }
+    },
+    "Questa nave non è nell'elenco che viaggia dentro l'app. I countdown funzionano lo stesso: la scheda è un di più.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This ship isn't in the list that travels inside the app. The countdowns work all the same: this card is a bonus."
+          }
+        }
+      }
+    },
+    "Questo file non contiene una crociera che riesco a leggere.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This file doesn't contain a cruise I can read."
+          }
+        }
+      }
+    },
+    "Registra la rotta percorsa": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Record the route sailed"
+          }
+        }
+      }
+    },
+    "Rientro %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All aboard %@"
+          }
+        }
+      }
+    },
+    "Rientro a bordo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back on board"
+          }
+        }
+      }
+    },
+    "Rientro a bordo fra %lld minuti": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back on board in %lld minutes"
+          }
+        }
+      }
+    },
+    "Rilevamento": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bearing"
+          }
+        }
+      }
+    },
+    "Riprova": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try again"
+          }
+        }
+      }
+    },
+    "Riprova la ricerca su Wikidata": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try the Wikidata lookup again"
+          }
+        }
+      }
+    },
+    "Rotta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Course"
+          }
+        }
+      }
+    },
+    "Rovesci": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showers"
+          }
+        }
+      }
+    },
+    "Rovesci di neve": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snow showers"
+          }
+        }
+      }
+    },
+    "S": {
+      "comment": "Punto cardinale: sud",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "S"
+          }
+        }
+      }
+    },
+    "Sab 15 nov · San Juan · 14:00 → 20:00\nDom 16 nov · Charlotte Amalie · 07:00 → 16:00\n…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sat 15 Nov · San Juan · 14:00 → 20:00\nSun 16 Nov · Charlotte Amalie · 07:00 → 16:00\n…"
+          }
+        }
+      }
+    },
+    "Salva": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save"
+          }
+        }
+      }
+    },
+    "Salvala come file e mandala a chi viaggia con te, o al tuo iPad: la apre e ce l'ha. Nessun account, nessun nostro server. Su una nave conviene anche di più della sincronizzazione automatica, perché AirDrop funziona senza rete.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save it as a file and send it to whoever is travelling with you, or to your iPad: they open it and they have it. No account, no server of ours. On a ship it beats automatic syncing anyway, because AirDrop works with no network."
+          }
+        }
+      }
+    },
+    "Sbarcati": {
+      "comment": "Timbro",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disembarked"
+          }
+        }
+      }
+    },
+    "Sbarco": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disembark"
+          }
+        }
+      }
+    },
+    "Sbarco con tender": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ashore by tender"
+          }
+        }
+      }
+    },
+    "Scali": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ports of call"
+          }
+        }
+      }
+    },
+    "Scansiona": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scan"
+          }
+        }
+      }
+    },
+    "Scarica le foto anche su rete a consumo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download photos on metered networks too"
+          }
+        }
+      }
+    },
+    "Scarto da UTC": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offset from UTC"
+          }
+        }
+      }
+    },
+    "Scegli il porto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the port"
+          }
+        }
+      }
+    },
+    "Schermata di blocco": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lock Screen"
+          }
+        }
+      }
+    },
+    "Scrivi il nome: se la nave è nell'elenco, identificativi e misure si compilano da soli.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Type the name: if the ship is in the list, the identifiers and measurements fill themselves in."
+          }
+        }
+      }
+    },
+    "Se a bordo hanno annunciato orari diversi, questi vincono su quelli pubblicati.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If different times were announced on board, these override the published ones."
+          }
+        }
+      }
+    },
+    "Segna dove passa la nave anche col telefono in tasca, per disegnare la traversata nel diario e contare le miglia vere invece di quelle in linea retta fra i porti. Consuma batteria e si spegne da sola quando sbarchi.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Records where the ship goes even with your phone in your pocket, to draw the crossing in the logbook and count the real miles instead of straight lines between ports. It uses battery, and switches itself off when you disembark."
+          }
+        }
+      }
+    },
+    "Segui i porti": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follow the ports"
+          }
+        }
+      }
+    },
+    "Sei a %@ dalla nave": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You are %@ from the ship"
+          }
+        }
+      }
+    },
+    "Senza creare nessun account.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Without creating any account."
+          }
+        }
+      }
+    },
+    "Senza nome": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unnamed"
+          }
+        }
+      }
+    },
+    "Senza rete le immagini satellitari non si caricano. La carta nautica funziona lo stesso.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "With no network the satellite imagery won't load. The nautical chart works all the same."
+          }
+        }
+      }
+    },
+    "Sereno": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear"
+          }
+        }
+      }
+    },
+    "Si accende in porto nelle ultime otto ore prima dell'all aboard, e in mare nell'ultima ora e mezza prima dell'attracco. Fuori da quelle finestre non ci sarebbe niente da contare.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It turns on in port during the last eight hours before all aboard, and at sea during the last hour and a half before docking. Outside those windows there would be nothing to count down."
+          }
+        }
+      }
+    },
+    "Si accende in porto nelle ultime otto ore prima dell'all aboard, e in mare nell'ultima ora e mezza prima dell'attracco. Resta visibile anche con Full Immersion attivo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It comes up in port during the last eight hours before all aboard, and at sea in the last hour and a half before docking. It stays visible even with Focus on."
+          }
+        }
+      }
+    },
+    "Si accenderà quando sarà il momento": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It will come up when the time comes"
+          }
+        }
+      }
+    },
+    "Si salpa fra": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sailing in"
+          }
+        }
+      }
+    },
+    "Si scende a piedi dalla passerella.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You walk ashore down the gangway."
+          }
+        }
+      }
+    },
+    "Sistema le righe segnate": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fix the marked lines"
+          }
+        }
+      }
+    },
+    "Sosta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stay"
+          }
+        }
+      }
+    },
+    "Sostituire la crociera?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Replace the cruise?"
+          }
+        }
+      }
+    },
+    "Sostituisci": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Replace"
+          }
+        }
+      }
+    },
+    "Southampton → New York": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Southampton → New York"
+          }
+        }
+      }
+    },
+    "Spenta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off"
+          }
+        }
+      }
+    },
+    "Stanotte alle %@ l'orologio di bordo torna indietro di %@. Guadagni un'ora: gli orari di domani non cambiano, cambia l'orologio.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tonight at %1$@ the ship's clock goes back %2$@. You gain time: tomorrow's times don't change, the clock does."
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Verso %1$@ · %2$@"
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Stanotte alle %1$@ l'orologio di bordo torna indietro di %2$@. Guadagni un'ora: gli orari di domani non cambiano, cambia l'orologio."
           }
         }
       }
     },
-    "Vuoto: Cruisy chiede il meteo direttamente a Open-Meteo. Se hai un proxy con cache, mettine qui l'indirizzo." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Leave it empty and Cruisy asks Open-Meteo directly. If you run a caching proxy, put its address here."
-          }
-        }
-      }
-    },
-    "aggiornato" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "up to date"
-          }
-        }
-      }
-    },
-    "al tutti a bordo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "to all aboard"
-          }
-        }
-      }
-    },
-    "all aboard %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "all aboard %@"
-          }
-        }
-      }
-    },
-    "all'all aboard" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "to all aboard"
-          }
-        }
-      }
-    },
-    "all'arrivo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "to arrival"
-          }
-        }
-      }
-    },
-    "avanti" : {
-      "comment" : "Il telefono rispetto alla nave",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ahead of"
-          }
-        }
-      }
-    },
-    "corretto da te" : {
-      "comment" : "Provenienza del countdown",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "corrected by you"
-          }
-        }
-      }
-    },
-    "di %@ fa" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "from %@ ago"
-          }
-        }
-      }
-    },
-    "documento scansionato" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "scanned document"
-          }
-        }
-      }
-    },
-    "entro le %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "by %@"
-          }
-        }
-      }
-    },
-    "giorni" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "days"
-          }
-        }
-      }
-    },
-    "giorno" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "day"
-          }
-        }
-      }
-    },
-    "h · m · s" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "h · m · s"
-          }
-        }
-      }
-    },
-    "http://…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "http://…"
-          }
-        }
-      }
-    },
-    "in corso" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "in progress"
-          }
-        }
-      }
-    },
-    "in linea d'aria, non lungo la strada" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "as the crow flies, not along the road"
-          }
-        }
-      }
-    },
-    "indietro" : {
-      "comment" : "Il telefono rispetto alla nave",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "behind"
-          }
-        }
-      }
-    },
-    "km/h" : {
-      "comment" : "Unità di velocità",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "km/h"
-          }
-        }
-      }
-    },
-    "m · s" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "m · s"
-          }
-        }
-      }
-    },
-    "mancano %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ to go"
-          }
-        }
-      }
-    },
-    "mancano %lld minuti" : {
-      "comment" : "Tempo residuo",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld minutes left"
-          }
-        }
-      }
-    },
-    "mancano %lld ore e %lld minuti" : {
-      "comment" : "Tempo residuo",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld hours and %2$lld minutes left"
+    "Stanotte alle %@ l'orologio di bordo va avanti di %@. Dormirai di meno: la sveglia del telefono non si sposta da sola.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tonight at %1$@ the ship's clock goes forward %2$@. You'll sleep less: your phone's alarm won't move by itself."
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "mancano %1$lld ore e %2$lld minuti"
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Stanotte alle %1$@ l'orologio di bordo va avanti di %2$@. Dormirai di meno: la sveglia del telefono non si sposta da sola."
           }
         }
       }
     },
-    "meno di un minuto" : {
-      "comment" : "Countdown letto da VoiceOver",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "less than a minute"
+    "Stazza": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tonnage"
           }
         }
       }
     },
-    "mn" : {
-      "comment" : "Abbreviazione di miglia nautiche",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "NM"
+    "Stimato": {
+      "comment": "Campo Orario del biglietto",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estimated"
           }
         }
       }
     },
-    "nel documento: %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "in the document: %@"
+    "Su Wikidata non c'è nessuna nave con questo nome.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There is no ship by that name on Wikidata."
           }
         }
       }
     },
-    "nodi" : {
-      "comment" : "Unità di velocità",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "knots"
+    "Su Wikidata non c'è nessuna nave con questo nome. Controlla come è scritto: conta la grafia, non le maiuscole.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There is no ship by that name on Wikidata. Check the spelling: it matters, capitals don't."
           }
         }
       }
     },
-    "ora" : {
-      "comment" : "Età di un dato appena aggiornato",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "just now"
+    "Tempestoso": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phenomenal"
           }
         }
       }
     },
-    "ora di bordo" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ship's time"
+    "Temporale": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thunderstorm"
           }
         }
       }
     },
-    "orario pubblicato" : {
-      "comment" : "Provenienza del countdown",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "published schedule"
+    "Temporale con grandine": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thunderstorm with hail"
           }
         }
       }
     },
-    "ormeggio" : {
-      "comment" : "Tipo di attracco",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "berth"
+    "Tender": {
+      "comment": "Timbro",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tender"
           }
         }
       }
     },
-    "previsto %@ · %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "expected %1$@ · %2$@"
+    "Tender con un po' d'onda": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tender ride with a little swell"
+          }
+        }
+      }
+    },
+    "Tender tranquillo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calm tender ride"
+          }
+        }
+      }
+    },
+    "Testo originale": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Original text"
+          }
+        }
+      }
+    },
+    "Toccato": {
+      "comment": "Timbro",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visited"
+          }
+        }
+      }
+    },
+    "Togli dal diario": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove from the logbook"
+          }
+        }
+      }
+    },
+    "Togliere questa crociera dal diario?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove this cruise from the logbook?"
+          }
+        }
+      }
+    },
+    "Torna alla nave": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back to the ship"
+          }
+        }
+      }
+    },
+    "Traversata più lunga": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Longest crossing"
+          }
+        }
+      }
+    },
+    "Tre cose da sapere": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Three things to know"
+          }
+        }
+      }
+    },
+    "Trovi «Condividi la crociera» nelle Impostazioni, dal menu dell'Itinerario.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You'll find “Share the cruise” in Settings, from the Itinerary menu."
+          }
+        }
+      }
+    },
+    "Tutti e %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All %lld"
+          }
+        }
+      }
+    },
+    "Tutti gli orari sono in ora di bordo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every time is in ship's time"
+          }
+        }
+      }
+    },
+    "Tutto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All"
+          }
+        }
+      }
+    },
+    "Tutto agganciato": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything matched"
+          }
+        }
+      }
+    },
+    "Ultima chiamata: %lld minuti": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last call: %lld minutes"
+          }
+        }
+      }
+    },
+    "Unità": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Units"
+          }
+        }
+      }
+    },
+    "Va bene": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Velocità": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speed"
+          }
+        }
+      }
+    },
+    "Velocità media": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Average speed"
+          }
+        }
+      }
+    },
+    "Verso %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To %@"
+          }
+        }
+      }
+    },
+    "Verso %@ · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To %1$@ · %2$@"
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "previsto %1$@ · %2$@"
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Verso %1$@ · %2$@"
           }
         }
       }
     },
-    "stima" : {
-      "comment" : "Provenienza del countdown",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "estimate"
+    "Vuoto: Cruisy chiede il meteo direttamente a Open-Meteo. Se hai un proxy con cache, mettine qui l'indirizzo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave it empty and Cruisy asks Open-Meteo directly. If you run a caching proxy, put its address here."
           }
         }
       }
     },
-    "stimata dagli orari" : {
-      "comment" : "Provenienza della posizione",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "schedule estimate"
+    "al tutti a bordo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "to all aboard"
           }
         }
       }
     },
-    "tender" : {
-      "comment" : "Tipo di attracco",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "tender"
+    "all aboard %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "all aboard %@"
           }
         }
       }
     },
-    "testo incollato" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "pasted text"
+    "all'arrivo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "to arrival"
           }
         }
       }
     },
-    "un'ora" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "an hour"
+    "avanti": {
+      "comment": "Il telefono rispetto alla nave",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ahead of"
           }
         }
       }
     },
-    "«%@», %lld scali." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“%1$@”, %2$lld ports of call."
+    "corretto da te": {
+      "comment": "Provenienza del countdown",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "corrected by you"
+          }
+        }
+      }
+    },
+    "da oceano a oceano": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ocean to ocean"
+          }
+        }
+      }
+    },
+    "dedotto": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "assumed"
+          }
+        }
+      }
+    },
+    "di %@ fa": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "from %@ ago"
+          }
+        }
+      }
+    },
+    "documento scansionato": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "scanned document"
+          }
+        }
+      }
+    },
+    "domani": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "tomorrow"
+          }
+        }
+      }
+    },
+    "giorni": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "days"
+          }
+        }
+      }
+    },
+    "giorno": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "day"
+          }
+        }
+      }
+    },
+    "http://…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "http://…"
+          }
+        }
+      }
+    },
+    "in linea d'aria, non lungo la strada": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "as the crow flies, not along the road"
+          }
+        }
+      }
+    },
+    "indietro": {
+      "comment": "Il telefono rispetto alla nave",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "behind"
+          }
+        }
+      }
+    },
+    "km/h": {
+      "comment": "Unità di velocità",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "km/h"
+          }
+        }
+      }
+    },
+    "lo Stretto → le Baleari": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the Strait → the Balearics"
+          }
+        }
+      }
+    },
+    "mancano %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ to go"
+          }
+        }
+      }
+    },
+    "meno di un minuto": {
+      "comment": "Countdown letto da VoiceOver",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "less than a minute"
+          }
+        }
+      }
+    },
+    "mn": {
+      "comment": "Abbreviazione di miglia nautiche",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NM"
+          }
+        }
+      }
+    },
+    "nel documento: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "in the document: %@"
+          }
+        }
+      }
+    },
+    "nodi": {
+      "comment": "Unità di velocità",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "knots"
+          }
+        }
+      }
+    },
+    "oggi": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "today"
+          }
+        }
+      }
+    },
+    "ora": {
+      "comment": "Età di un dato appena aggiornato",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "just now"
+          }
+        }
+      }
+    },
+    "ora di bordo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ship's time"
+          }
+        }
+      }
+    },
+    "orario pubblicato": {
+      "comment": "Provenienza del countdown",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "published schedule"
+          }
+        }
+      }
+    },
+    "ormeggio": {
+      "comment": "Tipo di attracco",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "berth"
+          }
+        }
+      }
+    },
+    "per mare, canali compresi": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "by sea, canals included"
+          }
+        }
+      }
+    },
+    "stima": {
+      "comment": "Provenienza del countdown",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "estimate"
+          }
+        }
+      }
+    },
+    "stimata dagli orari": {
+      "comment": "Provenienza della posizione",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "schedule estimate"
+          }
+        }
+      }
+    },
+    "tender": {
+      "comment": "Tipo di attracco",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "tender"
+          }
+        }
+      }
+    },
+    "testo incollato": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pasted text"
+          }
+        }
+      }
+    },
+    "un'ora": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "an hour"
+          }
+        }
+      }
+    },
+    "«%@», %lld scali.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%1$@”, %2$lld ports of call."
           }
         },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "«%1$@», %2$lld scali."
+        "it": {
+          "stringUnit": {
+            "state": "new",
+            "value": "«%1$@», %2$lld scali."
           }
         }
       }
     },
-    "È il giorno giusto." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Today's the day."
+    "· %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "· %@"
           }
         }
       }
     },
-    "×%lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "×%lld"
+    "×%lld\nvolte": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "×%lld\ntimes"
           }
         }
       }
     },
-    "—" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "—"
+    "—": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "—"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

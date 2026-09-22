@@ -12,6 +12,7 @@ struct VoyageEditor: View {
     @Environment(ShipLookupService.self) private var lookup
     private let onSave: (Voyage) -> Void
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.livery) private var livery
 
     init(voyage: Voyage?, onSave: @escaping (Voyage) -> Void) {
         _draft = State(initialValue: voyage ?? Self.blank())
@@ -61,17 +62,17 @@ struct VoyageEditor: View {
                 ProgressView().controlSize(.small)
                 Text("Cerco su Wikidata…")
                     .font(.subheadline)
-                    .foregroundStyle(Palette.inkSecondary)
+                    .foregroundStyle(.secondary)
             }
         case .notFound:
             Text("Su Wikidata non c'è nessuna nave con questo nome.")
                 .font(.footnote)
-                .foregroundStyle(Palette.inkSecondary)
+                .foregroundStyle(.secondary)
         case .failed:
             Button("Riprova la ricerca su Wikidata") {
                 Task { await lookup.search(draft.shipName) }
             }
-            .foregroundStyle(Palette.action)
+            .foregroundStyle(livery.tint)
         default:
             Button {
                 Task {
@@ -81,7 +82,7 @@ struct VoyageEditor: View {
             } label: {
                 Label("Cerca «\(draft.shipName)» su Wikidata", systemImage: "magnifyingglass")
             }
-            .foregroundStyle(Palette.action)
+            .foregroundStyle(livery.tint)
         }
     }
 
@@ -135,7 +136,7 @@ struct VoyageEditor: View {
                 } footer: {
                     if let match {
                         Label(recognised(match), systemImage: "checkmark.seal.fill")
-                            .foregroundStyle(Palette.underway)
+                            .foregroundStyle(livery.tint)
                     } else {
                         Text("Scrivi il nome: se la nave è nell'elenco, identificativi e misure si compilano da soli.")
                     }
@@ -167,10 +168,10 @@ struct VoyageEditor: View {
                             HStack {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(call.name.isEmpty ? String(localized: "Senza nome") : call.name)
-                                        .foregroundStyle(Palette.inkPrimary)
+                                        .foregroundStyle(.primary)
                                     Text(Format.window(from: call.arrival, to: call.departure, clock: draft.clock))
                                         .font(.caption)
-                                        .foregroundStyle(Palette.inkSecondary)
+                                        .foregroundStyle(.secondary)
                                 }
                                 Spacer()
                                 Image(systemName: "chevron.right")
@@ -187,6 +188,7 @@ struct VoyageEditor: View {
                     Button("Aggiungi scalo", systemImage: "plus") { addCall() }
                 }
             }
+            .tint(livery.tint)
             .environment(\.timeZone, draft.clock.timeZone(at: draft.calls.first?.arrival ?? .now))
             .navigationTitle(draft.shipName.isEmpty ? String(localized: "Nuova crociera") : draft.shipName)
             .navigationBarTitleDisplayMode(.inline)
@@ -245,20 +247,21 @@ struct VoyageEditor: View {
 /// Una riga d'elenco: il nome, e sotto quel tanto che basta a distinguere due navi
 /// omonime — la compagnia e l'anno.
 private struct SuggestionRow: View {
+    @Environment(\.livery) private var livery
     let record: ShipRecord
 
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: "ferry.fill")
                 .font(.footnote)
-                .foregroundStyle(Palette.underway)
+                .foregroundStyle(livery.tint)
             VStack(alignment: .leading, spacing: 1) {
                 Text(record.name)
-                    .foregroundStyle(Palette.inkPrimary)
+                    .foregroundStyle(.primary)
                 if !subtitle.isEmpty {
                     Text(subtitle)
                         .font(.caption)
-                        .foregroundStyle(Palette.inkSecondary)
+                        .foregroundStyle(.secondary)
                 }
             }
             Spacer(minLength: 0)

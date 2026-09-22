@@ -57,7 +57,7 @@ struct PortCallEditor: View {
                 } footer: {
                     if !isCoherent {
                         Text("L'all aboard deve cadere fra l'attracco e la partenza.")
-                            .foregroundStyle(Palette.adrift)
+                            .foregroundStyle(.red)
                     } else {
                         Text("Quello che salvi qui vince sugli orari pubblicati.")
                     }

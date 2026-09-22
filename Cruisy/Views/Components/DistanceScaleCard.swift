@@ -132,9 +132,15 @@ struct DistanceScaleCard: View {
                 // lettere: il moltiplicatore scende sotto invece di stringerlo.
                 AdaptiveHStack(verticalAlignment: .firstTextBaseline, spacing: 8) {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Image(systemName: next.glyph)
-                            .font(.system(.caption, weight: .semibold))
-                            .foregroundStyle(livery.signalInk)
+                        // Ai corpi accessibili il glifo se ne va: è decorativo, e la
+                        // larghezza che ruba faceva spezzare «Mediterraneo» col
+                        // trattino. Un nome tagliato a metà si legge peggio di un
+                        // nome senza icona.
+                        if !typeSize.isAccessibilitySize {
+                            Image(systemName: next.glyph)
+                                .font(.system(.caption, weight: .semibold))
+                                .foregroundStyle(livery.signalInk)
+                        }
                         VStack(alignment: .leading, spacing: 2) {
                             Text(next.name)
                                 .font(TicketType.rowTitle)
@@ -166,10 +172,12 @@ struct DistanceScaleCard: View {
             ForEach(comparisons) { milestone in
                 AdaptiveHStack(verticalAlignment: .firstTextBaseline, spacing: 10) {
                     HStack(alignment: .firstTextBaseline, spacing: 10) {
-                        Image(systemName: milestone.glyph)
-                            .font(.system(.caption2, weight: .semibold))
-                            .foregroundStyle(livery.field)
-                            .frame(width: 16)
+                        if !typeSize.isAccessibilitySize {
+                            Image(systemName: milestone.glyph)
+                                .font(.system(.caption2, weight: .semibold))
+                                .foregroundStyle(livery.field)
+                                .frame(width: 16)
+                        }
                         VStack(alignment: .leading, spacing: 1) {
                             Text(milestone.name)
                                 .font(TicketType.rowDetail)

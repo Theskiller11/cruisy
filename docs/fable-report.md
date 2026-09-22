@@ -430,3 +430,47 @@ usano i token dinamici, ma vanno **visti sul telefono** in entrambe le modalità
 - La scena del giorno di mare: fluidità delle onde e della nave, e che si fermi con Riduci
   movimento e in secondo piano.
 - I gesti sulla carta.
+
+---
+
+## Chiuso il 19 settembre 2026 (Opus 5)
+
+Quello che il rapporto lasciava aperto, punto per punto.
+
+1. **I due difetti AX5** — fatti. Il titolo dello scalo è chiaro sullo scafo
+   (`.toolbarColorScheme(.dark, for: .navigationBar)` su `PortDetailScreen`: il modificatore
+   della schermata che spinge non arriva alla destinazione). «Mediterraneo» non va più a capo
+   col trattino: ai corpi accessibili il glifo decorativo del traguardo sparisce e il nome si
+   prende tutta la larghezza. Terzo difetto, trovato nel giro AX5 nuovo: nei Porti toccati il
+   nome si spezzava una lettera per riga, perché il timbro gli rubava larghezza — ora il timbro
+   scende sotto (`AdaptiveHStack`) e si allarga finché «TOCCATO» ci sta intero.
+2. **Editor, importazione, riesame, onboarding** — fatti, `Form` e `List` di sistema con
+   `.tint(livery.tint)`. Il riesame è una sezione per giorno, con gli orari come righe
+   `LabeledContent` (identificatori stabili `orario-arrivo`/`-partenza`/`-allaboard`, che i
+   test cercano senza dipendere dalla lingua) e la conferma `.borderedProminent` in
+   `safeAreaInset`. Onboarding e avviso: fondo di sistema, niente vetro disegnato.
+3. **Widget e Live Activity** — restano da provare sul telefono: non si può fare da qui.
+4. **Design vecchio cancellato**: `Palette`, `Typography`, `GlassSurface`, `DebugFlags`,
+   `PaletteContrastTests`. La carta nautica ha preso i suoi colori in
+   `CruisyShared/Chart/ChartInk.swift`, con scritto perché non seguono la livrea.
+5. **Stringhe**: catalogo sincronizzato, **76 traduzioni inglesi** nuove, 65 chiavi stantie
+   tolte, `LocalizationTests` verde. I nomi dei traguardi passavano da `String` e restavano in
+   italiano: ora sono `String(localized:)`.
+6. **Screenshot**: `screenshots/it`, `screenshots/en`, `screenshots/ax5`, `screenshots/scuro`
+   (17 schermate ciascuno) più i giri di verifica dopo le correzioni.
+7. **Test di interfaccia** per importazione, editor e impostazioni: `CruisyUITests/FormsUITests`,
+   cinque test. Coprono l'andata e il ritorno di «Segui i porti», il salvataggio chiuso senza
+   nome della nave, la livrea e l'interruttore unico della Live Activity, l'arrivo al riesame e
+   la correzione di un orario.
+
+**Imparate qui, per chi verrà** (valgono per qualunque test di interfaccia su un `Form`):
+la riga di un `Toggle` è essa stessa uno `Switch` e ne contiene un altro — toccare la riga
+prende l'etichetta e non commuta niente, il tocco va su quello annidato; la riga di un `Picker`
+ha per etichetta «Scarto da UTC, UTC−4», col valore dentro, quindi si cerca per `staticTexts`;
+e un campo di testo si svuota con tre tocchi (selezionano tutto), perché i backspace lasciano
+il cursore in mezzo e il testo nuovo si incolla davanti al vecchio.
+
+**Resta aperto**: widget e Live Activity da vedere sul telefono; l'ottimizzazione per
+**iPhone Duo** (annunciato il 9 settembre 2026), che aspetta il sistema 27.1 nel simulatore;
+Archivo, se Matteo lo vuole davvero; il nome del paese nei Porti toccati resta in italiano
+anche con l'app in inglese, perché viene dall'elenco dei porti, che è un dato.

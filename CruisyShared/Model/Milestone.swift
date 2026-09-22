@@ -29,21 +29,23 @@ public struct Milestone: Hashable, Sendable, Identifiable {
     /// New York in linea d'aria ci sono 2.980 miglia, ma nessuna nave passa
     /// sull'Irlanda — la rotta vera ne fa circa 3.100, ed è quella che conta se il
     /// paragone deve essere onesto.
+    /// I nomi passano da `String(localized:)`: sono testo che si legge, non dati, e
+    /// senza quello restavano in italiano anche con l'app in inglese.
     public static let scale: [Milestone] = [
-        .init(name: "Il Canale della Manica",
-              detail: "Dover → Calais", nauticalMiles: 18, glyph: "arrow.left.and.right"),
-        .init(name: "Il Canale di Panama",
-              detail: "da oceano a oceano", nauticalMiles: 43, glyph: "arrow.triangle.merge"),
-        .init(name: "Da Gibilterra a Palma",
-              detail: "lo Stretto → le Baleari", nauticalMiles: 460, glyph: "sailboat"),
-        .init(name: "Il Mediterraneo intero",
-              detail: "Gibilterra → Beirut", nauticalMiles: 2_000, glyph: "water.waves"),
-        .init(name: "La traversata atlantica",
-              detail: "Southampton → New York", nauticalMiles: 3_100, glyph: "globe.europe.africa"),
-        .init(name: "Il Pacifico",
-              detail: "Panama → Sydney", nauticalMiles: 7_700, glyph: "globe.asia.australia"),
-        .init(name: "Il giro del mondo",
-              detail: "per mare, canali compresi", nauticalMiles: 25_000, glyph: "globe")
+        .init(name: String(localized: "Il Canale della Manica"),
+              detail: String(localized: "Dover → Calais"), nauticalMiles: 18, glyph: "arrow.left.and.right"),
+        .init(name: String(localized: "Il Canale di Panama"),
+              detail: String(localized: "da oceano a oceano"), nauticalMiles: 43, glyph: "arrow.triangle.merge"),
+        .init(name: String(localized: "Da Gibilterra a Palma"),
+              detail: String(localized: "lo Stretto → le Baleari"), nauticalMiles: 460, glyph: "sailboat"),
+        .init(name: String(localized: "Il Mediterraneo intero"),
+              detail: String(localized: "Gibilterra → Beirut"), nauticalMiles: 2_000, glyph: "water.waves"),
+        .init(name: String(localized: "La traversata atlantica"),
+              detail: String(localized: "Southampton → New York"), nauticalMiles: 3_100, glyph: "globe.europe.africa"),
+        .init(name: String(localized: "Il Pacifico"),
+              detail: String(localized: "Panama → Sydney"), nauticalMiles: 7_700, glyph: "globe.asia.australia"),
+        .init(name: String(localized: "Il giro del mondo"),
+              detail: String(localized: "per mare, canali compresi"), nauticalMiles: 25_000, glyph: "globe")
     ]
 
     /// Quante volte ci sta la distanza percorsa.

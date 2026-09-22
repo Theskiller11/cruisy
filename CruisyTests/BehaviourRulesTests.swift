@@ -69,7 +69,7 @@ struct BehaviourRulesTests {
         // Il pulsante «Cercala su Wikidata» era bianco su azzurro: 1,5:1.
         let azzurro = Contrast.RGB(hex: 0x7FD8FF)
         #expect(Contrast.ratio(Contrast.RGB(hex: 0x030C14), azzurro) >= Contrast.bodyMinimum)
-        #expect(Contrast.ratio(Contrast.RGB(hex: Palette.inkHex), azzurro) < Contrast.bodyMinimum)
+        #expect(Contrast.ratio(Contrast.RGB(hex: 0xEAF2F8), azzurro) < Contrast.bodyMinimum)
     }
 
     // MARK: I crediti delle foto

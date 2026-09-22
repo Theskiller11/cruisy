@@ -11,6 +11,7 @@ struct ItineraryImportView: View {
     let onConfirm: (Voyage) -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.livery) private var livery
     @State private var importer = ItineraryImporter()
     @State private var pasted = ""
     @State private var isScanning = false
@@ -61,20 +62,36 @@ struct ItineraryImportView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Palette.seaBackground.ignoresSafeArea()
-
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        intro
+                // Inserire dati è lavoro da modulo di sistema, non da documento di
+                // bordo: il biglietto sta nelle schermate della crociera, qui comanda
+                // iOS, che di caselle di testo e tastiere sa più di noi.
+                Form {
+                    Section {
                         editor
-                        sources
-                        if case .failed(let message) = importer.phase {
-                            HullNotice(LocalizedStringKey(message))
+                    } header: {
+                        Text("Incolla la conferma della crociera")
+                    } footer: {
+                        Text("L'email della compagnia, la pagina del sito, una foto del programma di bordo. Basta che ci siano le date e i nomi dei porti: al resto pensa Cruisy, e tutto resta sul telefono.")
+                    }
+
+                    Section {
+                        Button { isScanning = true } label: {
+                            Label("Scansiona", systemImage: "doc.viewfinder")
+                        }
+                        Button { isPickingFile = true } label: {
+                            Label("Importa file", systemImage: "folder")
                         }
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 24)
+                    .disabled(importer.isBusy)
+
+                    if case .failed(let message) = importer.phase {
+                        Section {
+                            Label(LocalizedStringKey(message), systemImage: "exclamationmark.triangle.fill")
+                                .foregroundStyle(.red)
+                        }
+                    }
                 }
+                .tint(livery.tint)
                 .scrollDismissesKeyboard(.interactively)
                 #if DEBUG
                 .task {
@@ -139,73 +156,37 @@ struct ItineraryImportView: View {
         }
     }
 
-    private var intro: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Incolla la conferma della crociera")
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(Palette.inkPrimary)
-            Text("L'email della compagnia, la pagina del sito, una foto del programma di bordo. Basta che ci siano le date e i nomi dei porti: al resto pensa Cruisy, e tutto resta sul telefono.")
-                .font(Type.rowDetail)
-                .foregroundStyle(Palette.inkSecondary)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .padding(.top, 8)
-    }
-
+    /// La casella dove si incolla. Il segnaposto è un esempio vero di due righe:
+    /// dice che formato accettiamo meglio di qualunque spiegazione.
     private var editor: some View {
         TextEditor(text: $pasted)
             .focused($isEditorFocused)
             .font(.callout)
-            .foregroundStyle(Palette.inkPrimary)
-            .scrollContentBackground(.hidden)
             .frame(minHeight: 210)
-            .padding(12)
-            .glassSurface(cornerRadius: 20, prominence: .chip)
             .overlay(alignment: .topLeading) {
                 if pasted.isEmpty {
                     Text("Sab 15 nov · San Juan · 14:00 → 20:00\nDom 16 nov · Charlotte Amalie · 07:00 → 16:00\n…")
                         .font(.callout)
-                        .foregroundStyle(Palette.inkTertiary)
-                        .padding(.horizontal, 17)
-                        .padding(.vertical, 20)
+                        .foregroundStyle(.tertiary)
+                        .padding(.vertical, 8)
                         .allowsHitTesting(false)
                 }
             }
     }
 
-    private var sources: some View {
-        HStack(spacing: 10) {
-            Button { isScanning = true } label: {
-                Label("Scansiona", systemImage: "doc.viewfinder")
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 13)
-            }
-            .buttonStyle(.glass)
-
-            Button { isPickingFile = true } label: {
-                Label("Importa file", systemImage: "folder")
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 13)
-            }
-            .buttonStyle(.glass)
-        }
-        .tint(Palette.action)
-        .disabled(importer.isBusy)
-    }
-
     private var busyOverlay: some View {
         ZStack {
-            Palette.abyss.opacity(0.6).ignoresSafeArea()
+            Color.black.opacity(0.4).ignoresSafeArea()
             VStack(spacing: 12) {
                 ProgressView().controlSize(.large)
                 Text(importer.phase == .reading
                      ? "Leggo il documento…"
                      : "Metto in ordine l'itinerario…")
-                    .font(Type.rowDetail)
-                    .foregroundStyle(Palette.inkSecondary)
+                    .font(TicketType.rowDetail)
+                    .foregroundStyle(.secondary)
             }
             .padding(26)
-            .glassSurface(cornerRadius: 24, prominence: .chrome)
+            .background(.regularMaterial, in: .rect(cornerRadius: 24))
         }
         .transition(.opacity)
     }

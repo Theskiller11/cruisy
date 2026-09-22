@@ -6,3 +6,6 @@ DerivedData/
 *.xcresult
 # Uscita di scripts/screenshots.sh: si rigenera quando serve.
 screenshots/
+
+# I worktree degli agenti: copie del progetto, non progetto.
+.claude/worktrees/

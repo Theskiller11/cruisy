@@ -12,6 +12,7 @@ struct OnboardingFlow: View {
     @Environment(VoyageStore.self) private var store
     @Environment(Preferences.self) private var preferences
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.livery) private var livery
 
     @State private var step = {
         #if DEBUG
@@ -31,25 +32,21 @@ struct OnboardingFlow: View {
     private let lastStep = 4
 
     var body: some View {
-        ZStack {
-            Palette.seaBackground.ignoresSafeArea()
+        VStack(spacing: 0) {
+            progress
+                .padding(.top, 20)
+                .padding(.horizontal, 24)
 
-            VStack(spacing: 0) {
-                progress
-                    .padding(.top, 20)
-                    .padding(.horizontal, 24)
-
-                ScrollView {
-                    content
-                        .padding(.horizontal, 26)
-                        .padding(.top, 28)
-                        .padding(.bottom, 20)
-                }
-
-                actions
+            ScrollView {
+                content
                     .padding(.horizontal, 26)
-                    .padding(.bottom, 16)
+                    .padding(.top, 28)
+                    .padding(.bottom, 20)
             }
+
+            actions
+                .padding(.horizontal, 26)
+                .padding(.bottom, 16)
         }
         .interactiveDismissDisabled()
         .sheet(isPresented: $isImporting) {
@@ -64,7 +61,7 @@ struct OnboardingFlow: View {
         HStack(spacing: 6) {
             ForEach(0...lastStep, id: \.self) { index in
                 Capsule()
-                    .fill(index <= step ? Palette.underway : Palette.ink.opacity(0.18))
+                    .fill(index <= step ? livery.tint : Color(.tertiaryLabel))
                     .frame(height: 3)
             }
         }
@@ -88,7 +85,7 @@ struct OnboardingFlow: View {
 
     private var welcome: some View {
         OnboardingPage(
-            glyph: "location.north.circle.fill", tint: Palette.underway,
+            glyph: "location.north.circle.fill", tint: .green,
             title: String(localized: "Cruisy"),
             subtitle: String(localized: "Quanto manca. Nient'altro."),
             text: String(localized: "In giorno di porto conta al rientro obbligatorio a bordo. In giorno di mare, all'arrivo nel prossimo scalo. È tutto quello che fa, e lo fa bene."))
@@ -98,17 +95,17 @@ struct OnboardingFlow: View {
         VStack(alignment: .leading, spacing: 20) {
             Text("Tre cose da sapere")
                 .font(.largeTitle.weight(.bold))
-                .foregroundStyle(Palette.inkPrimary)
+                .foregroundStyle(.primary)
 
-            OnboardingPoint(glyph: "megaphone.fill", tint: Palette.ashore,
+            OnboardingPoint(glyph: "megaphone.fill", tint: .orange,
                             title: String(localized: "Gli annunci di bordo fanno fede"),
                             text: String(localized: "Cruisy conta dagli orari che le hai dato. Se a bordo ne annunciano altri, quelli vincono: correggili dal dettaglio del porto."))
 
-            OnboardingPoint(glyph: "wifi.slash", tint: Palette.underway,
+            OnboardingPoint(glyph: "wifi.slash", tint: .green,
                             title: String(localized: "Funziona senza rete"),
                             text: String(localized: "Countdown e carta si calcolano sul telefono. In mezzo all'oceano, in modalità aereo, continuano a funzionare."))
 
-            OnboardingPoint(glyph: "clock.badge.exclamationmark.fill", tint: Palette.action,
+            OnboardingPoint(glyph: "clock.badge.exclamationmark.fill", tint: livery.tint,
                             title: String(localized: "Tutti gli orari sono in ora di bordo"),
                             text: String(localized: "Le navi tengono la propria ora e non sempre la cambiano in porto. Se il tuo telefono non è allineato, Cruisy te lo dice."))
         }
@@ -117,7 +114,7 @@ struct OnboardingFlow: View {
     private var iCloudStep: some View {
         VStack(alignment: .leading, spacing: 20) {
             OnboardingPage(
-                glyph: "square.and.arrow.up.on.square.fill", tint: Palette.action,
+                glyph: "square.and.arrow.up.on.square.fill", tint: livery.tint,
                 title: String(localized: "Portala con te"),
                 subtitle: String(localized: "Senza creare nessun account."),
                 text: String(localized: "Puoi salvare la crociera come file e mandarla a chi viaggia con te, o al tuo iPad. Chi la riceve la apre e ce l'ha: nessun account, nessuna password, nessun nostro server."),
@@ -125,13 +122,13 @@ struct OnboardingFlow: View {
 
             // Il punto che vale la pena dire, perché è controintuitivo: in crociera
             // questa strada funziona **meglio** della sincronizzazione automatica.
-            OnboardingPoint(glyph: "wifi.slash", tint: Palette.underway,
+            OnboardingPoint(glyph: "wifi.slash", tint: .green,
                             title: String(localized: "Funziona anche in mezzo al mare"),
                             text: String(localized: "AirDrop fra due telefoni sullo stesso ponte non ha bisogno di rete. Una sincronizzazione automatica, in mezzo all'oceano, non sincronizzerebbe niente."))
 
             Text("Trovi «Condividi la crociera» nelle Impostazioni, dal menu dell'Itinerario.")
                 .font(.caption)
-                .foregroundStyle(Palette.inkTertiary)
+                .foregroundStyle(.tertiary)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
@@ -145,7 +142,7 @@ struct OnboardingFlow: View {
     private var liveActivityStep: some View {
         VStack(alignment: .leading, spacing: 20) {
             OnboardingPage(
-                glyph: "clock.badge.checkmark", tint: Palette.ashore,
+                glyph: "clock.badge.checkmark", tint: .orange,
                 title: String(localized: "Prima di salpare"),
                 subtitle: String(localized: "Il countdown sulla schermata di blocco."),
                 text: String(localized: "Nelle ore che contano, Cruisy può tenere il tempo che manca sulla schermata di blocco e nella Dynamic Island: lo guardi senza aprire nulla, anche con le mani occupate."),
@@ -156,31 +153,32 @@ struct OnboardingFlow: View {
                 set: { preferences.wantsLiveActivity = $0 })) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Mostralo quando serve")
-                            .font(Type.rowTitle)
-                            .foregroundStyle(Palette.inkPrimary)
+                            .font(TicketType.rowTitle)
+                            .foregroundStyle(.primary)
                         // La rassicurazione va detta qui, non nascosta in un aiuto:
                         // chi accetta qualcosa nell'onboarding vuole sapere di poter
                         // tornare indietro.
                         Text("Puoi disattivarlo quando vuoi dalle Impostazioni.")
-                            .font(Type.rowDetail)
-                            .foregroundStyle(Palette.inkSecondary)
+                            .font(TicketType.rowDetail)
+                            .foregroundStyle(.secondary)
                     }
                 }
-                .tint(Palette.ashore)
+                .tint(livery.tint)
                 .padding(.horizontal, 15)
                 .padding(.vertical, 13)
-                .glassSurface(cornerRadius: 20, prominence: .chip)
+                .background(Color(.secondarySystemGroupedBackground),
+                            in: .rect(cornerRadius: 20, style: .continuous))
 
             Text("Si accende in porto nelle ultime otto ore prima dell'all aboard, e in mare nell'ultima ora e mezza prima dell'attracco. Fuori da quelle finestre non ci sarebbe niente da contare.")
                 .font(.caption)
-                .foregroundStyle(Palette.inkTertiary)
+                .foregroundStyle(.tertiary)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
 
     private var itineraryStep: some View {
         OnboardingPage(
-            glyph: "text.viewfinder", tint: Palette.underway,
+            glyph: "text.viewfinder", tint: .green,
             title: String(localized: "Aggiungi la tua crociera"),
             subtitle: String(localized: "Incolla, fotografa o importa."),
             text: String(localized: "L'email della compagnia, la pagina del sito, una foto del programma di bordo: Cruisy ne ricava l'itinerario e ti fa controllare tutto prima di salvarlo."))
@@ -195,21 +193,18 @@ struct OnboardingFlow: View {
                 if step == lastStep { isImporting = true } else { advance() }
             } label: {
                 Text(step == lastStep ? "Aggiungi l'itinerario" : "Avanti")
-                    .font(Type.rowTitle)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 15)
             }
-            .buttonStyle(.glassProminent)
-            .tint(Palette.underway)
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+            .tint(livery.tint)
 
             if step == lastStep {
                 Button("Lo faccio più tardi") { finish() }
-                    .font(Type.rowDetail)
-                    .tint(Palette.action)
+                    .tint(livery.tint)
             } else if step > 0 {
                 Button("Indietro") { withAnimation(Motion.settle) { step -= 1 } }
-                    .font(Type.rowDetail)
-                    .tint(Palette.action)
+                    .tint(livery.tint)
             }
         }
     }
@@ -242,13 +237,13 @@ private struct OnboardingPage: View {
 
             Text(title)
                 .font(.largeTitle.weight(.bold))
-                .foregroundStyle(Palette.inkPrimary)
+                .foregroundStyle(.primary)
             Text(subtitle)
                 .font(.title3.weight(.medium))
                 .foregroundStyle(tint)
             Text(text)
-                .font(Type.rowDetail)
-                .foregroundStyle(Palette.inkSecondary)
+                .font(TicketType.rowDetail)
+                .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: alignment == .leading ? .leading : .center)
@@ -275,11 +270,11 @@ private struct OnboardingPoint: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(Type.rowTitle)
-                    .foregroundStyle(Palette.inkPrimary)
+                    .font(TicketType.rowTitle)
+                    .foregroundStyle(.primary)
                 Text(text)
-                    .font(Type.rowDetail)
-                    .foregroundStyle(Palette.inkSecondary)
+                    .font(TicketType.rowDetail)
+                    .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

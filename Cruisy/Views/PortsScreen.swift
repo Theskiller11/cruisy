@@ -85,7 +85,9 @@ private struct PortCard: View {
                     .padding(6)
             }
 
-            HStack(alignment: .center, spacing: 14) {
+            // Ai corpi accessibili il timbro scende sotto: accanto al nome rubava
+            // tanta larghezza che «Puerto Plata» si spezzava una lettera per riga.
+            AdaptiveHStack(verticalAlignment: .center, spacing: 14) {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(stamp.port.name)
                         .font(TicketType.place)
@@ -96,7 +98,10 @@ private struct PortCard: View {
                         .font(TicketType.rowDetail)
                         .foregroundStyle(livery.field)
                 }
-                Spacer(minLength: 8)
+                AdaptiveSpacer(minLength: 8)
+                // Senza `diameter` il timbro si allarga finché il testo ci sta intero:
+                // sotto il nome c'è tutta la larghezza, e «TOC-CATO» spezzato era peggio
+                // di un timbro grande.
                 Stamp(stamp.visits > 1 ? String(localized: "×\(stamp.visits)\nvolte") : String(localized: "Toccato"),
                       color: stamp.visits >= 3 ? livery.signal : livery.field, rotation: -9)
             }

@@ -12,6 +12,8 @@ import SwiftUI
 /// Qui ci sono solo i controlli e il testo: il contenitore — una sezione di un `Form`
 /// o una card — lo decide chi li usa.
 struct ShipClockControls: View {
+    @Environment(\.livery) private var livery
+
     /// Nullo quando l'orologio segue i porti. Valorizzato quando è fisso.
     @Binding var manualOffset: Int?
 
@@ -25,7 +27,7 @@ struct ShipClockControls: View {
         Toggle("Segui i porti", isOn: Binding(
             get: { manualOffset == nil },
             set: { manualOffset = $0 ? nil : suggestedOffset }))
-            .tint(Palette.underway)
+            .tint(livery.tint)
 
         if let offset = manualOffset {
             Picker("Scarto da UTC", selection: Binding(
@@ -35,7 +37,7 @@ struct ShipClockControls: View {
                 }
             }
             .pickerStyle(.menu)
-            .tint(Palette.action)
+            .tint(livery.tint)
         }
     }
 

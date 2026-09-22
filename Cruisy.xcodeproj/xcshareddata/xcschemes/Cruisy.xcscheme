@@ -73,11 +73,11 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-sample deviceTest"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-sampleRestore"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>

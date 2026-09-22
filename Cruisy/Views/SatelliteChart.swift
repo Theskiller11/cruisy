@@ -39,11 +39,11 @@ struct SatelliteChart: View {
     var body: some View {
         Map(position: $position) {
             MapPolyline(coordinates: Voyage.greatCirclePath(through: segments.ahead).map(\.location))
-                .stroke(Palette.ink.opacity(0.55),
+                .stroke(ChartInk.hairline.opacity(0.55),
                         style: StrokeStyle(lineWidth: 2, lineCap: .round, dash: [3, 6]))
 
             MapPolyline(coordinates: Voyage.greatCirclePath(through: segments.sailed).map(\.location))
-                .stroke(Palette.underway, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                .stroke(ChartInk.route, style: StrokeStyle(lineWidth: 3, lineCap: .round))
 
             ForEach(voyage.calls) { call in
                 Annotation(call.name, coordinate: call.coordinate.location) {
@@ -115,10 +115,10 @@ private struct PortDot: View {
 
     var body: some View {
         Circle()
-            .fill(visited ? Palette.underway : Color(hex: 0x091A28))
+            .fill(visited ? ChartInk.route : ChartInk.portFill)
             .frame(width: 11, height: 11)
-            .overlay(Circle().stroke(visited ? Palette.abyss : Palette.ink.opacity(0.8), lineWidth: 1.6))
-            .shadow(color: Palette.abyss.opacity(0.5), radius: 3, y: 1)
+            .overlay(Circle().stroke(visited ? ChartInk.abyss : ChartInk.hairline.opacity(0.8), lineWidth: 1.6))
+            .shadow(color: ChartInk.abyss.opacity(0.5), radius: 3, y: 1)
     }
 }
 
@@ -128,12 +128,12 @@ private struct ShipMarker: View {
 
     var body: some View {
         ZStack {
-            Circle().fill(Palette.underway.opacity(0.22)).frame(width: 30, height: 30)
+            Circle().fill(ChartInk.route.opacity(0.22)).frame(width: 30, height: 30)
             Triangle()
                 .fill(Color(hex: 0xEAFAF6))
                 .frame(width: 14, height: 18)
                 .rotationEffect(.degrees(course))
-                .shadow(color: Palette.abyss.opacity(0.6), radius: 2)
+                .shadow(color: ChartInk.abyss.opacity(0.6), radius: 2)
         }
     }
 }

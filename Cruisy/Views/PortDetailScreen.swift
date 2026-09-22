@@ -48,6 +48,10 @@ struct PortDetailScreen: View {
         }
         .navigationTitle(current.name)
         .navigationBarTitleDisplayMode(.inline)
+        // Lo scafo è scuro, quindi il titolo va tenuto chiaro a mano: il modificatore
+        // della schermata che spinge questa non arriva fin qui. Ai corpi accessibili
+        // si vedeva, perché la barra si allarga e il titolo scuro sul blu spariva.
+        .toolbarColorScheme(.dark, for: .navigationBar)
         .task(id: current.id) {
             guard current.arrival <= store.now.addingTimeInterval(3 * 86_400) else { return }
             await weather.load(for: current.coordinate, now: store.now)

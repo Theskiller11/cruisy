@@ -47,9 +47,10 @@ gruppi sincronizzati sia dell'app sia dei widget.
 Design di oggi — il biglietto d'imbarco, direzione D del 14 settembre 2026: `CruisyShared/Design/`
 (`Livery` coi token chiaro/scuro e il catalogo delle livree, `TicketType`, `Ticket` coi componenti,
 `SeaScene`, `Motion`, `Contrast`). Le regole per usarlo con coerenza sono in `docs/fable-report.md`,
-sezione «Regole del sistema». `Palette`, `Typography` e `GlassSurface` sono il design vecchio: li
-usano ancora widget, Live Activity, editor, importazione e onboarding, e spariscono con la loro
-conversione.
+sezione «Regole del sistema». Il design vecchio (`Palette`, `Typography`, `GlassSurface`,
+`DebugFlags`) è **cancellato** dal 19 settembre 2026: editor, importazione, riesame e onboarding
+sono `Form` di sistema con la tinta della livrea. La carta nautica ha i suoi colori a parte
+(`CruisyShared/Chart/ChartInk.swift`): sono convenzioni da carta, non cambiano con la compagnia.
 
 ## Comandi
 
@@ -66,7 +67,10 @@ scripts/screenshots.sh --appearance dark  # modalità scura
 scripts/sync-strings.sh                 # porta le stringhe nuove nel catalogo (xcodebuild non lo fa)
 ```
 
-Simulatore: **iPhone 17 Pro**, iOS 27.
+Simulatore: **iPhone 17 Pro**, iOS 27. Xcode 27.1 non lo crea più da sé: se sparisce,
+`xcrun simctl create "iPhone 17 Pro" com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro
+com.apple.CoreSimulator.SimRuntime.iOS-27-0`. Il tipo **iPhone Duo** c'è già; manca il sistema
+27.1, e con quello arriva l'ottimizzazione per il pieghevole (regioni riservate, `onHingeChange`).
 
 ## Come si verifica, su questo Mac
 

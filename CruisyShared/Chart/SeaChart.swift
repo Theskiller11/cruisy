@@ -163,9 +163,9 @@ struct SeaChart: View {
         context.stroke(path(segments.ahead), with: .color(Color(hex: 0xB4E1FF).opacity(0.34)),
                        style: StrokeStyle(lineWidth: 1.6, lineCap: .round, dash: [2, 5]))
         let sailed = path(segments.sailed)
-        context.stroke(sailed, with: .color(Palette.underway.opacity(0.22)),
+        context.stroke(sailed, with: .color(ChartInk.route.opacity(0.22)),
                        style: StrokeStyle(lineWidth: 7, lineCap: .round))
-        context.stroke(sailed, with: .color(Palette.underway),
+        context.stroke(sailed, with: .color(ChartInk.route),
                        style: StrokeStyle(lineWidth: 1.9, lineCap: .round))
     }
 
@@ -194,10 +194,10 @@ struct SeaChart: View {
             if isHighlighted {
                 context.fill(Path(ellipseIn: CGRect(x: point.x - 13, y: point.y - 13,
                                                     width: 26, height: 26)),
-                             with: .color(Palette.action.opacity(0.22)))
+                             with: .color(ChartInk.highlight.opacity(0.22)))
             }
-            context.fill(dot, with: .color(isHighlighted ? Palette.action
-                                           : visited ? Palette.underway : Color(hex: 0x091A28)))
+            context.fill(dot, with: .color(isHighlighted ? ChartInk.highlight
+                                           : visited ? ChartInk.route : ChartInk.portFill))
             context.stroke(dot, with: .color(visited || isHighlighted ? Color(hex: 0x041420)
                                              : Color(hex: 0xBEE6FF).opacity(0.75)),
                            lineWidth: 1.4)
@@ -228,9 +228,9 @@ struct SeaChart: View {
         let point = projection.point(fix.coordinate)
 
         context.fill(Path(ellipseIn: CGRect(x: point.x - 17, y: point.y - 17, width: 34, height: 34)),
-                     with: .color(Palette.underway.opacity(0.10)))
+                     with: .color(ChartInk.route.opacity(0.10)))
         context.fill(Path(ellipseIn: CGRect(x: point.x - 9.5, y: point.y - 9.5, width: 19, height: 19)),
-                     with: .color(Palette.underway.opacity(0.22)))
+                     with: .color(ChartInk.route.opacity(0.22)))
 
         var hull = Path()
         hull.move(to: CGPoint(x: 0, y: -8))

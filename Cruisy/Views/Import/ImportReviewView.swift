@@ -6,10 +6,16 @@ import SwiftUI
 /// letta — da regole o da un modello — è un'ipotesi su un documento, e un orario
 /// sbagliato qui diventa una persona che resta a terra. Quindi: tutto sotto gli occhi,
 /// i dubbi in cima, e la conferma chiusa finché resta qualcosa di irrisolto.
+///
+/// È un `Form` di sistema, non un documento di bordo: qui si correggono dati, e i
+/// moduli di iOS lo fanno meglio di qualunque cosa disegnata da noi. Il biglietto
+/// comincia dopo, quando la crociera è salvata.
 struct ImportReviewView: View {
     @State private var draft: ItineraryDraft
     private let sourceText: String
     private let onConfirm: (Voyage) -> Void
+
+    @Environment(\.livery) private var livery
 
     /// Nullo quando l'ora di bordo la calcola l'app dagli scali, che è il caso
     /// normale. Valorizzato solo se chi è a bordo la impone.
@@ -43,29 +49,42 @@ struct ImportReviewView: View {
     }
 
     var body: some View {
-        ZStack {
-            Palette.seaBackground.ignoresSafeArea()
-
-            ScrollView {
-                VStack(spacing: 12) {
-                    summary
-                    shipSection
-                    clockSection
-                    ForEach($draft.calls) { $call in
-                        DraftCallRow(call: $call, clock: clock) { editingPortFor = call.id }
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 120)
+        Form {
+            Section {
+                LabeledContent("Letto da", value: draft.source.label)
+                LabeledContent("Scali", value: "\(draft.portCalls.count)")
+                LabeledContent("Giorni di mare", value: "\(draft.calls.filter(\.isSeaDay).count)")
+            } footer: {
+                status
             }
-            .safeAreaInset(edge: .bottom) { confirmBar }
+
+            Section("Nave") {
+                TextField("Nome della nave", text: Binding(
+                    get: { draft.shipName ?? "" },
+                    set: { draft.shipName = $0.isEmpty ? nil : $0 }))
+                    .textInputAutocapitalization(.words)
+            }
+
+            Section {
+                ShipClockControls(manualOffset: $manualOffset,
+                                  suggestedOffset: TimeZone.current.secondsFromGMT())
+            } header: {
+                Text("Ora di bordo")
+            } footer: {
+                Text(ShipClockControls.explanation(isManual: manualOffset != nil))
+            }
+
+            ForEach($draft.calls) { $call in
+                DraftCallSection(call: $call) { editingPortFor = call.id }
+            }
         }
+        .tint(livery.tint)
+        .safeAreaInset(edge: .bottom) { confirmBar }
         .navigationTitle("Controlla")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Originale") { showsSource = true }
-                    .tint(Palette.action)
             }
         }
         .sheet(isPresented: $showsSource) {
@@ -85,194 +104,120 @@ struct ImportReviewView: View {
 
     // MARK: Pezzi
 
-    private var summary: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text("\(draft.portCalls.count) scali · \(draft.calls.filter(\.isSeaDay).count) giorni di mare")
-                    .font(Type.rowTitle)
-                    .foregroundStyle(Palette.inkPrimary)
-                Spacer(minLength: 8)
-                Text(draft.source.label)
-                    .font(Type.technical)
-                    .foregroundStyle(Palette.inkTertiary)
-            }
-
-            if blockingCount > 0 {
-                Label("\(blockingCount) righe da sistemare prima di confermare",
-                      systemImage: "exclamationmark.triangle.fill")
-                    .font(Type.rowDetail)
-                    .foregroundStyle(Palette.ashore)
-            } else if assumedCount > 0 {
-                // Non è un errore, ma è la cosa che va guardata: un all aboard dedotto
-                // e sbagliato è esattamente il modo in cui si perde la nave.
-                Label("\(assumedCount) orari di all aboard sono dedotti: confrontali col programma di bordo",
-                      systemImage: "questionmark.circle.fill")
-                    .font(Type.rowDetail)
-                    .foregroundStyle(Palette.ashore)
-                    .fixedSize(horizontal: false, vertical: true)
-            } else {
-                Label("Tutto agganciato", systemImage: "checkmark.circle.fill")
-                    .font(Type.rowDetail)
-                    .foregroundStyle(Palette.underway)
-            }
+    /// Lo stato del riesame, in fondo alla prima sezione: quello che va guardato
+    /// prima di confermare.
+    @ViewBuilder
+    private var status: some View {
+        if blockingCount > 0 {
+            Label("\(blockingCount) righe da sistemare prima di confermare",
+                  systemImage: "exclamationmark.triangle.fill")
+                .foregroundStyle(.red)
+        } else if assumedCount > 0 {
+            // Non è un errore, ma è la cosa che va guardata: un all aboard dedotto
+            // e sbagliato è esattamente il modo in cui si perde la nave.
+            Label("\(assumedCount) orari di all aboard sono dedotti: confrontali col programma di bordo",
+                  systemImage: "questionmark.circle.fill")
+                .foregroundStyle(.orange)
+        } else {
+            Label("Tutto agganciato", systemImage: "checkmark.circle.fill")
+                .foregroundStyle(.green)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .glassSurface(cornerRadius: 22, prominence: .card)
-        .padding(.top, 8)
-    }
-
-    private var shipSection: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("Nave").eyebrow()
-            TextField("Nome della nave", text: Binding(
-                get: { draft.shipName ?? "" },
-                set: { draft.shipName = $0.isEmpty ? nil : $0 }))
-                .font(Type.rowTitle)
-                .foregroundStyle(Palette.inkPrimary)
-                .textFieldStyle(.plain)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .glassSurface(cornerRadius: 20, prominence: .chip)
-    }
-
-    private var clockSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Ora di bordo").eyebrow()
-
-            ShipClockControls(manualOffset: $manualOffset,
-                              suggestedOffset: TimeZone.current.secondsFromGMT())
-
-            Text(ShipClockControls.explanation(isManual: manualOffset != nil))
-                .font(Type.rowDetail)
-                .foregroundStyle(Palette.inkSecondary)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .glassSurface(cornerRadius: 20, prominence: .chip)
     }
 
     private var confirmBar: some View {
-        VStack(spacing: 0) {
-            Button {
-                if let voyage { onConfirm(voyage) }
-            } label: {
-                Text(voyage == nil ? "Sistema le righe segnate" : "Conferma e salva")
-                    .font(Type.rowTitle)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 15)
-            }
-            .buttonStyle(.glassProminent)
-            .tint(voyage == nil ? Palette.inkTertiary : Palette.underway)
-            .disabled(voyage == nil)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+        Button {
+            if let voyage { onConfirm(voyage) }
+        } label: {
+            Text(voyage == nil ? "Sistema le righe segnate" : "Conferma e salva")
+                .frame(maxWidth: .infinity)
         }
-        .background(.ultraThinMaterial)
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
+        .tint(livery.tint)
+        .disabled(voyage == nil)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.bar)
     }
 }
 
-/// Una riga del riesame: modificabile sul posto, coi dubbi in evidenza.
-private struct DraftCallRow: View {
+/// Una sezione del riesame: un giorno, coi suoi orari e i suoi dubbi.
+///
+/// Gli orari si correggono qui, senza aprire un'altra schermata: sono la cosa che più
+/// spesso va ritoccata, e un giro in più li farebbe saltare.
+private struct DraftCallSection: View {
     @Binding var call: DraftCall
-    let clock: ShipClock
     let onEditPort: () -> Void
 
-    private var tint: Color {
-        if call.isBlocked { return Palette.adrift }
-        if !call.issues.isEmpty { return Palette.ashore }
-        return Palette.underway
-    }
-
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .top, spacing: 12) {
-                dateColumn
-
-                VStack(alignment: .leading, spacing: 3) {
-                    Button(action: onEditPort) {
-                        HStack(spacing: 6) {
-                            Text(call.displayName)
-                                .font(Type.rowTitle)
-                                .foregroundStyle(Palette.inkPrimary)
-                                .multilineTextAlignment(.leading)
-                            if !call.isSeaDay {
-                                Image(systemName: "pencil")
-                                    .font(.caption2)
-                                    .foregroundStyle(Palette.inkTertiary)
-                            }
-                        }
-                    }
-                    .buttonStyle(.plain)
-                    .disabled(call.isSeaDay)
-
-                    if !call.isSeaDay, call.port == nil, !call.rawName.isEmpty {
-                        Text("nel documento: \(call.rawName)")
-                            .font(Type.technical)
-                            .foregroundStyle(Palette.inkTertiary)
-                    }
-                }
-                Spacer(minLength: 0)
-            }
-
+        Section {
             if !call.isSeaDay {
-                times
-            }
-
-            if !call.issues.isEmpty {
-                FlowRow(spacing: 6) {
-                    ForEach(Array(call.issues).sorted(by: { $0.rawValue < $1.rawValue }), id: \.self) { issue in
-                        Text(issue.label)
-                            .font(.caption2.weight(.semibold))
-                            .foregroundStyle(issue.isBlocking ? Palette.adrift : Palette.ashore)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Capsule().fill((issue.isBlocking ? Palette.adrift : Palette.ashore).opacity(0.16)))
-                    }
+                TimeRow(label: String(localized: "Arrivo"), identifier: "orario-arrivo",
+                        time: $call.arrival)
+                TimeRow(label: String(localized: "Partenza"), identifier: "orario-partenza",
+                        time: $call.departure)
+                TimeRow(label: String(localized: "All aboard"), identifier: "orario-allaboard",
+                        time: $call.allAboard,
+                        highlighted: call.issues.contains(.allAboardAssumed)) {
+                    call.issues.remove(.allAboardAssumed)
                 }
             }
+        } header: {
+            header
+        } footer: {
+            footer
         }
-        .padding(14)
-        .glassSurface(cornerRadius: 20, prominence: .chip, tint: call.issues.isEmpty ? nil : tint)
     }
 
-    private var dateColumn: some View {
-        VStack(spacing: 1) {
-            Text(call.day.map(String.init) ?? "—")
-                .font(.body.weight(.semibold).monospacedDigit())
-                .foregroundStyle(Palette.inkPrimary)
-            Text(call.month.map { monthAbbreviation($0) } ?? "")
-                .font(.caption2.weight(.semibold))
-                .foregroundStyle(Palette.inkTertiary)
-        }
-        .frame(width: 36)
-    }
-
-    private func monthAbbreviation(_ month: Int) -> String {
-        let symbols = DateFormatter().shortMonthSymbols ?? []
-        guard (1...12).contains(month), symbols.count == 12 else { return "" }
-        return symbols[month - 1].uppercased()
-    }
-
-    /// Gli orari si correggono qui, senza aprire un'altra schermata: sono la cosa
-    /// che più spesso va ritoccata, e un giro in più li farebbe saltare.
-    private var times: some View {
+    private var header: some View {
         HStack(spacing: 8) {
-            TimeField(label: String(localized: "Arrivo"), time: $call.arrival)
-            TimeField(label: String(localized: "Partenza"), time: $call.departure)
-            TimeField(label: String(localized: "All aboard"), time: $call.allAboard,
-                      highlighted: call.issues.contains(.allAboardAssumed)) {
-                call.issues.remove(.allAboardAssumed)
+            Text(date)
+                .monospacedDigit()
+            if call.isSeaDay {
+                Text(call.displayName)
+            } else {
+                Button(action: onEditPort) {
+                    HStack(spacing: 4) {
+                        Text(call.displayName)
+                        Image(systemName: "pencil").font(.caption2)
+                    }
+                }
+                .buttonStyle(.plain)
+            }
+            Spacer(minLength: 0)
+        }
+        .textCase(nil)
+        .font(TicketType.rowTitle)
+    }
+
+    @ViewBuilder
+    private var footer: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            if !call.isSeaDay, call.port == nil, !call.rawName.isEmpty {
+                Text("nel documento: \(call.rawName)")
+            }
+            ForEach(Array(call.issues).sorted(by: { $0.rawValue < $1.rawValue }), id: \.self) { issue in
+                Label(issue.label, systemImage: issue.isBlocking
+                      ? "exclamationmark.triangle.fill" : "questionmark.circle.fill")
+                    .foregroundStyle(issue.isBlocking ? .red : .orange)
             }
         }
+    }
+
+    private var date: String {
+        let day = call.day.map(String.init) ?? "—"
+        guard let month = call.month, (1...12).contains(month),
+              let symbols = DateFormatter().shortMonthSymbols, symbols.count == 12 else { return day }
+        return "\(day) \(symbols[month - 1].uppercased())"
     }
 }
 
-/// Un orario modificabile, scritto a mano.
-private struct TimeField: View {
+/// Un orario modificabile, scritto a mano, come riga di un modulo.
+private struct TimeRow: View {
     let label: String
+    /// Stabile e non tradotto: i test di interfaccia cercano gli orari con questo,
+    /// perché l'etichetta cambia con la lingua.
+    let identifier: String
     @Binding var time: TimeOfDay?
     var highlighted = false
     var onEdit: () -> Void = {}
@@ -281,12 +226,12 @@ private struct TimeField: View {
     @FocusState private var isFocused: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
-            Text(label).eyebrow(highlighted ? Palette.ashore : Palette.inkTertiary)
+        LabeledContent {
             TextField("—", text: $text)
-                .font(.subheadline.weight(.semibold).monospacedDigit())
-                .foregroundStyle(Palette.inkPrimary)
+                .multilineTextAlignment(.trailing)
+                .monospacedDigit()
                 .keyboardType(.numbersAndPunctuation)
+                .accessibilityIdentifier(identifier)
                 .focused($isFocused)
                 .onAppear { text = time?.formatted ?? "" }
                 .onChange(of: isFocused) { _, focused in
@@ -296,12 +241,18 @@ private struct TimeField: View {
                     time = parsed
                     text = parsed?.formatted ?? ""
                 }
+        } label: {
+            HStack(spacing: 6) {
+                Text(label)
+                // Un all aboard dedotto si segna: è l'orario che vale la pena
+                // confrontare col programma di bordo.
+                if highlighted {
+                    Image(systemName: "questionmark.circle.fill")
+                        .foregroundStyle(.orange)
+                        .accessibilityLabel("dedotto")
+                }
+            }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 8)
-        .background(RoundedRectangle(cornerRadius: 12, style: .continuous)
-            .fill(highlighted ? Palette.ashore.opacity(0.14) : Color.white.opacity(0.05)))
     }
 }
 
@@ -326,9 +277,10 @@ private struct PortPickerSheet: View {
                         // distingue: va mostrato sempre.
                         Text("\(match.subtitle) · \(Format.coordinate(match.coordinate))")
                             .font(.caption)
-                            .foregroundStyle(Palette.inkSecondary)
+                            .foregroundStyle(.secondary)
                     }
                 }
+                .buttonStyle(.plain)
             }
             .searchable(text: $query, prompt: "Cerca un porto")
             .navigationTitle("Scegli il porto")
@@ -351,12 +303,10 @@ private struct SourceTextSheet: View {
             ScrollView {
                 Text(text)
                     .font(.callout.monospaced())
-                    .foregroundStyle(Palette.inkSecondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .textSelection(.enabled)
                     .padding(16)
             }
-            .background(Palette.seaBackground.ignoresSafeArea())
             .navigationTitle("Testo originale")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Chiudi") { dismiss() } } }

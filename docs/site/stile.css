@@ -1,0 +1,11 @@
+@font-face{font-family:"Archivo";src:url("fonts/Archivo-latin.woff2") format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Archivo";src:url("fonts/Archivo-latin-ext.woff2") format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap;unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+:root{color-scheme:light dark;background:light-dark(#0E2A47,#0A0E13)}
+html,body{margin:0}
+a{color:inherit;text-decoration-thickness:1px;text-underline-offset:.2em}
+a:hover{text-decoration-thickness:2px;text-decoration-color:light-dark(#E4570F,#F07A3A)}
+a:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid light-dark(#E4570F,#F07A3A);outline-offset:3px;border-radius:4px}
+li{margin:.4em 0}
+summary::-webkit-details-marker{display:none}
+details[open] > summary > span[aria-hidden]{transform:rotate(45deg)}
+@media (prefers-reduced-motion:no-preference){summary > span[aria-hidden]{transition:transform .2s}}

@@ -24,7 +24,8 @@ Il design si può rifare da capo. Questi no, perché sono il motivo per cui l'ap
   in entrambe le modalità, `Contrast.swift`), Dynamic Type (niente dimensioni fisse per il testo; `@ScaledMetric` solo sulle
   altezze), VoiceOver, Riduci movimento (`Motion.honouring`).
 - **Privacy.** La posizione non esce dal telefono. Nessun server nostro, nessuna statistica. Se aggiungi
-  una chiamata di rete, aggiorna `docs/index.html`.
+  una chiamata di rete, aggiorna l'informativa: `docs/site/privacy.html`, pubblicata su
+  https://cruisy.matteopapini.com/privacy (Cloudflare Pages, si ricarica a mano dalla cartella).
 
 ## Struttura
 
@@ -35,7 +36,7 @@ CruisyWidgets/     widget della schermata Home e Live Activity
 CruisyTests/       test unitari, Swift Testing
 CruisyUITests/     test di interfaccia, XCUITest: gesti della carta, apertura di ogni schermata
 scripts/           test, screenshot, stringhe, costruzione dei database
-docs/              informativa privacy, passaggio di consegne
+docs/              sito (docs/site: home, privacy, assistenza), passaggio di consegne
 store/             testi App Store e note per la revisione
 figma/             script per il file Figma (piano Starter: 20 chiamate al mese)
 ```

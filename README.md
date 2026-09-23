@@ -18,7 +18,8 @@ La rete serve solo per cose **facoltative**, che degradano senza: il meteo (Open
 direttamente o dal proxy), le foto di navi e porti (Wikimedia Commons e Wikipedia, mai
 su rete a consumo senza permesso), la ricerca di una nave che manca (Wikidata, solo a
 richiesta) e il livello satellitare della Carta (tessere di Apple, spento di default).
-L'elenco completo, con cosa parte verso chi, è nell'informativa: `docs/index.html`.
+L'elenco completo, con cosa parte verso chi, è nell'informativa: `docs/site/privacy.html`,
+pubblicata su https://cruisy.matteopapini.com/privacy.
 La posizione non esce dal telefono in nessun caso.
 
 ## Come entra l'itinerario
@@ -126,7 +127,7 @@ CruisyWidgets/    widget di schermata Home + Live Activity
 CruisyTests/      test unitari (Swift Testing)
 CruisyUITests/    test di interfaccia (XCUITest): gesti della carta, apertura di ogni schermata
 scripts/          dati (porti, navi, fusi), screenshot, test
-docs/             informativa privacy; handoff-fable.md per chi riprende il lavoro
+docs/             sito in docs/site (home, privacy, assistenza); handoff-fable.md per chi riprende il lavoro
 store/            testi per App Store Connect e note per la revisione
 ```
 
@@ -196,6 +197,7 @@ messa da parte prima; `-sampleRestore` la rimette.
 
 - Iscrizione all'Apple Developer Program (possibile dal 23 novembre 2026).
 - Licenza del meteo: Open-Meteo è gratuito solo per uso non commerciale.
-- Pubblicare l'informativa privacy (`docs/index.html`): App Store Connect vuole l'URL.
+- ~~Pubblicare l'informativa privacy~~ fatto il 22 settembre 2026: privacy
+  https://cruisy.matteopapini.com/privacy, assistenza https://cruisy.matteopapini.com/assistenza.
 - Note per la revisione sul permesso «Sempre»: `store/app-review-notes.md`.
 - Verifica su dispositivo di widget, Live Activity, rotta registrata e collegamento a Meteo.

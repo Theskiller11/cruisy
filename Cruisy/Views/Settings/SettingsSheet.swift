@@ -31,6 +31,7 @@ struct SettingsSheet: View {
                 weatherSection
                 photosSection
                 shipsSection
+                siteSection
                 aboutSection
             }
             .navigationTitle("Impostazioni")
@@ -274,6 +275,26 @@ struct SettingsSheet: View {
         }
     }
 
+    /// Privacy e assistenza aprono il sito in Safari. Le stesse pagine che App Store
+    /// Connect vuole come URL: chi usa l'app deve poterle leggere senza cercarle.
+    private var siteSection: some View {
+        Section {
+            Link(destination: CruisySite.url(.privacy)) {
+                Label("Privacy", systemImage: "hand.raised")
+            }
+            Link(destination: CruisySite.url(.support)) {
+                Label("Assistenza", systemImage: "questionmark.bubble")
+            }
+            Link(destination: URL(string: "mailto:\(CruisySite.email)")!) {
+                Label("Scrivimi", systemImage: "envelope")
+            }
+        } header: {
+            Text("Cruisy")
+        } footer: {
+            Text("Si aprono in Safari. Cruisy non ha un account né un nostro server: per qualunque cosa, basta un'email.")
+        }
+    }
+
     private var aboutSection: some View {
         Section {
             NavigationLink("Come funziona Cruisy") { DisclaimerSheet {} }
@@ -286,5 +307,24 @@ struct SettingsSheet: View {
         } footer: {
             Text("Coste, porti e dati delle navi sono di pubblico dominio e viaggiano dentro l'app: la carta si disegna anche senza rete. Il meteo arriva da Open-Meteo; le fotografie delle navi da Wikimedia Commons, con il credito del loro autore.")
         }
+    }
+}
+
+/// Il sito di Cruisy, su Cloudflare Pages. Sorgenti in `docs/site/`.
+enum CruisySite {
+    static let base = URL(string: "https://cruisy.matteopapini.com")!
+    static let email = "cruisy@matteopapini.com"
+
+    enum Page: String {
+        case privacy
+        case support = "assistenza"
+    }
+
+    /// Le pagine hanno l'italiano in cima e l'inglese sotto l'ancora `#english`: chi
+    /// usa l'app in un'altra lingua arriva direttamente alla sua parte.
+    static func url(_ page: Page, language: String? = Bundle.main.preferredLocalizations.first) -> URL {
+        var components = URLComponents(url: base.appending(path: page.rawValue), resolvingAgainstBaseURL: false)!
+        if language?.hasPrefix("it") == false { components.fragment = "english" }
+        return components.url!
     }
 }

@@ -583,6 +583,16 @@
         }
       }
     },
+    "Assistenza": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Support"
+          }
+        }
+      }
+    },
     "Attiva": {
       "localizations": {
         "en": {
@@ -2762,6 +2772,16 @@
         }
       }
     },
+    "Privacy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy"
+          }
+        }
+      }
+    },
     "Pronta": {
       "localizations": {
         "en": {
@@ -3155,6 +3175,16 @@
         }
       }
     },
+    "Scrivimi": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Write to me"
+          }
+        }
+      }
+    },
     "Se a bordo hanno annunciato orari diversi, questi vincono su quelli pubblicati.": {
       "localizations": {
         "en": {
@@ -3261,6 +3291,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "It will come up when the time comes"
+          }
+        }
+      }
+    },
+    "Si aprono in Safari. Cruisy non ha un account né un nostro server: per qualunque cosa, basta un'email.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These open in Safari. Cruisy has no account and no server of ours: for anything at all, an email is enough."
           }
         }
       }

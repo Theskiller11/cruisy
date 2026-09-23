@@ -13,7 +13,7 @@ Consigli prima di inviare:
 - Verifica che il testo del permesso («Serve solo se accendi la registrazione della rotta…») sia quello
   dell'app compilata: `/usr/libexec/PlistBuddy -c "Print :NSLocationAlwaysAndWhenInUseUsageDescription"`
   sul `.app`. Il test `InfoPlistTests` lo controlla, ma il revisore legge quello che vede.
-- L'informativa privacy pubblicata deve dire la stessa cosa: `docs/index.html`, sezione «La posizione».
+- L'informativa privacy pubblicata deve dire la stessa cosa: https://cruisy.matteopapini.com/privacy (sorgente `docs/site/privacy.html`), sezione «La posizione».
 
 ---
 

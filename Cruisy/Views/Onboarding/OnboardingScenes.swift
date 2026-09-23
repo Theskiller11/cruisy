@@ -127,41 +127,43 @@ struct LiveActivityDemo: View {
         .padding(.horizontal, 13)
     }
 
+    /// Come la regione espansa vera: a sinistra che cosa e dove, a destra quanto
+    /// manca, sotto la barra e il traguardo in ora di bordo.
     private func expanded(left: TimeInterval) -> some View {
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .top) {
-                Image(systemName: "figure.walk.departure")
-                    .font(.system(size: 14, weight: .semibold))
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "figure.walk.departure")
+                        Text("Rientro a bordo")
+                            .textCase(.uppercase)
+                            .tracking(0.6)
+                    }
+                    .font(.system(size: 9, weight: .bold))
                     .foregroundStyle(livery.signalOnHull)
-                Spacer()
-                VStack(alignment: .trailing, spacing: -1) {
-                    Text(verbatim: "17:30")
-                        .font(.system(size: 15, weight: .black).width(.compressed))
+                    Text(verbatim: "PUERTO PLATA")
+                        .font(.system(size: 15, weight: .heavy).width(.condensed))
                         .foregroundStyle(.white)
-                    Text("ora di bordo")
-                        .font(.system(size: 8))
+                }
+                Spacer(minLength: 8)
+                VStack(alignment: .trailing, spacing: 0) {
+                    countdown(left, size: 27)
+                        .foregroundStyle(.white)
+                    Text("al tutti a bordo")
+                        .font(.system(size: 9, weight: .semibold))
                         .foregroundStyle(livery.onHullMuted)
                 }
             }
             Spacer(minLength: 0)
-            Text(verbatim: "PUERTO PLATA")
-                .font(.system(size: 12, weight: .bold).width(.condensed))
-                .foregroundStyle(.white)
-            HStack(alignment: .lastTextBaseline, spacing: 8) {
-                countdown(left, size: 26)
-                    .foregroundStyle(.white)
-                Text("al tutti a bordo")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(livery.onHullMuted)
-                Spacer(minLength: 0)
-            }
             ProgressView(value: progress(left))
                 .tint(livery.signalOnHull)
-                .padding(.top, 2)
+            Text("Entro le 17:30 · ora di bordo")
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(.white.opacity(0.85))
         }
         .padding(.horizontal, 18)
         .padding(.top, 13)
-        .padding(.bottom, 15)
+        .padding(.bottom, 14)
     }
 
     // MARK: La schermata di blocco
@@ -206,9 +208,14 @@ struct LiveActivityDemo: View {
 
     // MARK: Pezzi
 
+    /// Come `ActivityCountdown` nell'attività vera: ore e minuti sopra l'ora, i
+    /// secondi solo nell'ultima.
     private func countdown(_ left: TimeInterval, size: CGFloat) -> some View {
         let s = Int(left)
-        return Text(verbatim: String(format: "%d:%02d:%02d", s / 3600, s / 60 % 60, s % 60))
+        let text = s >= 3600
+            ? String(format: "%d:%02d", s / 3600, s / 60 % 60)
+            : String(format: "%d:%02d", s / 60, s % 60)
+        return Text(verbatim: text)
             .font(.system(size: size, weight: .black).width(.condensed))
             .monospacedDigit()
             .contentTransition(.numericText(countsDown: true))

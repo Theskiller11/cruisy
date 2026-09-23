@@ -633,6 +633,16 @@
         }
       }
     },
+    "Attracco alle %@ · ora di bordo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docking at %@ · ship's time"
+          }
+        }
+      }
+    },
     "Avanti" : {
       "localizations" : {
         "en" : {
@@ -1291,6 +1301,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "E"
+          }
+        }
+      }
+    },
+    "Entro le %@ · ora di bordo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By %@ · ship's time"
+          }
+        }
+      }
+    },
+    "Entro le 17:30 · ora di bordo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By 17:30 · ship's time"
           }
         }
       }

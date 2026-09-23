@@ -9,6 +9,18 @@ import UniformTypeIdentifiers
 /// promessa che l'app funziona senza rete. Quindi l'itinerario lo porti tu — incollato,
 /// fotografato o importato — e l'app fa il lavoro noioso di metterlo in ordine.
 struct ItineraryImportView: View {
+    /// Da dove cominciare, quando chi apre l'ha già detto: i tre pulsanti del
+    /// biglietto nell'onboarding.
+    enum Start: String, Identifiable {
+        case paste, photos, file
+        var id: String { rawValue }
+    }
+
+    var start: Start? = nil
+    /// La nave già scelta, per il riesame quando il documento non ne nomina una
+    /// dell'elenco: dagli screenshot della compagnia arriva spesso il marchio, non
+    /// la nave.
+    var shipName: String? = nil
     let onConfirm: (Voyage) -> Void
 
     @Environment(\.dismiss) private var dismiss
@@ -17,6 +29,8 @@ struct ItineraryImportView: View {
     @State private var pasted = ""
     @State private var isScanning = false
     @State private var isPickingFile = false
+    @State private var isPickingPhotos = false
+    @State private var didStart = false
     @State private var photoItems: [PhotosPickerItem] = []
     @FocusState private var isEditorFocused: Bool
 
@@ -105,6 +119,18 @@ struct ItineraryImportView: View {
                 }
                 .tint(livery.tint)
                 .scrollDismissesKeyboard(.interactively)
+                .task {
+                    guard let start, !didStart else { return }
+                    didStart = true
+                    // Aspetta che il foglio abbia finito di salire: un secondo foglio
+                    // chiesto mentre il primo è ancora in movimento non si presenta.
+                    try? await Task.sleep(for: .milliseconds(500))
+                    switch start {
+                    case .paste: isEditorFocused = true
+                    case .photos: isPickingPhotos = true
+                    case .file: isPickingFile = true
+                    }
+                }
                 #if DEBUG
                 .task {
                     guard ProcessInfo.processInfo.arguments.contains("-importDemo"),
@@ -141,6 +167,8 @@ struct ItineraryImportView: View {
                 }
                 .ignoresSafeArea()
             }
+            .photosPicker(isPresented: $isPickingPhotos, selection: $photoItems, maxSelectionCount: 12,
+                          selectionBehavior: .ordered, matching: .images)
             .onChange(of: photoItems) { _, items in
                 guard !items.isEmpty else { return }
                 Task {
@@ -177,13 +205,23 @@ struct ItineraryImportView: View {
                 get: { importer.phase == .ready && importer.draft != nil },
                 set: { if !$0 { importer.reset() } })) {
                 if let draft = importer.draft {
-                    ImportReviewView(draft: draft, sourceText: importer.sourceText) { voyage in
+                    ImportReviewView(draft: withShip(draft), sourceText: importer.sourceText) { voyage in
                         onConfirm(voyage)
                         dismiss()
                     }
                 }
             }
         }
+    }
+
+    /// La nave scelta prima vale quando il documento non ne nomina una che l'elenco
+    /// conosce. Se la nomina, vince il documento: il riesame la mostra comunque.
+    private func withShip(_ draft: ItineraryDraft) -> ItineraryDraft {
+        guard let shipName, !shipName.isEmpty else { return draft }
+        if let read = draft.shipName, ShipDirectory.shared.lookup(read) != nil { return draft }
+        var draft = draft
+        draft.shipName = shipName
+        return draft
     }
 
     /// La casella dove si incolla. Il segnaposto è un esempio vero di due righe:

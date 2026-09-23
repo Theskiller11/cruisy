@@ -75,12 +75,15 @@ com.apple.CoreSimulator.SimRuntime.iOS-27-0`. Il tipo **iPhone Duo** c'è già; 
 
 ## Come si verifica, su questo Mac
 
-- **Non c'è `Simulator.app`**, e il pannello del simulatore di Claude Code cade. `xcrun simctl` sa avviare
-  e fotografare, **non toccare**. Per vedere una schermata usa gli argomenti DEBUG:
+- **Non c'è `Simulator.app`**, ma il simulatore **si tocca** col tool iOS Simulator di Claude Code
+  (`tap`, `swipe`, `text`, `screenshot`, sull'«iPhone 17 Pro»): è così che si provano a mano gesti e
+  sequenze, come lo strappo del biglietto nell'onboarding. `xcrun simctl` sa avviare e fotografare,
+  non toccare. Per arrivare dritti a una schermata usa gli argomenti DEBUG:
   - `-sample inPort | atSea | beforeBoarding | farFromBoarding | imminent` — una crociera di prova;
   - `-tab oggi | itinerario | nave | diario`;
   - `-open carta | scalo | porti | editor | importazione | impostazioni | onboarding`
     (`Cruisy/Services/DebugLaunch.swift`);
+  - `-onboardingStep 0…4`, insieme a `-open onboarding`, apre l'onboarding a un passo preciso;
   - `-cruisy.hasSeenDisclaimer YES` salta l'onboarding, `-AppleLanguages "(en)"` cambia lingua;
   - `-livrea rosso` veste l'app con una livrea del catalogo (`Livery.id`), perché la nave di prova
     non è nell'elenco e da sola resterebbe sempre quella di Cruisy;

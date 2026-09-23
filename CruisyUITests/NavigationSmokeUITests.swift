@@ -88,6 +88,6 @@ final class NavigationSmokeUITests: XCTestCase {
 
     func testOnboardingOpens() {
         assertOpens(["-sample", "inPort", "-open", "onboarding"],
-                    showing: { $0.staticTexts["Cruisy"] }, "Onboarding")
+                    showing: { $0.staticTexts["Quanto manca."] }, "Onboarding")
     }
 }

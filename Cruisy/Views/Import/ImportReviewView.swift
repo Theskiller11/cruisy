@@ -22,6 +22,7 @@ struct ImportReviewView: View {
     @State private var manualOffset: Int?
     @State private var editingPortFor: DraftCall.ID?
     @State private var showsSource = false
+    @State private var isReporting = false
 
     init(draft: ItineraryDraft, sourceText: String, onConfirm: @escaping (Voyage) -> Void) {
         _draft = State(initialValue: draft)
@@ -84,11 +85,21 @@ struct ImportReviewView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Originale") { showsSource = true }
+                Menu {
+                    Button("Testo originale", systemImage: "doc.plaintext") { showsSource = true }
+                    Button("Segnala un problema di lettura", systemImage: "exclamationmark.bubble") {
+                        isReporting = true
+                    }
+                } label: {
+                    Label("Altro", systemImage: "ellipsis")
+                }
             }
         }
         .sheet(isPresented: $showsSource) {
             SourceTextSheet(text: sourceText)
+        }
+        .sheet(isPresented: $isReporting) {
+            ImportProblemReportSheet(draft: draft, sourceText: sourceText)
         }
         .sheet(item: Binding(
             get: { editingPortFor.flatMap { id in draft.calls.first { $0.id == id } } },
@@ -106,8 +117,18 @@ struct ImportReviewView: View {
 
     /// Lo stato del riesame, in fondo alla prima sezione: quello che va guardato
     /// prima di confermare.
-    @ViewBuilder
     private var status: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            callsStatus
+            ForEach(draft.warnings, id: \.self) { warning in
+                Label(warning, systemImage: "exclamationmark.bubble.fill")
+                    .foregroundStyle(.orange)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var callsStatus: some View {
         if blockingCount > 0 {
             Label("\(blockingCount) righe da sistemare prima di confermare",
                   systemImage: "exclamationmark.triangle.fill")

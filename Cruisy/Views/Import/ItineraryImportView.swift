@@ -1,4 +1,5 @@
 import SwiftUI
+import PhotosUI
 import UniformTypeIdentifiers
 
 /// Da qui l'itinerario entra nell'app.
@@ -16,6 +17,7 @@ struct ItineraryImportView: View {
     @State private var pasted = ""
     @State private var isScanning = false
     @State private var isPickingFile = false
+    @State private var photoItems: [PhotosPickerItem] = []
     @FocusState private var isEditorFocused: Bool
 
     #if DEBUG
@@ -75,12 +77,22 @@ struct ItineraryImportView: View {
                     }
 
                     Section {
+                        // Prima le foto: gli screenshot dell'app della compagnia sono il
+                        // modo più comune di avere l'itinerario sul telefono, e stanno in
+                        // Foto, non in File. Il selettore gira fuori dall'app: Cruisy vede
+                        // solo le immagini scelte, e non chiede il permesso alla libreria.
+                        PhotosPicker(selection: $photoItems, maxSelectionCount: 12,
+                                     selectionBehavior: .ordered, matching: .images) {
+                            Label("Dalle foto", systemImage: "photo.on.rectangle")
+                        }
                         Button { isScanning = true } label: {
                             Label("Scansiona", systemImage: "doc.viewfinder")
                         }
                         Button { isPickingFile = true } label: {
                             Label("Importa file", systemImage: "folder")
                         }
+                    } footer: {
+                        Text("Puoi scegliere più screenshot insieme, nell'ordine dei giorni: le parti ripetute da uno all'altro si uniscono da sole.")
                     }
                     .disabled(importer.isBusy)
 
@@ -129,17 +141,35 @@ struct ItineraryImportView: View {
                 }
                 .ignoresSafeArea()
             }
-            .fileImporter(isPresented: $isPickingFile,
-                          allowedContentTypes: [.pdf, .image, .plainText]) { result in
-                guard case .success(let url) = result else { return }
+            .onChange(of: photoItems) { _, items in
+                guard !items.isEmpty else { return }
                 Task {
-                    if url.pathExtension.lowercased() == "pdf" {
+                    var images: [CGImage] = []
+                    for item in items {
+                        if let data = try? await item.loadTransferable(type: Data.self),
+                           let image = UIImage(data: data)?.cgImage {
+                            images.append(image)
+                        }
+                    }
+                    photoItems = []
+                    await importer.importPhotos(images)
+                }
+            }
+            .fileImporter(isPresented: $isPickingFile,
+                          allowedContentTypes: [.pdf, .image, .plainText],
+                          allowsMultipleSelection: true) { result in
+                guard case .success(let urls) = result, let url = urls.first else { return }
+                Task {
+                    if urls.count > 1 {
+                        // Più file insieme: screenshot salvati in File.
+                        await importer.importImageFiles(at: urls)
+                    } else if url.pathExtension.lowercased() == "pdf" {
                         await importer.importPDF(at: url)
                     } else if let text = try? String(contentsOf: url, encoding: .utf8),
                               !text.isEmpty {
                         await importer.importText(text)
                     } else {
-                        await importer.importImageFile(at: url)
+                        await importer.importImageFiles(at: [url])
                     }
                 }
             }

@@ -174,6 +174,39 @@ final class PortGazetteer: @unchecked Sendable {
         return loose
     }
 
+    /// Solo i porti il cui nome coincide esattamente, senza ripieghi larghi. Serve a
+    /// cercare un porto **dentro** una frase, parola per parola, dove un ripiego largo
+    /// troverebbe un porto in qualunque parola.
+    func exactCandidates(_ rawName: String) -> [PortMatch] {
+        candidatesByKey[Self.fold(rawName)] ?? []
+    }
+
+    /// Porti col nome scritto **quasi** uguale: una lettera sbagliata dall'OCR nei
+    /// nomi corti, due in quelli lunghi («Puerto Plsta»).
+    ///
+    /// Tiene solo le chiavi con la stessa iniziale e la distanza minima, e rinuncia se
+    /// quelle sono più di tre: un nome che somiglia a troppi porti non è un indizio.
+    /// Confidenza bassa, così passano sempre dal riesame come «da confermare».
+    func fuzzyCandidates(_ rawName: String) -> [PortMatch] {
+        let folded = Self.fold(rawName)
+        guard folded.count >= 5, let initial = folded.first else { return [] }
+        let limit = folded.count >= 9 ? 2 : 1
+        let target = Array(folded)
+        var bestDistance = limit + 1
+        var bestKeys: [String] = []
+        for key in keys where key.first == initial && abs(key.count - target.count) <= limit {
+            let distance = EditDistance.between(target, Array(key), limit: limit)
+            if distance < bestDistance {
+                bestDistance = distance
+                bestKeys = [key]
+            } else if distance == bestDistance {
+                bestKeys.append(key)
+            }
+        }
+        guard bestDistance <= limit, (1...3).contains(bestKeys.count) else { return [] }
+        return bestKeys.flatMap { candidatesByKey[$0] ?? [] }.map { var m = $0; m.confidence = 0.6; return m }
+    }
+
     /// Il candidato migliore quando non c'è contesto per scegliere.
     func lookup(_ rawName: String) -> PortMatch? { candidates(rawName).first }
 

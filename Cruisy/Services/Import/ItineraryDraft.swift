@@ -59,6 +59,11 @@ enum DraftIssue: String, Hashable, Sendable, CaseIterable {
     case missingDate
     case missingTimes
     case allAboardAssumed
+    /// Per arrivarci dal porto prima la nave dovrebbe andare più veloce di quanto
+    /// una nave da crociera possa: quasi sempre è il porto a essere sbagliato.
+    case implausibleLeg
+    case timesOutOfOrder
+    case dateOutOfOrder
 
     var label: String {
         switch self {
@@ -67,14 +72,21 @@ enum DraftIssue: String, Hashable, Sendable, CaseIterable {
         case .missingDate: String(localized: "Data mancante")
         case .missingTimes: String(localized: "Orari mancanti")
         case .allAboardAssumed: String(localized: "All aboard dedotto")
+        case .implausibleLeg: String(localized: "Troppo lontano dal porto prima: controlla il porto")
+        case .timesOutOfOrder: String(localized: "Orari che non tornano")
+        case .dateOutOfOrder: String(localized: "Data fuori ordine")
         }
     }
 
     /// Se blocca la conferma o si limita ad avvisare.
+    ///
+    /// I controlli di buon senso avvisano e basta: dicono che qualcosa è strano, non
+    /// che è sbagliato, e l'ultima parola resta a chi ha il programma di bordo in mano.
     var isBlocking: Bool {
         switch self {
         case .portUnknown, .missingDate: true
-        case .portUncertain, .missingTimes, .allAboardAssumed: false
+        case .portUncertain, .missingTimes, .allAboardAssumed,
+             .implausibleLeg, .timesOutOfOrder, .dateOutOfOrder: false
         }
     }
 }
@@ -98,6 +110,9 @@ struct DraftCall: Identifiable, Sendable {
     var allAboard: TimeOfDay?
     var berth: Berth.Kind = .dock
     var isSeaDay = false
+    /// Il numero del giorno di crociera, quando il documento lo scrive («Giorno 7»).
+    /// Serve a datare le tappe che una data non ce l'hanno, tipicamente i giorni di mare.
+    var dayNumber: Int?
     /// La riga da cui viene, mostrata nel riesame per poter confrontare con l'originale.
     var sourceLine: String = ""
     var issues: Set<DraftIssue> = []
@@ -130,19 +145,46 @@ struct ItineraryDraft: Sendable {
     var calls: [DraftCall] = []
     /// Da dove è arrivato il testo, per dirlo nel riesame.
     var source: Source = .pastedText
+    /// Quello che il documento dice di sé in testa — «7 notti · 7 porti» — per
+    /// accorgersi di una tappa persa.
+    var statedNights: Int?
+    var statedPorts: Int?
+    /// Avvisi sull'itinerario intero, mostrati in cima al riesame.
+    var warnings: [String] = []
 
     enum Source: Sendable {
-        case pastedText, scannedDocument
+        case pastedText, scannedDocument, pdf, images
 
         var label: String {
             switch self {
             case .pastedText: String(localized: "testo incollato")
             case .scannedDocument: String(localized: "documento scansionato")
+            case .pdf: String(localized: "PDF")
+            case .images: String(localized: "foto e screenshot")
             }
         }
     }
 
     var isEmpty: Bool { calls.isEmpty }
+
+    /// Quanto è buona una lettura, per scegliere fra due letture dello stesso documento.
+    ///
+    /// Conta quello che serve davvero: porti agganciati, orari trovati, giorni di mare
+    /// riconosciuti; toglie per ogni riga che blocca la conferma. Non misura se è
+    /// **giusta** — quello lo fa il riesame — ma fra due letture tiene quella che ha
+    /// capito di più.
+    var quality: Int {
+        calls.reduce(0) { score, call in
+            var value = score
+            if call.isSeaDay { value += 2 }
+            if !call.portCandidates.isEmpty { value += 3 }
+            if call.arrival != nil { value += 1 }
+            if call.departure != nil { value += 1 }
+            if call.day != nil, call.month != nil { value += 1 }
+            if call.isBlocked { value -= 4 }
+            return value - call.issues.filter { !$0.isBlocking }.count / 2
+        }
+    }
     var hasBlockingIssues: Bool { calls.contains { $0.isBlocked } }
 
     /// Gli scali veri, senza i giorni di mare (che l'app ricava da sola).

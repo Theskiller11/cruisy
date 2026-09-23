@@ -193,9 +193,9 @@ struct OnboardingFlow: View {
     private var liveActivity: some View {
         VStack(alignment: .leading, spacing: 22) {
             HullTitle(eyebrow: "Prima di salpare", title: "Sempre sotto gli occhi",
-                      detail: "Nelle ore che contano, il tempo che manca sta sulla schermata di blocco e nella Dynamic Island: lo guardi senza aprire nulla, anche con le mani occupate.")
+                      detail: "Nelle ore che contano il tempo che manca sta sulla schermata di blocco e nella Dynamic Island: lo guardi senza aprire nulla.")
 
-            LockScreenPreview()
+            LiveActivityDemo()
 
             Toggle(isOn: Binding(
                 get: { preferences.wantsLiveActivity },
@@ -236,6 +236,8 @@ struct OnboardingFlow: View {
             } else {
                 shipSearch
             }
+            ShipArrivalScene(ship: ship)
+                .padding(.horizontal, -24)
         }
     }
 
@@ -332,7 +334,6 @@ struct OnboardingFlow: View {
                 Image(systemName: "ferry.fill")
                     .font(.title2)
                     .foregroundStyle(livery.ink)
-                    .symbolEffect(.bounce, options: .nonRepeating, value: record.id)
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(record.name)
@@ -651,98 +652,6 @@ private struct HalfTicketShape: Shape {
                                           width: notchRadius * 2, height: notchRadius * 2))
         }
         return paper.subtracting(notches)
-    }
-}
-
-// MARK: - La schermata di blocco in miniatura
-
-/// La Live Activity non si spiega, si vede: una schermata di blocco finta con la
-/// pillola che si allarga e il countdown che conta davvero, un secondo alla volta.
-private struct LockScreenPreview: View {
-    @Environment(\.livery) private var livery
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var start = Date.now
-    @State private var isShowing = false
-
-    /// 2:59:52, come nel biglietto di Puerto Plata degli esempi.
-    private let total: TimeInterval = 2 * 3600 + 59 * 60 + 52
-
-    var body: some View {
-        TimelineView(.periodic(from: start, by: 1)) { context in
-            let left = max(0, total - context.date.timeIntervalSince(start))
-            VStack(spacing: 10) {
-                island(left)
-                Text("Sabato 17 ottobre")
-                    .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.white.opacity(0.8))
-                    .padding(.top, 8)
-                Text(verbatim: "14:30")
-                    .font(.system(size: 64, weight: .light).width(.condensed))
-                    .monospacedDigit()
-                    .foregroundStyle(.white)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-                if isShowing {
-                    activity(left)
-                        .transition(reduceMotion ? .opacity : .move(edge: .bottom).combined(with: .opacity))
-                }
-            }
-            .padding(14)
-            .frame(maxWidth: 300, minHeight: 280, alignment: .top)
-            .background(RoundedRectangle(cornerRadius: 30, style: .continuous).fill(livery.hullDeep))
-            .overlay(RoundedRectangle(cornerRadius: 30, style: .continuous)
-                .stroke(livery.onHull.opacity(0.12), lineWidth: 1))
-            .frame(maxWidth: .infinity)
-        }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text("Esempio: la schermata di blocco con il countdown del rientro a bordo."))
-        .onAppear {
-            withAnimation(Motion.honouring(reduceMotion, Motion.sheet).delay(0.5)) { isShowing = true }
-        }
-    }
-
-    private func island(_ left: TimeInterval) -> some View {
-        HStack {
-            if isShowing {
-                Text("Rientro")
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(.white)
-                Spacer(minLength: 0)
-                Text(verbatim: Self.short(left))
-                    .font(.caption.weight(.bold))
-                    .monospacedDigit()
-            }
-        }
-        .foregroundStyle(livery.signalOnHull)
-        .padding(.horizontal, 12)
-        .frame(width: isShowing ? 170 : 90, height: 28)
-        .background(Capsule().fill(.black))
-    }
-
-    private func activity(_ left: TimeInterval) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text("Rientro a bordo").ticketEyebrow(livery.signalInk)
-            Text(verbatim: Self.long(left))
-                .font(TicketType.count)
-                .foregroundStyle(livery.ink)
-                .contentTransition(.numericText(countsDown: true))
-            Text("Puerto Plata · entro le 17:30")
-                .font(TicketType.rowDetail)
-                .foregroundStyle(livery.field)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
-        .paperCard(cornerRadius: 20)
-    }
-
-    private static func long(_ time: TimeInterval) -> String {
-        let s = Int(time)
-        return String(format: "%d:%02d:%02d", s / 3600, s / 60 % 60, s % 60)
-    }
-
-    private static func short(_ time: TimeInterval) -> String {
-        let m = Int(time) / 60
-        return String(format: "%d:%02d", m / 60, m % 60)
     }
 }
 

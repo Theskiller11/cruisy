@@ -316,9 +316,20 @@ struct ItineraryTextParser {
     // MARK: Nome della nave
 
     private func shipName(in lines: [String]) -> String? {
-        // Una riga che è il nome di una nave dell'elenco vince su tutto, ovunque stia:
-        // Explora lo scrive a pagina quattro, sotto «La nave», e in copertina c'è il
-        // titolo del viaggio.
+        // «La nave» da sola su una riga, e sotto il nome: è così che Explora la scrive
+        // a pagina quattro. Non si può contare sull'elenco per trovarla: Explora III
+        // è stata varata dopo la fotografia di Wikidata, e il test passava solo
+        // perché un altro test l'aveva insegnata al simulatore. Viene prima
+        // dell'elenco perché qui è il documento a dire quale riga è la nave, mentre
+        // l'elenco, provato su ogni riga, scambierebbe il porto di Hamburg per la
+        // nave Hamburg.
+        for (heading, name) in zip(lines, lines.dropFirst()) where Self.isShipHeading(heading) {
+            guard (3...40).contains(name.count), name.split(separator: " ").count <= 4,
+                  name.contains(where: \.isLetter) else { continue }
+            return ShipDirectory.shared.lookup(name)?.name ?? Self.shipCased(name)
+        }
+        // Una riga che è il nome di una nave dell'elenco vince sul resto, ovunque stia:
+        // in copertina c'è il titolo del viaggio, non la nave.
         for line in lines where line.count <= 40 {
             if let record = ShipDirectory.shared.lookup(line) { return record.name }
         }
@@ -337,6 +348,24 @@ struct ItineraryTextParser {
             if line.count <= 40, line.count >= 3, line.split(separator: " ").count <= 4 { return line }
         }
         return nil
+    }
+
+    /// «La nave», «The ship:» — un titoletto, non una frase che parla della nave.
+    private static func isShipHeading(_ line: String) -> Bool {
+        let heading = line.lowercased().trimmingCharacters(in: CharacterSet(charactersIn: ": "))
+        return ["nave", "la nave", "la tua nave", "la vostra nave",
+                "ship", "the ship", "your ship"].contains(heading)
+    }
+
+    /// «EXPLORA III» → «Explora III». Le brochure scrivono il nome in maiuscolo come
+    /// un titolo: quando l'elenco lo conosce lo riscrive lui, ma una nave che non
+    /// conosce resterebbe urlata nel riesame. I numeri romani restano maiuscoli.
+    private static func shipCased(_ name: String) -> String {
+        guard name == name.uppercased() else { return name }
+        return name.split(separator: " ").map { word in
+            if word.allSatisfy({ "IVX".contains($0) }) { return String(word) }
+            return word.prefix(1) + word.dropFirst().lowercased()
+        }.joined(separator: " ")
     }
 
     // MARK: Blocchi

@@ -62,9 +62,28 @@ struct ExploraImportTests {
         #expect(calls[2].departure == TimeOfDay(hour: 19, minute: 0))
     }
 
+    /// Explora III non è in `ships.bin`: la si trova dal titoletto «La nave». Se nel
+    /// frattempo `ShipLookupTests` l'ha insegnata all'elenco, il risultato è lo stesso.
     @Test("La nave si trova anche a pagina quattro")
     func shipName() throws {
         #expect(try draft("explora-caraibi-2026.txt").shipName == "Explora III")
+    }
+
+    /// Un nome inventato: nessun elenco lo conosce, né quello impacchettato né quello
+    /// imparato, quindi la prova non dipende da cosa hanno fatto gli altri test.
+    @Test("Sotto «La nave» c'è la nave, anche se l'elenco non la conosce")
+    func shipUnderHeading() {
+        let draft = ItineraryTextParser().parse("""
+        Un viaggio per rifugiarsi in
+        paradiso e scoprire lo splendore
+        delle isole
+        Hamburg
+        La nave
+        AURORA DEI MARI II
+        """)
+        // «Hamburg» è anche una nave dell'elenco: qui però è una riga qualunque, e
+        // il titoletto dice qual è la nave.
+        #expect(draft.shipName == "Aurora Dei Mari II")
     }
 
     @Test("Il tender scritto nel titolo del giorno resta tender")

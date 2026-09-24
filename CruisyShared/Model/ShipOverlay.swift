@@ -11,6 +11,18 @@ import Foundation
 enum ShipOverlay {
 
     private static var fileURL: URL? {
+        // Sotto i test il file è un altro, usa e getta per ogni processo.
+        // `ShipLookupTests` insegna all'elenco una nave finta (la risposta di Wikidata
+        // ridotta all'osso), e finiva nel file vero del simulatore: l'app ospite la
+        // rileggeva all'avvio, in parallelo coi test, e `ExploraImportTests` passava
+        // o falliva a seconda di chi arrivava prima.
+        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
+            let folder = FileManager.default.temporaryDirectory
+                .appendingPathComponent("Cruisy-test-\(ProcessInfo.processInfo.processIdentifier)",
+                                        isDirectory: true)
+            try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+            return folder.appendingPathComponent("ships-extra.json")
+        }
         let shared = FileManager.default.containerURL(
             forSecurityApplicationGroupIdentifier: VoyageArchive.appGroup)
         let base = shared ?? (try? FileManager.default.url(for: .applicationSupportDirectory,

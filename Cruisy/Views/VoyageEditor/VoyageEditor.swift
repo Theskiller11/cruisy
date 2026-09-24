@@ -54,25 +54,17 @@ struct VoyageEditor: View {
         nameFocused = false
     }
 
+    /// Il nome scritto, in fondo ai suggerimenti come se fosse un'altra nave, con
+    /// sotto che cosa succede toccandolo: la cerca su Wikidata. Prima era un
+    /// collegamento che compariva solo senza suggerimenti, e scrivendo «Explora IV»
+    /// sotto Explora I, II e III non c'era modo di cercare quella giusta.
     @ViewBuilder
     private var lookupRow: some View {
         switch lookup.outcome {
-        case .searching:
-            HStack(spacing: 10) {
-                ProgressView().controlSize(.small)
-                Text("Cerco su Wikidata…")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
         case .notFound:
             Text("Su Wikidata non c'è nessuna nave con questo nome.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
-        case .failed:
-            Button("Riprova la ricerca su Wikidata") {
-                Task { await lookup.search(draft.shipName) }
-            }
-            .foregroundStyle(livery.tint)
         default:
             Button {
                 Task {
@@ -80,9 +72,39 @@ struct VoyageEditor: View {
                     if case .found(let record) = lookup.outcome { adopt(record) }
                 }
             } label: {
-                Label("Cerca «\(draft.shipName)» su Wikidata", systemImage: "magnifyingglass")
+                HStack(spacing: 10) {
+                    Group {
+                        if lookup.outcome == .searching {
+                            ProgressView().controlSize(.small)
+                        } else {
+                            Image(systemName: "magnifyingglass")
+                                .font(.footnote)
+                                .foregroundStyle(livery.tint)
+                        }
+                    }
+                    .frame(width: 18)
+                    .accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(draft.shipName.trimmingCharacters(in: .whitespaces))
+                            .foregroundStyle(.primary)
+                            .lineLimit(1)
+                        Group {
+                            switch lookup.outcome {
+                            case .searching: Text("Cerco su Wikidata…")
+                            case .failed: Text("Wikidata non risponde: tocca per riprovare")
+                            default: Text("Cerca nave su Wikidata")
+                            }
+                        }
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    }
+                    Spacer(minLength: 0)
+                }
+                .contentShape(.rect)
+                .accessibilityElement(children: .combine)
             }
-            .foregroundStyle(livery.tint)
+            .buttonStyle(.plain)
+            .disabled(lookup.outcome == .searching)
         }
     }
 
@@ -107,6 +129,10 @@ struct VoyageEditor: View {
                 Section {
                     TextField("Nome della nave", text: $draft.shipName)
                         .focused($nameFocused)
+                        // Un nome nuovo è una ricerca nuova: «non c'è» valeva per quello di prima.
+                        .onChange(of: draft.shipName) { _, _ in
+                            if lookup.outcome != .searching { lookup.reset() }
+                        }
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.words)
                         .submitLabel(.done)
@@ -116,10 +142,11 @@ struct VoyageEditor: View {
                             .buttonStyle(.plain)
                     }
 
-                    // Nome scritto per intero e nessuna corrispondenza: la nave può
-                    // essere più recente dell'elenco impacchettato. Si può andare a
-                    // chiederla, ma è una scelta di chi scrive, non un automatismo.
-                    if match == nil, draft.shipName.count >= 3, suggestions.isEmpty {
+                    // Nessuna nave dell'elenco con questo nome: può essere più recente
+                    // dell'elenco impacchettato. Si può andare a chiederla, ma è una
+                    // scelta di chi scrive, non un automatismo.
+                    if match == nil, nameFocused || lookup.outcome != .idle,
+                       draft.shipName.trimmingCharacters(in: .whitespaces).count >= 3 {
                         lookupRow
                     }
 

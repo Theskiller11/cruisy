@@ -773,6 +773,16 @@
         }
       }
     },
+    "Cerca nave su Wikidata" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search Wikidata for the ship"
+          }
+        }
+      }
+    },
     "Cerca un porto" : {
       "localizations" : {
         "en" : {
@@ -3990,6 +4000,16 @@
         }
       }
     },
+    "Su Wikidata non c'è: la tengo col nome che hai scritto." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not on Wikidata: I'll keep the name you typed."
+          }
+        }
+      }
+    },
     "Su che nave sali?" : {
       "localizations" : {
         "en" : {
@@ -4340,6 +4360,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leave it empty and Cruisy asks Open-Meteo directly. If you run a caching proxy, put its address here."
+          }
+        }
+      }
+    },
+    "Wikidata non risponde: tocca per riprovare" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wikidata isn't responding: tap to try again"
           }
         }
       }

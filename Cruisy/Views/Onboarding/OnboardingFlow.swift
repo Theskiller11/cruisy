@@ -34,6 +34,12 @@ struct OnboardingFlow: View {
     @State private var shipQuery = ""
     @FocusState private var isShipFieldFocused: Bool
     @State private var importStart: ItineraryImportView.Start?
+    /// Tutta sua, non quella dell'ambiente: l'esito di una ricerca fatta qui non
+    /// deve comparire nell'editor, e viceversa.
+    @State private var lookup = ShipLookupService()
+    /// La nave scelta non c'è né nell'elenco né su Wikidata: la si tiene col nome
+    /// scritto, e lo si dice.
+    @State private var keptAsTyped = false
 
     private static var initialStep: Step {
         #if DEBUG
@@ -282,6 +288,76 @@ struct OnboardingFlow: View {
         return ShipDirectory.shared.suggestions(for: shipQuery, limit: 4)
     }
 
+    private var typedShip: String { shipQuery.trimmingCharacters(in: .whitespacesAndNewlines) }
+
+    /// Il nome scritto non è una nave dell'elenco: in fondo ai suggerimenti compare
+    /// lui stesso, come se fosse un'altra nave, e toccandolo lo si cerca su Wikidata.
+    /// Una nave varata dopo l'elenco si trova così con un tocco, senza dover capire
+    /// che esiste una ricerca.
+    private var offersWikidata: Bool {
+        guard typedShip.count >= 3 else { return false }
+        let folded = ShipDirectory.fold(typedShip)
+        return !shipSuggestions.contains { ShipDirectory.fold($0.name) == folded }
+    }
+
+    /// La riga del nome scritto, nel suo stato: da cercare, in ricerca, o da riprovare.
+    private var wikidataRow: some View {
+        Button { searchWikidata() } label: {
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(typedShip)
+                        .font(TicketType.rowTitle)
+                        .foregroundStyle(livery.ink)
+                        .lineLimit(1)
+                    Group {
+                        switch lookup.outcome {
+                        case .searching: Text("Cerco su Wikidata…")
+                        case .failed: Text("Wikidata non risponde: tocca per riprovare")
+                        default: Text("Cerca nave su Wikidata")
+                        }
+                    }
+                    .font(TicketType.rowDetail)
+                    .foregroundStyle(livery.field)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                if lookup.outcome == .searching {
+                    ProgressView().controlSize(.small).tint(livery.ink)
+                } else {
+                    Image(systemName: "magnifyingglass")
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(livery.field)
+                        .accessibilityHidden(true)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 11)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .disabled(lookup.outcome == .searching)
+    }
+
+    /// La ricerca parte solo dal tocco: il nome esce dal telefono perché l'hai chiesto
+    /// tu, come promette l'informativa. Trovata, la nave arriva come quelle
+    /// dell'elenco; non trovata, si tiene il nome scritto e si va avanti lo stesso.
+    private func searchWikidata() {
+        let name = typedShip
+        Task {
+            await lookup.search(name)
+            switch lookup.outcome {
+            case .found(let record):
+                keptAsTyped = false
+                choose(record)
+            case .notFound:
+                keptAsTyped = true
+                choose(ShipRecord(name: name, imo: "", mmsi: "", tonnage: 0, length: 0, beam: 0,
+                                  year: 0, operatorName: "", flag: "", imageFile: ""))
+            default:
+                break
+            }
+        }
+    }
+
     private var shipSearch: some View {
         VStack(spacing: 10) {
             TextField("Nome della nave", text: $shipQuery,
@@ -300,7 +376,7 @@ struct OnboardingFlow: View {
                 .padding(.vertical, 14)
                 .paperCard(cornerRadius: 14)
 
-            if !shipSuggestions.isEmpty {
+            if !shipSuggestions.isEmpty || offersWikidata {
                 VStack(spacing: 0) {
                     ForEach(Array(shipSuggestions.enumerated()), id: \.element.id) { index, record in
                         if index > 0 { TicketRule().padding(.leading, 16) }
@@ -322,9 +398,17 @@ struct OnboardingFlow: View {
                         }
                         .buttonStyle(.plain)
                     }
+                    if offersWikidata {
+                        if !shipSuggestions.isEmpty { TicketRule().padding(.leading, 16) }
+                        wikidataRow
+                    }
                 }
                 .paperCard(cornerRadius: 14)
             }
+        }
+        // Un nome nuovo è una ricerca nuova: l'esito di quella di prima non vale più.
+        .onChange(of: shipQuery) { _, _ in
+            if lookup.outcome != .searching { lookup.reset() }
         }
     }
 
@@ -353,6 +437,13 @@ struct OnboardingFlow: View {
             .padding(16)
             .paperCard(cornerRadius: 14)
             .transition(reduceMotion ? .opacity : .move(edge: .leading).combined(with: .opacity))
+
+            if keptAsTyped {
+                Text("Su Wikidata non c'è: la tengo col nome che hai scritto.")
+                    .font(.caption)
+                    .foregroundStyle(livery.onHullMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
 
             // Il nome della compagnia non compare: le livree sono colori ispirati,
             // mai un marchio (App Store 5.2.1).
@@ -383,6 +474,8 @@ struct OnboardingFlow: View {
     }
 
     private func clearShip() {
+        keptAsTyped = false
+        lookup.reset()
         withAnimation(Motion.honouring(reduceMotion, .easeInOut(duration: 0.4))) { ship = nil }
         isShipFieldFocused = true
     }

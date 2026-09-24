@@ -255,10 +255,10 @@ struct LiveActivityDemo: View {
 /// scia che si spengono, e resta a beccheggiare. Con «Cambia» se ne va a destra.
 ///
 /// È disegnata e non un simbolo: `ferry.fill` che rimbalza era un'icona, non una
-/// nave. Tutto sta in un `Canvas` guidato dal tempo — un `Canvas` non anima niente
-/// da solo, e posizione, velocità, schiuma e beccheggio sono funzioni dello stesso
-/// istante. Scafo e ponti bianchi, la fascia e il fumaiolo nel colore della livrea,
-/// le scialuppe nell'arancio delle scialuppe vere. Nessun marchio.
+/// nave. La nave è `CruiseShipDrawing`, la stessa della scena del giorno di mare;
+/// tutto sta in un `Canvas` guidato dal tempo — un `Canvas` non anima niente da
+/// solo, e posizione, velocità, schiuma e beccheggio sono funzioni dello stesso
+/// istante.
 ///
 /// Con Riduci movimento la nave compare ferma al centro, e il mare è immobile.
 struct ShipArrivalScene: View {
@@ -349,8 +349,9 @@ struct ShipArrivalScene: View {
                 ship.translateBy(x: x, y: waterline + bob)
                 ship.rotate(by: .radians(pitch))
                 ship.scaleBy(x: scale, y: scale)
-                drawFoam(in: &ship, speed: speed, time: time)
-                drawShip(in: &ship)
+                CruiseShipDrawing.draw(in: &ship, band: Color(hex: livery.hullHex),
+                                       funnelTop: Color(hex: livery.signalOnHullHex),
+                                       lit: false, foam: speed, time: time)
             }
             canvas.fill(wavePath(wave, baseY: waterline + wave.offset, width: size.width,
                                  height: size.height, time: time),
@@ -372,117 +373,5 @@ struct ShipArrivalScene: View {
         path.addLine(to: CGPoint(x: width, y: height))
         path.closeSubpath()
         return path
-    }
-
-    /// L'onda di prua e la scia: bianche, e tanto più lunghe quanto più la nave corre.
-    private func drawFoam(in canvas: inout GraphicsContext, speed: CGFloat, time: TimeInterval) {
-        guard speed > 0.02 else { return }
-        let foam = Color.white.opacity(Double(0.75 * speed))
-        // La scia: strisce che si allungano dietro la poppa e tremano con l'onda.
-        for row in 0..<3 {
-            let y = CGFloat(row) * 3 + 2
-            let length = (60 + CGFloat(row) * 26) * speed
-            let wobble = CGFloat(sin(time * 6 + Double(row))) * 2
-            var streak = Path()
-            streak.addRoundedRect(in: CGRect(x: -84 - length + wobble, y: y, width: length, height: 1.8),
-                                  cornerSize: CGSize(width: 1, height: 1))
-            canvas.fill(streak, with: .color(.white.opacity(Double(0.6 * speed) / Double(row + 1))))
-        }
-        // L'onda di prua: un ventaglio d'acqua davanti al tagliamare.
-        var bow = Path()
-        bow.move(to: CGPoint(x: 70, y: 6))
-        bow.addQuadCurve(to: CGPoint(x: 70 + 20 * speed, y: 8),
-                         control: CGPoint(x: 80 + 10 * speed, y: -6 * speed))
-        bow.addQuadCurve(to: CGPoint(x: 70, y: 10), control: CGPoint(x: 78, y: 10))
-        bow.closeSubpath()
-        canvas.fill(bow, with: .color(foam))
-    }
-
-    /// La nave, di profilo, con la prua a destra e la linea di galleggiamento a y = 0.
-    private func drawShip(in canvas: inout GraphicsContext) {
-        let white = Color(hex: 0xF4F6F9)
-        let band = Color(hex: livery.hullHex)
-        let glass = Color(hex: livery.hullDeepHex)
-        let lifeboat = Color(hex: 0xF26A1B)
-
-        // Lo scafo: la cimosa sale verso la prua, il dritto di prua è slanciato.
-        var hull = Path()
-        hull.move(to: CGPoint(x: -84, y: -4))
-        hull.addLine(to: CGPoint(x: 76, y: -9))
-        hull.addQuadCurve(to: CGPoint(x: 64, y: 12), control: CGPoint(x: 88, y: 2))
-        hull.addLine(to: CGPoint(x: -78, y: 12))
-        hull.addQuadCurve(to: CGPoint(x: -84, y: -4), control: CGPoint(x: -87, y: 6))
-        hull.closeSubpath()
-        canvas.fill(hull, with: .color(white))
-
-        // La fascia sulla linea di galleggiamento, nel colore della livrea.
-        var boot = canvas
-        boot.clip(to: hull)
-        boot.fill(Path(CGRect(x: -90, y: 2, width: 180, height: 12)), with: .color(band))
-        var stripe = Path()
-        stripe.move(to: CGPoint(x: -80, y: -1))
-        stripe.addLine(to: CGPoint(x: 72, y: -5.5))
-        boot.stroke(stripe, with: .color(band), lineWidth: 1.2)
-
-        // I ponti: rastremati verso poppa, con la fronte inclinata.
-        func deck(_ x0: CGFloat, _ x1: CGFloat, _ top: CGFloat, _ bottom: CGFloat, rake: CGFloat) -> Path {
-            var path = Path()
-            path.move(to: CGPoint(x: x0, y: bottom))
-            path.addLine(to: CGPoint(x: x0, y: top))
-            path.addLine(to: CGPoint(x: x1 - rake, y: top))
-            path.addLine(to: CGPoint(x: x1, y: bottom))
-            path.closeSubpath()
-            return path
-        }
-        canvas.fill(deck(-74, 64, -18, -3, rake: 6), with: .color(white))
-        canvas.fill(deck(-66, 54, -27, -17, rake: 7), with: .color(white))
-        canvas.fill(deck(-54, 40, -35, -26, rake: 6), with: .color(white))
-        canvas.fill(deck(-8, 34, -42, -34, rake: 5), with: .color(white))
-
-        // Le finestre: file di punti scuri, una per ponte, due sul più lungo.
-        var windows = Path()
-        for (y, from, to) in [(-15.5, -68.0, 56.0), (-10.5, -70.0, 60.0), (-24.0, -60.0, 46.0), (-32.5, -48.0, 33.0)] as [(CGFloat, CGFloat, CGFloat)] {
-            var x = from
-            while x < to {
-                windows.addRect(CGRect(x: x, y: y, width: 3, height: 2.2))
-                x += 5.5
-            }
-        }
-        windows.addRoundedRect(in: CGRect(x: 0, y: -40.5, width: 27, height: 3),
-                               cornerSize: CGSize(width: 1, height: 1))
-        canvas.fill(windows, with: .color(glass.opacity(0.75)))
-
-        // Le scialuppe, appese lungo il fianco.
-        var boats = Path()
-        var bx: CGFloat = -50
-        while bx < 34 {
-            boats.addRoundedRect(in: CGRect(x: bx, y: -21, width: 10, height: 4.2),
-                                 cornerSize: CGSize(width: 2.1, height: 2.1))
-            bx += 13
-        }
-        canvas.fill(boats, with: .color(lifeboat))
-
-        // Il fumaiolo, inclinato all'indietro: bianco, con la fascia della livrea e
-        // il segnale in cima. Pieno nel colore della livrea spariva: sullo scafo
-        // della schermata, che è dello stesso blu, restava a mezz'aria solo la cima.
-        var funnel = Path()
-        funnel.move(to: CGPoint(x: -46, y: -34))
-        funnel.addLine(to: CGPoint(x: -31, y: -34))
-        funnel.addLine(to: CGPoint(x: -35, y: -52))
-        funnel.addLine(to: CGPoint(x: -50, y: -52))
-        funnel.closeSubpath()
-        canvas.fill(funnel, with: .color(white))
-        var marks = canvas
-        marks.clip(to: funnel)
-        marks.fill(Path(CGRect(x: -52, y: -46, width: 24, height: 5)), with: .color(band))
-        marks.fill(Path(CGRect(x: -52, y: -52, width: 24, height: 3)),
-                   with: .color(Color(hex: livery.signalOnHullHex)))
-
-        // L'albero sopra la plancia, con la cupola del radar.
-        var mast = Path()
-        mast.move(to: CGPoint(x: 20, y: -42))
-        mast.addLine(to: CGPoint(x: 19, y: -53))
-        canvas.stroke(mast, with: .color(white), lineWidth: 1.4)
-        canvas.fill(Path(ellipseIn: CGRect(x: 15.5, y: -58, width: 7, height: 7)), with: .color(white))
     }
 }

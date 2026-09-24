@@ -74,14 +74,23 @@ public struct SeaSky: Equatable, Sendable {
     }
 }
 
-/// La scena del giorno di mare: cielo, sole o luna, e le onde che si muovono.
+/// La scena del giorno di mare: cielo, sole o luna, nuvole, e il mare con la nave.
 ///
 /// Sta dietro al biglietto verso il prossimo scalo, e finisce nel colore dello
 /// scafo: sotto le onde la schermata continua senza giunture.
 ///
-/// **Riduci movimento** ferma le onde e lascia la scena immobile. Fuori dal primo
-/// piano l'animazione si sospende: `TimelineView(.animation(paused:))` smette di
-/// chiedere fotogrammi, che è l'unico modo perché non costi batteria in tasca.
+/// Rifatta il 24 settembre 2026. Il mare andava bene; il sole era un disco piatto
+/// con un alone slavato e la nave una scatola grigia. Adesso il sole ha un alone
+/// che respira e si scalda verso l'orizzonte, e il suo riflesso luccica sull'acqua;
+/// la luna è una falce vera, ritagliata, non un disco scuro appoggiato sopra; le
+/// nuvole passano lente, le stelle brillano a ritmi diversi, e la nave è quella di
+/// `CruiseShipDrawing`, la stessa dell'onboarding.
+///
+/// Tutto è funzione dello stesso istante, dentro un `Canvas`: niente `withAnimation`,
+/// che su un `Canvas` produce scatti. **Riduci movimento** ferma il tempo e lascia la
+/// scena immobile. Fuori dal primo piano l'animazione si sospende:
+/// `TimelineView(.animation(paused:))` smette di chiedere fotogrammi, che è l'unico
+/// modo perché non costi batteria in tasca.
 public struct SeaScene: View {
     @Environment(\.livery) private var livery
     @Environment(\.colorScheme) private var colorScheme
@@ -91,7 +100,6 @@ public struct SeaScene: View {
     /// Lo scafo nella modalità in vigore: le onde si mescolano con lui, e un `Canvas`
     /// vuole numeri, non colori dinamici.
     private var hullHex: UInt32 { livery.hullPair.hex(colorScheme == .dark ? .dark : .light) }
-    private var hullDeepHex: UInt32 { livery.hullDeepPair.hex(colorScheme == .dark ? .dark : .light) }
 
     /// L'ora di bordo, decimale.
     let hour: Double
@@ -111,10 +119,35 @@ public struct SeaScene: View {
         .accessibilityHidden(true)
     }
 
+    // MARK: La scena
+
+    /// Il sole o la luna: dove sta, quanto è grande, e quanto è vicino all'orizzonte.
+    private struct Light {
+        let center: CGPoint
+        let radius: CGFloat
+        let isSun: Bool
+        /// Da 0, alto nel cielo, a 1, sull'orizzonte: scalda il sole e il suo riflesso.
+        let low: Double
+    }
+
+    private func light(size: CGSize, horizonY: CGFloat) -> Light {
+        let sun = SeaSky.sunProgress(hour: hour)
+        let progress = sun ?? SeaSky.moonProgress(hour: hour) ?? 0
+        // L'arco: sorge a sinistra sull'orizzonte, culmina in alto, tramonta a destra.
+        let x = size.width * (0.08 + 0.84 * progress)
+        let height = sin(progress * .pi)
+        let y = horizonY - height * (horizonY * 0.66) + 6
+        return Light(center: CGPoint(x: x, y: y), radius: sun != nil ? 15 : 12,
+                     isSun: sun != nil, low: 1 - min(1, height / 0.45))
+    }
+
     private func draw(sky: SeaSky, time: TimeInterval, in canvas: inout GraphicsContext, size: CGSize) {
         // La linea dell'orizzonte sta a tre quinti: sopra il cielo, sotto il mare.
         let horizonY = size.height * 0.6
-        let skyRect = CGRect(x: 0, y: 0, width: size.width, height: horizonY + 2)
+        // Il cielo scende sotto l'orizzonte: dove la prima onda si abbassa, sotto ci
+        // dev'essere cielo. Con due punti soli, lì si vedeva il fondo nero del `Canvas`,
+        // una riga scura lungo tutto l'orizzonte.
+        let skyRect = CGRect(x: 0, y: 0, width: size.width, height: horizonY + 24)
 
         // Il cielo **parte dallo scafo**: in cima è del colore della schermata e
         // scende verso lo zenit, poi verso l'orizzonte. Così la scena non ha un
@@ -126,13 +159,25 @@ public struct SeaScene: View {
                              .init(color: Color(hex: sky.horizon), location: 1)]),
             startPoint: .zero, endPoint: CGPoint(x: 0, y: horizonY)))
 
-        drawStars(in: &canvas, size: size, horizonY: horizonY)
-        drawCelestial(in: &canvas, size: size, horizonY: horizonY)
-        drawSea(in: &canvas, size: size, horizonY: horizonY, time: time, sky: sky)
+        let light = light(size: size, horizonY: horizonY)
+        drawStars(in: &canvas, size: size, horizonY: horizonY, time: time)
+        if light.isSun { drawSun(light, in: &canvas, time: time) } else { drawMoon(light, in: &canvas) }
+        drawClouds(in: &canvas, size: size, horizonY: horizonY, time: time, sky: sky, light: light)
+
+        // L'orizzonte: una linea sottile di luce, che separa senza disegnare un bordo.
+        var line = Path()
+        line.move(to: CGPoint(x: 0, y: horizonY))
+        line.addLine(to: CGPoint(x: size.width, y: horizonY))
+        canvas.stroke(line, with: .color(.white.opacity(0.22)), lineWidth: 0.8)
+
+        drawSea(in: &canvas, size: size, horizonY: horizonY, time: time, sky: sky, light: light)
     }
 
-    /// Le stelle: poche, ferme, solo quando il cielo è scuro davvero.
-    private func drawStars(in canvas: inout GraphicsContext, size: CGSize, horizonY: CGFloat) {
+    // MARK: Il cielo
+
+    /// Le stelle: poche, solo quando il cielo è scuro davvero, e ognuna brilla col
+    /// suo ritmo.
+    private func drawStars(in canvas: inout GraphicsContext, size: CGSize, horizonY: CGFloat, time: TimeInterval) {
         guard SeaSky.sunProgress(hour: hour) == nil else { return }
         // Posizioni fisse, ricavate da una sequenza deterministica: stelle che
         // cambiano posto a ogni ridisegno sarebbero uno sfarfallio.
@@ -141,112 +186,188 @@ public struct SeaScene: View {
             seed ^= seed << 13; seed ^= seed >> 17; seed ^= seed << 5
             return CGFloat(seed % 10_000) / 10_000
         }
-        for _ in 0..<28 {
+        for _ in 0..<32 {
             let x = next() * size.width
-            let y = next() * horizonY * 0.8
-            let r = 0.6 + next() * 1.1
-            canvas.fill(Path(ellipseIn: CGRect(x: x, y: y, width: r * 2, height: r * 2)),
-                        with: .color(.white.opacity(0.55 + Double(next()) * 0.4)))
+            let y = next() * horizonY * 0.82
+            let r = 0.5 + next() * 1.1
+            let base = 0.5 + Double(next()) * 0.35
+            let rhythm = 0.6 + Double(next()) * 1.4, phase = Double(next()) * 6.3
+            let twinkle = time == 0 ? base : base + 0.3 * sin(time * rhythm + phase)
+            canvas.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: r * 2, height: r * 2)),
+                        with: .color(.white.opacity(max(0.15, min(1, twinkle)))))
         }
     }
 
-    /// Il sole di giorno, la luna di notte, lungo un arco basso.
-    private func drawCelestial(in canvas: inout GraphicsContext, size: CGSize, horizonY: CGFloat) {
-        let sun = SeaSky.sunProgress(hour: hour)
-        let progress = sun ?? SeaSky.moonProgress(hour: hour) ?? 0
-        // L'arco: sorge a sinistra sull'orizzonte, culmina in alto, tramonta a destra.
-        let x = size.width * (0.08 + 0.84 * progress)
-        let y = horizonY - sin(progress * .pi) * (horizonY * 0.66) + 6
-        let radius: CGFloat = sun != nil ? 22 : 16
-        let disc = Path(ellipseIn: CGRect(x: x - radius, y: y - radius, width: radius * 2, height: radius * 2))
+    /// Il sole: un nucleo caldo e un alone morbido che respira appena. Vicino
+    /// all'orizzonte si fa arancio, come fa davvero.
+    private func drawSun(_ light: Light, in canvas: inout GraphicsContext, time: TimeInterval) {
+        let c = light.center, r = light.radius
+        let breath = time == 0 ? 1 : 1 + 0.05 * sin(time * 0.9)
+        let halo = r * 3.6 * breath
+        let warm = Color(hex: Livery.mix(0xFFE59A, 0xFF9A4D, light.low))
+        canvas.fill(Path(ellipseIn: CGRect(x: c.x - halo, y: c.y - halo, width: halo * 2, height: halo * 2)),
+                    with: .radialGradient(Gradient(stops: [
+                        .init(color: warm.opacity(0.55), location: 0),
+                        .init(color: warm.opacity(0.22), location: 0.35),
+                        .init(color: warm.opacity(0), location: 1)]),
+                        center: c, startRadius: 0, endRadius: halo))
+        let core = Color(hex: Livery.mix(0xFFE08A, 0xFF8A3D, light.low))
+        canvas.fill(Path(ellipseIn: CGRect(x: c.x - r, y: c.y - r, width: r * 2, height: r * 2)),
+                    with: .radialGradient(Gradient(colors: [Color(hex: 0xFFFDF2), core]),
+                                          center: c, startRadius: 0, endRadius: r))
+    }
 
-        if sun != nil {
-            // Un sole acceso: giallo caldo con un alone largo, che di giorno si
-            // stacca dal celeste e all'alba si fonde con l'arancio.
-            canvas.fill(Path(ellipseIn: CGRect(x: x - radius * 2.4, y: y - radius * 2.4,
-                                               width: radius * 4.8, height: radius * 4.8)),
-                        with: .color(Color(hex: 0xFFE38A).opacity(0.35)))
-            canvas.fill(Path(ellipseIn: CGRect(x: x - radius * 1.4, y: y - radius * 1.4,
-                                               width: radius * 2.8, height: radius * 2.8)),
-                        with: .color(Color(hex: 0xFFE38A).opacity(0.35)))
-            canvas.fill(disc, with: .color(Color(hex: 0xFFD54A)))
-        } else {
-            canvas.fill(disc, with: .color(Color(hex: 0xE8ECF3)))
-            // Il quarto d'ombra: una luna piena ogni notte sembrerebbe un sole spento.
-            let shadow = Path(ellipseIn: CGRect(x: x - radius * 0.55, y: y - radius * 1.05,
-                                                width: radius * 2, height: radius * 2.1))
-            canvas.fill(shadow, with: .color(Color(hex: 0x0A1A38).opacity(0.9)))
+    /// La luna: una falce vera, il disco meno un disco spostato. Il quarto d'ombra
+    /// dipinto sopra col colore del cielo si vedeva come un disco scuro a parte.
+    private func drawMoon(_ light: Light, in canvas: inout GraphicsContext) {
+        let c = light.center, r = light.radius
+        let halo = r * 3.4
+        canvas.fill(Path(ellipseIn: CGRect(x: c.x - halo, y: c.y - halo, width: halo * 2, height: halo * 2)),
+                    with: .radialGradient(Gradient(stops: [
+                        .init(color: Color(hex: 0xE8ECF6).opacity(0.28), location: 0),
+                        .init(color: Color(hex: 0xE8ECF6).opacity(0), location: 1)]),
+                        center: c, startRadius: 0, endRadius: halo))
+        let disc = Path(ellipseIn: CGRect(x: c.x - r, y: c.y - r, width: r * 2, height: r * 2))
+        let bite = Path(ellipseIn: CGRect(x: c.x - r * 0.45, y: c.y - r * 1.2, width: r * 2, height: r * 2))
+        canvas.fill(disc.subtracting(bite), with: .color(Color(hex: 0xEEF1F7)))
+    }
+
+    /// Le nuvole: tre, soffici, che attraversano in qualche minuto. Di giorno
+    /// bianche, all'alba e al tramonto prendono il colore dell'orizzonte; di notte
+    /// non ci sono, perché non si vedrebbero.
+    private func drawClouds(in canvas: inout GraphicsContext, size: CGSize, horizonY: CGFloat,
+                            time: TimeInterval, sky: SeaSky, light: Light) {
+        guard light.isSun else { return }
+        // Col sole basso le nuvole si fanno pesca, illuminate da sotto. Mescolate col
+        // colore dell'orizzonte venivano grigio-lilla, spente contro il cielo viola.
+        let tint = Color(hex: Livery.mix(0xFFFFFF, 0xFFB896, 0.75 * light.low))
+        let opacity = 0.85
+        let clouds: [(start: CGFloat, height: CGFloat, scale: CGFloat, speed: Double)] = [
+            (0.62, 0.30, 1, 3.2), (0.18, 0.44, 0.72, 2.2), (0.9, 0.18, 0.55, 1.5),
+        ]
+        let span = size.width + 140
+        for cloud in clouds {
+            let drift = CGFloat(time * cloud.speed).truncatingRemainder(dividingBy: span)
+            let x = (cloud.start * size.width + drift).truncatingRemainder(dividingBy: span) - 70
+            let y = horizonY * cloud.height
+            var puff = Path()
+            let s = cloud.scale
+            puff.addEllipse(in: CGRect(x: x - 26 * s, y: y - 8 * s, width: 52 * s, height: 16 * s))
+            puff.addEllipse(in: CGRect(x: x - 22 * s, y: y - 14 * s, width: 26 * s, height: 16 * s))
+            puff.addEllipse(in: CGRect(x: x - 5 * s, y: y - 18 * s, width: 30 * s, height: 20 * s))
+            canvas.fill(puff, with: .color(tint.opacity(opacity)))
         }
     }
+
+    // MARK: Il mare
 
     /// Tre onde, una sopra l'altra, che scorrono a velocità diverse: l'ultima è
-    /// dello stesso colore dello scafo e chiude la scena senza giunture.
+    /// dello stesso colore dello scafo e chiude la scena senza giunture. Fra la
+    /// prima e la seconda, il riflesso della luce e la nave.
     private func drawSea(in canvas: inout GraphicsContext, size: CGSize, horizonY: CGFloat,
-                         time: TimeInterval, sky: SeaSky) {
+                         time: TimeInterval, sky: SeaSky, light: Light) {
         // Il mare prende un po' del colore dell'orizzonte — di giorno è celeste, al
         // tramonto arancio — e scende verso lo scafo: l'ultima onda è lo scafo.
-        let layers: [(offset: CGFloat, amplitude: CGFloat, wavelength: CGFloat, speed: Double, color: Color)] = [
-            (0, 5, 190, 0.35, Color(hex: Livery.mix(hullHex, sky.horizon, 0.42))),
-            (16, 7, 140, 0.55, Color(hex: Livery.mix(hullHex, sky.horizon, 0.18))),
-            (34, 9, 110, 0.8, Color(hex: hullHex)),
+        let layers: [(offset: CGFloat, amplitude: CGFloat, wavelength: CGFloat, speed: Double, top: UInt32, bottom: UInt32)] = [
+            (0, 4, 190, 0.35, Livery.mix(hullHex, sky.horizon, 0.46), Livery.mix(hullHex, sky.horizon, 0.3)),
+            (16, 6, 140, 0.55, Livery.mix(hullHex, sky.horizon, 0.2), Livery.mix(hullHex, sky.horizon, 0.08)),
+            (34, 8, 110, 0.8, hullHex, hullHex),
         ]
         for (index, layer) in layers.enumerated() {
-            // La nave passa fra la prima onda e la seconda: la prua nell'acqua.
             if index == 1 { drawShip(in: &canvas, size: size, horizonY: horizonY, time: time) }
-            var path = Path()
+            // Il riflesso va sopra la seconda onda: sotto, ne restava visibile una
+            // striscia di pochi punti e non si vedeva.
+            if index == 2 {
+                drawGlitter(in: &canvas, size: size, horizonY: horizonY, time: time, light: light,
+                            avoiding: shipSpan(size: size, time: time))
+            }
             let baseY = horizonY + layer.offset
-            path.move(to: CGPoint(x: 0, y: size.height))
-            path.addLine(to: CGPoint(x: 0, y: baseY))
-            var x: CGFloat = 0
             let phase = time * layer.speed
+            var crest = Path()
+            var x: CGFloat = 0
             while x <= size.width + 4 {
                 let y = baseY + sin(Double(x) / Double(layer.wavelength) * 2 * .pi + phase) * Double(layer.amplitude)
-                path.addLine(to: CGPoint(x: x, y: y))
+                if x == 0 { crest.move(to: CGPoint(x: x, y: y)) } else { crest.addLine(to: CGPoint(x: x, y: y)) }
                 x += 4
             }
-            path.addLine(to: CGPoint(x: size.width, y: size.height))
-            path.closeSubpath()
-            canvas.fill(path, with: .color(layer.color))
+            var body = crest
+            body.addLine(to: CGPoint(x: size.width + 4, y: size.height))
+            body.addLine(to: CGPoint(x: 0, y: size.height))
+            body.closeSubpath()
+            canvas.fill(body, with: .linearGradient(
+                Gradient(colors: [Color(hex: layer.top), Color(hex: layer.bottom)]),
+                startPoint: CGPoint(x: 0, y: baseY - layer.amplitude),
+                endPoint: CGPoint(x: 0, y: min(size.height, baseY + 40))))
+            // La cresta: un filo di luce sulle due onde lontane, che dà spessore al mare.
+            if index < 2 {
+                canvas.stroke(crest, with: .color(.white.opacity(index == 0 ? 0.16 : 0.1)), lineWidth: 1)
+            }
         }
     }
 
-    /// Una nave di profilo che attraversa la scena, piano, e beccheggia con l'onda.
-    ///
-    /// È la parte che «diverte»: sei punti al secondo, un giro ogni minuto e mezzo,
-    /// e con Riduci movimento sta ferma a un terzo della scena. Nessuna livrea di
-    /// nessuna compagnia: scafo scuro, sovrastruttura bianca, un fumaiolo.
-    private func drawShip(in canvas: inout GraphicsContext, size: CGSize, horizonY: CGFloat,
-                          time: TimeInterval) {
-        let span = size.width + 140
-        let x = time == 0 ? size.width * 0.34
-                          : (CGFloat(time * 6).truncatingRemainder(dividingBy: span)) - 70
-        let bob = time == 0 ? 0 : sin(time * 0.9) * 1.6
-        let y = horizonY + 9 + bob
-        let tilt = time == 0 ? 0 : sin(time * 0.9 + 0.6) * 0.02
-
-        var hull = Path()
-        hull.move(to: CGPoint(x: -34, y: 0))
-        hull.addLine(to: CGPoint(x: 36, y: 0))
-        hull.addLine(to: CGPoint(x: 30, y: 9))
-        hull.addLine(to: CGPoint(x: -30, y: 9))
-        hull.closeSubpath()
-
-        var deck = Path()
-        deck.addRoundedRect(in: CGRect(x: -24, y: -14, width: 44, height: 14), cornerSize: CGSize(width: 2, height: 2))
-        deck.addRoundedRect(in: CGRect(x: -16, y: -22, width: 26, height: 8), cornerSize: CGSize(width: 2, height: 2))
-        var funnel = Path()
-        funnel.addRect(CGRect(x: 4, y: -30, width: 6, height: 9))
-
-        let transform = CGAffineTransform(translationX: x, y: y).rotated(by: tilt)
-        canvas.fill(hull.applying(transform), with: .color(Color(hex: hullDeepHex)))
-        canvas.fill(deck.applying(transform), with: .color(Color(hex: 0xF2F5F8)))
-        canvas.fill(funnel.applying(transform), with: .color(Color(hex: livery.signalOnHullHex)))
-        // Le finestre: una fila di punti, che a questa scala bastano.
-        var windows = Path()
-        for i in 0..<7 {
-            windows.addEllipse(in: CGRect(x: -20 + CGFloat(i) * 6, y: -9, width: 2.2, height: 2.2))
+    /// Il riflesso del sole o della luna: trattini che luccicano sull'acqua, sotto
+    /// la luce, sempre più larghi verso chi guarda.
+    private func drawGlitter(in canvas: inout GraphicsContext, size: CGSize, horizonY: CGFloat,
+                             time: TimeInterval, light: Light, avoiding ship: ClosedRange<CGFloat>) {
+        guard light.center.y < horizonY else { return }
+        let color = light.isSun ? Color(hex: Livery.mix(0xFFFFFF, 0xFFC47A, light.low)) : Color(hex: 0xE8ECF6)
+        let strength = light.isSun ? 0.85 : 0.5
+        var seed: UInt32 = 1_234_567
+        func next() -> CGFloat {
+            seed ^= seed << 13; seed ^= seed >> 17; seed ^= seed << 5
+            return CGFloat(seed % 10_000) / 10_000
         }
-        canvas.fill(windows.applying(transform), with: .color(Color(hex: hullDeepHex).opacity(0.7)))
+        let rows = 14
+        for i in 0..<rows {
+            let t = CGFloat(i) / CGFloat(rows - 1)
+            let y = horizonY + 3 + t * 30
+            let width = 5 + t * 18 + next() * 8
+            let x = light.center.x + (next() - 0.5) * (12 + t * 44)
+            let rhythm = 1.2 + Double(next()) * 1.8, phase = Double(next()) * 6.3
+            let shimmer = time == 0 ? 0.6 : max(0, sin(time * rhythm + phase))
+            let alpha = shimmer * strength * Double(1 - t * 0.55)
+            guard alpha > 0.03 else { continue }
+            // Sulla fiancata della nave il riflesso non c'è: la nave sta davanti.
+            if y < horizonY + 20, ship.overlaps((x - width / 2)...(x + width / 2)) { continue }
+            canvas.fill(Path(roundedRect: CGRect(x: x - width / 2, y: y, width: width, height: 1.4), cornerRadius: 0.7),
+                        with: .color(color.opacity(alpha)))
+        }
+    }
+
+    /// La nave, che beccheggia e sale sull'onda. Con Riduci movimento sta ferma,
+    /// senza scia.
+    private func shipScale(size: CGSize) -> CGFloat { min(0.62, size.width / 620) }
+
+    /// Dove sta la nave, a quest'ora: il centro dello scafo.
+    ///
+    /// Resta nella scena, con una deriva lenta attorno al centro. Prima la
+    /// attraversava da un lato all'altro, e per un terzo del giro era fuori: si
+    /// apriva Oggi e la nave non c'era. Che navighi lo dicono la scia, l'onda di
+    /// prua e le onde che le scorrono verso poppa, come in una ripresa da una barca
+    /// che le va accanto.
+    private func shipX(size: CGSize, time: TimeInterval) -> CGFloat {
+        let drift = time == 0 ? 0 : CGFloat(sin(time * 0.045)) * size.width * 0.07
+        return size.width * 0.42 + drift
+    }
+
+    /// Lo spazio che la nave occupa in orizzontale, scia esclusa.
+    private func shipSpan(size: CGSize, time: TimeInterval) -> ClosedRange<CGFloat> {
+        let x = shipX(size: size, time: time), scale = shipScale(size: size)
+        return (x - 90 * scale)...(x + 98 * scale)
+    }
+
+    private func drawShip(in canvas: inout GraphicsContext, size: CGSize, horizonY: CGFloat, time: TimeInterval) {
+        let scale = shipScale(size: size)
+        let x = shipX(size: size, time: time)
+        let bob = time == 0 ? 0 : CGFloat(sin(time * 0.9)) * 1.4
+        let pitch = time == 0 ? 0 : sin(time * 0.75 + 0.6) * 0.018
+        var ship = canvas
+        ship.translateBy(x: x, y: horizonY + 11 + bob)
+        ship.rotate(by: .radians(pitch))
+        ship.scaleBy(x: scale, y: scale)
+        CruiseShipDrawing.draw(in: &ship, band: Color(hex: livery.hullHex),
+                               funnelTop: Color(hex: livery.signalOnHullHex),
+                               lit: SeaSky.sunProgress(hour: hour) == nil,
+                               foam: time == 0 ? 0 : 0.55, time: time)
     }
 }
-

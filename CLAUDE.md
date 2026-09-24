@@ -140,4 +140,7 @@ com.apple.CoreSimulator.SimRuntime.iOS-27-0`. Il tipo **iPhone Duo** c'è già; 
 - Test in Swift Testing (`@Suite`, `@Test`, `#expect`), con nomi che sono frasi.
 - **Commit** in italiano, al presente, con questa riga in fondo:
   `Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>` — o il modello che li scrive davvero.
-- Mai `git push`, mai pubblicare niente, mai toccare il MeteoProxy sul TrueNAS senza che Matteo lo chieda.
+- Il codice sta su GitHub, **pubblico**: https://github.com/Theskiller11/cruisy (ramo `main`). Il push si fa
+  **solo quando Matteo lo chiede**, mai di iniziativa: quello che si carica lo vede chiunque. Niente
+  segreti, dati personali o documenti di prenotazione veri nei commit.
+- Mai pubblicare altro (sito, App Store) e mai toccare il MeteoProxy sul TrueNAS senza che Matteo lo chieda.

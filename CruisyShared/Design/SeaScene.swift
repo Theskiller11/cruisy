@@ -101,10 +101,17 @@ public struct SeaScene: View {
     /// vuole numeri, non colori dinamici.
     private var hullHex: UInt32 { livery.hullPair.hex(colorScheme == .dark ? .dark : .light) }
 
+    /// Dove sta la nave: al largo, o ormeggiata davanti a un porto.
+    public enum Setting: Sendable { case openSea, port }
+
     /// L'ora di bordo, decimale.
     let hour: Double
+    let setting: Setting
 
-    public init(hour: Double) { self.hour = hour }
+    public init(hour: Double, setting: Setting = .openSea) {
+        self.hour = hour
+        self.setting = setting
+    }
 
     private var isPaused: Bool { reduceMotion || scenePhase != .active }
 
@@ -163,6 +170,7 @@ public struct SeaScene: View {
         drawStars(in: &canvas, size: size, horizonY: horizonY, time: time)
         if light.isSun { drawSun(light, in: &canvas, time: time) } else { drawMoon(light, in: &canvas) }
         drawClouds(in: &canvas, size: size, horizonY: horizonY, time: time, sky: sky, light: light)
+        if setting == .port { drawPort(in: &canvas, size: size, horizonY: horizonY, sky: sky, light: light) }
 
         // L'orizzonte: una linea sottile di luce, che separa senza disegnare un bordo.
         var line = Path()
@@ -259,6 +267,70 @@ public struct SeaScene: View {
         }
     }
 
+    // MARK: Il porto
+
+    /// La terra dietro la nave ormeggiata: colline, il paese, un faro, la banchina.
+    ///
+    /// In porto la schermata Oggi era un vuoto blu sopra il biglietto: la scena del
+    /// mare c'era solo in navigazione. Qui è la stessa scena, con la terra. I
+    /// colori si spengono con la luce — di notte le colline sono sagome e nel paese
+    /// si accendono le finestre — mescolandoli al cielo dell'ora, così la terra sta
+    /// nello stesso tempo del cielo che ha sopra.
+    private func drawPort(in canvas: inout GraphicsContext, size: CGSize, horizonY: CGFloat,
+                          sky: SeaSky, light: Light) {
+        let night = !light.isSun
+        let dim = night ? 0.72 : 0.12 + 0.4 * light.low
+        func tone(_ hex: UInt32) -> Color { Color(hex: Livery.mix(hex, sky.zenith, dim)) }
+        let w = size.width, h = horizonY
+
+        // Le colline lontane, velate dall'aria; poi quelle vicine, verdi.
+        var far = Path()
+        far.move(to: CGPoint(x: w * 0.3, y: h))
+        far.addCurve(to: CGPoint(x: w * 0.62, y: h - 30), control1: CGPoint(x: w * 0.42, y: h - 18), control2: CGPoint(x: w * 0.52, y: h - 34))
+        far.addCurve(to: CGPoint(x: w, y: h - 24), control1: CGPoint(x: w * 0.74, y: h - 26), control2: CGPoint(x: w * 0.88, y: h - 40))
+        far.addLine(to: CGPoint(x: w, y: h))
+        far.closeSubpath()
+        canvas.fill(far, with: .color(tone(Livery.mix(0x7C9AB5, sky.horizon, 0.35))))
+
+        var near = Path()
+        near.move(to: CGPoint(x: w * 0.44, y: h))
+        near.addCurve(to: CGPoint(x: w * 0.72, y: h - 26), control1: CGPoint(x: w * 0.52, y: h - 22), control2: CGPoint(x: w * 0.62, y: h - 30))
+        near.addCurve(to: CGPoint(x: w, y: h - 16), control1: CGPoint(x: w * 0.82, y: h - 22), control2: CGPoint(x: w * 0.92, y: h - 20))
+        near.addLine(to: CGPoint(x: w, y: h))
+        near.closeSubpath()
+        canvas.fill(near, with: .color(tone(0x4D7A5E)))
+
+        // Il paese: case pastello in fila sulla banchina, con le finestre.
+        let houses: [UInt32] = [0xF4EBDD, 0xE9C9A0, 0xF6D8C8, 0xD9A77A, 0xEFE3C9, 0xC8D8E4, 0xF4EBDD, 0xE9C9A0]
+        var x = w * 0.54
+        var windows = Path()
+        for (index, colour) in houses.enumerated() where x < w * 0.9 {
+            let width = 10 + CGFloat(index % 3) * 3
+            let height = 8 + CGFloat((index * 7) % 5) * 2.6
+            canvas.fill(Path(CGRect(x: x, y: h - 3 - height, width: width, height: height)), with: .color(tone(colour)))
+            windows.addRect(CGRect(x: x + 2, y: h - height + 0.5, width: 2, height: 2))
+            windows.addRect(CGRect(x: x + width - 4, y: h - height + 0.5, width: 2, height: 2))
+            x += width + 2
+        }
+        canvas.fill(windows, with: .color(night ? Color(hex: 0xFFD27A) : tone(0x5D7389).opacity(0.5)))
+
+        // Il faro in fondo al molo, con la sua fascia rossa; di notte, la luce.
+        let lx = w * 0.93
+        var tower = Path()
+        tower.addLines([CGPoint(x: lx - 3, y: h - 3), CGPoint(x: lx - 2, y: h - 24), CGPoint(x: lx + 2, y: h - 24), CGPoint(x: lx + 3, y: h - 3)])
+        tower.closeSubpath()
+        canvas.fill(tower, with: .color(tone(0xFFFFFF)))
+        canvas.fill(Path(CGRect(x: lx - 2.6, y: h - 16, width: 5.2, height: 3.5)), with: .color(tone(0xC8442A)))
+        if night {
+            canvas.fill(Path(ellipseIn: CGRect(x: lx - 7, y: h - 31, width: 14, height: 14)),
+                        with: .radialGradient(Gradient(colors: [Color(hex: 0xFFE7A0).opacity(0.9), .clear]),
+                                              center: CGPoint(x: lx, y: h - 24), startRadius: 0, endRadius: 7))
+        }
+
+        // La banchina, lungo tutto l'orizzonte della terra.
+        canvas.fill(Path(CGRect(x: w * 0.2, y: h - 3.5, width: w * 0.8, height: 4.5)), with: .color(tone(0x9AA7B2)))
+    }
+
     // MARK: Il mare
 
     /// Tre onde, una sopra l'altra, che scorrono a velocità diverse: l'ultima è
@@ -346,6 +418,8 @@ public struct SeaScene: View {
     /// prua e le onde che le scorrono verso poppa, come in una ripresa da una barca
     /// che le va accanto.
     private func shipX(size: CGSize, time: TimeInterval) -> CGFloat {
+        // In porto la nave è ormeggiata: ferma, a sinistra, davanti alla banchina.
+        if setting == .port { return size.width * 0.3 }
         let drift = time == 0 ? 0 : CGFloat(sin(time * 0.045)) * size.width * 0.07
         return size.width * 0.42 + drift
     }
@@ -368,6 +442,6 @@ public struct SeaScene: View {
         CruiseShipDrawing.draw(in: &ship, band: Color(hex: livery.hullHex),
                                funnelTop: Color(hex: livery.signalOnHullHex),
                                lit: SeaSky.sunProgress(hour: hour) == nil,
-                               foam: time == 0 ? 0 : 0.55, time: time)
+                               foam: time == 0 || setting == .port ? 0 : 0.55, time: time)
     }
 }

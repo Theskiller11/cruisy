@@ -120,7 +120,7 @@ struct TodayScreen: View {
                 Masthead(voyage.shipName, detail: dayLine(voyage: voyage))
                     .padding(.horizontal, 22)
                     .padding(.top, 12)
-                    .padding(.bottom, isAtSea ? 0 : 6)
+                    .padding(.bottom, isAtSea || store.isInPort ? 0 : 6)
 
                 if isAtSea {
                     // La scena: una fascia di cielo e mare che parte dallo scafo,
@@ -128,6 +128,14 @@ struct TodayScreen: View {
                     // biglietto ci si appoggia sopra, con la prua nell'acqua.
                     SeaScene(hour: store.shipHour)
                         .frame(height: 250)
+                        .frame(maxWidth: .infinity)
+                        .padding(.bottom, -ticketDraft)
+                } else if store.isInPort {
+                    // In porto la stessa scena, con la terra e la nave ormeggiata:
+                    // prima qui c'era solo il blu dello scafo. Più bassa, perché in
+                    // porto sotto il biglietto ci sono il meteo e la carta.
+                    SeaScene(hour: store.shipHour, setting: .port)
+                        .frame(height: 210)
                         .frame(maxWidth: .infinity)
                         .padding(.bottom, -ticketDraft)
                 }

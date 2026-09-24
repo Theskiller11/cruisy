@@ -17,6 +17,16 @@
         }
       }
     },
+    "%@ alla meta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ to go"
+          }
+        }
+      }
+    },
     "%@ alle %@" : {
       "localizations" : {
         "en" : {
@@ -123,6 +133,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld sea days"
+          }
+        }
+      }
+    },
+    "%lld miglia alla meta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld miles to go"
           }
         }
       }
@@ -629,6 +649,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Docking"
+          }
+        }
+      }
+    },
+    "Attracco alle %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docking at %@"
           }
         }
       }
@@ -1144,6 +1174,22 @@
         }
       }
     },
+    "Da %@ a %@, traversata al %lld per cento" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Da %1$@ a %2$@, traversata al %3$lld per cento"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From %1$@ to %2$@, crossing %3$lld per cent done"
+          }
+        }
+      }
+    },
     "Da Gibilterra a Palma" : {
       "localizations" : {
         "en" : {
@@ -1311,6 +1357,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "E"
+          }
+        }
+      }
+    },
+    "Entro le %@ · la nave parte alle %@" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Entro le %1$@ · la nave parte alle %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By %1$@ · the ship leaves at %2$@"
           }
         }
       }
@@ -2040,6 +2102,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The ship on this cruise is not in the list, so the livery stays Cruisy's even if you choose the cruise line colours."
+          }
+        }
+      }
+    },
+    "La nave parte alle %@ · ora di bordo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The ship leaves at %@ · ship's time"
           }
         }
       }
@@ -4404,6 +4476,16 @@
         }
       }
     },
+    "attracco %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "docked %@"
+          }
+        }
+      }
+    },
     "avanti" : {
       "comment" : "Il telefono rispetto alla nave",
       "localizations" : {
@@ -4609,6 +4691,16 @@
         }
       }
     },
+    "min" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "min"
+          }
+        }
+      }
+    },
     "mn" : {
       "comment" : "Abbreviazione di miglia nautiche",
       "localizations" : {
@@ -4683,6 +4775,16 @@
         }
       }
     },
+    "ore" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hrs"
+          }
+        }
+      }
+    },
     "ormeggio" : {
       "comment" : "Tipo di attracco",
       "localizations" : {
@@ -4694,12 +4796,62 @@
         }
       }
     },
+    "partenza %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "leaves %@"
+          }
+        }
+      }
+    },
+    "partenza alle %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "leaving at %@"
+          }
+        }
+      }
+    },
+    "partita alle %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "left at %@"
+          }
+        }
+      }
+    },
     "per mare, canali compresi" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "by sea, canals included"
+          }
+        }
+      }
+    },
+    "rientro a bordo alle %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "all aboard at %@"
+          }
+        }
+      }
+    },
+    "sec" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sec"
           }
         }
       }

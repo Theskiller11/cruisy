@@ -10,6 +10,17 @@ import SwiftUI
 ///
 /// L'orario pubblicato fa fede: il countdown viene dall'itinerario, e il campo
 /// «Orario» dice sempre da dove viene.
+///
+/// ## In mare e in porto: un numero solo
+///
+/// Rifinito il 24 settembre 2026. In mare e in porto il numero grande è **quanto
+/// manca** (`HeroCountdown`), non l'ora: prima c'erano l'ora stampata e sotto il
+/// countdown coi secondi, due numeri grandi che si contendevano l'occhio. L'ora
+/// scende in una riga sotto, e subito dopo c'è la giornata disegnata: in mare la
+/// traversata da un porto all'altro, in porto la barra con l'attracco, il rientro
+/// e la partenza. La matrice tiene solo quello che non è già scritto sopra.
+/// Prima dell'imbarco e a crociera finita il biglietto resta quello dell'ora
+/// stampata: lì si ricorda una data, non si conta.
 struct BoardingPass: View {
     @Environment(\.livery) private var livery
     let voyage: Voyage
@@ -33,9 +44,72 @@ struct BoardingPass: View {
 
     // MARK: La parte alta
 
+    /// In mare e in porto il biglietto conta; prima e dopo, ricorda una data.
+    private var countsDown: Bool {
+        switch moment {
+        case .atSea, .inPort: focus != nil
+        case .beforeVoyage, .completed: false
+        }
+    }
+
     @ViewBuilder
     private var top: some View {
-        TicketHead(eyebrow: eyebrow, place: place, stamp: stamp) { hour }
+        if countsDown, let focus {
+            VStack(alignment: .leading, spacing: 0) {
+                TicketHead(eyebrow: eyebrow, place: place, stamp: stamp) {
+                    HeroCountdown(countdown: focus.countdown, colour: heroColour, offset: offset)
+                }
+                VStack(alignment: .leading, spacing: 14) {
+                    if let deadline {
+                        Text(deadline)
+                            .font(TicketType.body)
+                            .foregroundStyle(livery.field)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    day
+                }
+                .padding(.horizontal, 18)
+                .padding(.top, -4)
+                .padding(.bottom, 18)
+            }
+        } else {
+            TicketHead(eyebrow: eyebrow, place: place, stamp: stamp) { hour }
+        }
+    }
+
+    /// Il rientro a bordo è l'unico arancio della schermata: il resto è inchiostro.
+    private var heroColour: Color {
+        if case .inPort = moment, case .some(.allAboard) = focus?.kind { return livery.signal }
+        return livery.ink
+    }
+
+    /// L'ora del traguardo, per esteso, sotto il numero.
+    private var deadline: String? {
+        switch (moment, focus?.kind) {
+        case (.atSea(_, let to), _):
+            return String(localized: "Attracco alle \(clock.time(to.arrival)) · ora di bordo")
+        case (.inPort(let call), .some(.allAboard)):
+            let aboard = clock.time(call.allAboard ?? call.castOff)
+            return String(localized: "Entro le \(aboard) · la nave parte alle \(clock.time(call.castOff))")
+        case (.inPort(let call), _):
+            return String(localized: "La nave parte alle \(clock.time(call.castOff)) · ora di bordo")
+        default:
+            return nil
+        }
+    }
+
+    /// La giornata disegnata: la traversata in mare, la barra in porto.
+    @ViewBuilder
+    private var day: some View {
+        switch moment {
+        case .atSea(let from, let to):
+            PassageTrack(from: from, to: to, now: now, clock: clock,
+                         milesLeft: fix.map { Geo.nauticalMiles(from: $0.coordinate, to: to.coordinate) })
+        case .inPort(let call):
+            PortDayBar(call: call, now: now, clock: clock)
+        default:
+            EmptyView()
+        }
     }
 
     @ViewBuilder
@@ -71,7 +145,7 @@ struct BoardingPass: View {
     @ViewBuilder
     private var stub: some View {
         VStack(alignment: .leading, spacing: 14) {
-            if let focus, let countdownLabel {
+            if !countsDown, let focus, let countdownLabel {
                 TicketCountRow(label: countdownLabel) {
                     CountdownView(countdown: focus.countdown, offset: offset)
                 }
@@ -187,10 +261,7 @@ struct BoardingPass: View {
             fields.append(TicketField(label: String(localized: "Orario"), value: call.scheduleOrigin.fieldValue))
 
         case .inPort(let call):
-            fields.append(TicketField(label: String(localized: "Attracco"), value: clock.time(call.arrival)))
-            if let departure = call.departure {
-                fields.append(TicketField(label: String(localized: "Partenza"), value: clock.time(departure)))
-            }
+            // Attracco e partenza stanno già sotto la barra della giornata.
             fields.append(TicketField(label: String(localized: "Sosta"),
                                       value: Format.duration(call.duration),
                                       spoken: Format.duration(call.duration)))
@@ -198,9 +269,9 @@ struct BoardingPass: View {
             fields.append(contentsOf: clockFields)
 
         case .atSea(let from, let to):
-            // Compatto: in mare la scena sopra vale più di una riga di campi.
-            fields.append(TicketField(label: String(localized: "Da"),
-                                      value: "\(from.name) · \(clock.time(from.castOff))"))
+            // Compatto: in mare la scena sopra vale più di una riga di campi. Da dove
+            // si è partiti e le miglia che restano stanno già sulla linea della
+            // traversata.
             fields.append(contentsOf: seaFields(from: from, to: to))
             fields.append(TicketField(label: String(localized: "Orario"), value: to.scheduleOrigin.fieldValue))
             if !clock.matchesDevice(at: now) { fields.append(contentsOf: clockFields) }
@@ -242,9 +313,6 @@ struct BoardingPass: View {
                 fields.append(TicketField(label: String(localized: "Rilevamento"), value: Format.bearing(bearing),
                                           spoken: Format.course(bearing)))
             }
-            let miles = Geo.nauticalMiles(from: fix.coordinate, to: to.coordinate)
-            fields.append(TicketField(label: String(localized: "Alla meta"), value: Format.nauticalMiles(miles),
-                                      spoken: String(localized: "\(Int(miles)) miglia nautiche")))
         }
         return fields
     }

@@ -142,7 +142,7 @@ public enum SampleVoyage {
     ///
     /// Risultato: attraccata cinque ore fa, all aboard fra tre ore, partenza fra tre
     /// e mezza. È lo stato in cui il widget ha qualcosa da contare e la Live Activity
-    /// si può accendere — sotto le otto ore di vita che il sistema le concede.
+    /// si può accendere: proprio al limite delle tre ore della sua finestra in porto.
     public static func deviceTest(now: Date = .now) -> Scenario {
         let clock = ShipClock(secondsFromGMT: TimeZone.current.secondsFromGMT(for: now),
                               source: .manual)

@@ -93,16 +93,16 @@
     },
     "%@: mancano %@" : {
       "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@: mancano %2$@"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@: %2$@ to go"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: mancano %2$@"
           }
         }
       }
@@ -715,16 +715,16 @@
     },
     "Carta della crociera: %@. %@" : {
       "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Carta della crociera: %1$@. %2$@"
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cruise chart: %1$@. %2$@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Carta della crociera: %1$@. %2$@"
           }
         }
       }
@@ -3815,22 +3815,22 @@
         }
       }
     },
-    "Si accende in porto nelle ultime otto ore prima dell'all aboard, e in mare nell'ultima ora e mezza prima dell'attracco. Fuori da quelle finestre non ci sarebbe niente da contare." : {
+    "Si accende in porto nelle ultime tre ore prima dell'all aboard, e in mare nell'ultima ora e mezza prima dell'attracco. Fuori da quelle finestre non ci sarebbe niente da contare." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "It turns on in port during the last eight hours before all aboard, and at sea during the last hour and a half before docking. Outside those windows there would be nothing to count down."
+            "value" : "It turns on in port during the last three hours before all aboard, and at sea during the last hour and a half before docking. Outside those windows there would be nothing to count down."
           }
         }
       }
     },
-    "Si accende in porto nelle ultime otto ore prima dell'all aboard, e in mare nell'ultima ora e mezza prima dell'attracco. Resta visibile anche con Full Immersion attivo." : {
+    "Si accende in porto nelle ultime tre ore prima dell'all aboard, e in mare nell'ultima ora e mezza prima dell'attracco. Resta visibile anche con Full Immersion attivo." : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "It comes up in port during the last eight hours before all aboard, and at sea in the last hour and a half before docking. It stays visible even with Focus on."
+            "value" : "It comes up in port during the last three hours before all aboard, and at sea in the last hour and a half before docking. It stays visible even with Focus on."
           }
         }
       }
@@ -3857,16 +3857,16 @@
     },
     "Si riempie da solo. Il primo timbro arriva a %@, %@ alle %@." : {
       "localizations" : {
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Si riempie da solo. Il primo timbro arriva a %1$@, %2$@ alle %3$@."
-          }
-        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "It fills itself. The first stamp arrives in %1$@, %2$@ at %3$@."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Si riempie da solo. Il primo timbro arriva a %1$@, %2$@ alle %3$@."
           }
         }
       }

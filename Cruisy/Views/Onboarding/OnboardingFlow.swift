@@ -223,7 +223,7 @@ struct OnboardingFlow: View {
                 .padding(.vertical, 13)
                 .paperCard(cornerRadius: 18)
 
-            Text("Si accende in porto nelle ultime otto ore prima dell'all aboard, e in mare nell'ultima ora e mezza prima dell'attracco. Fuori da quelle finestre non ci sarebbe niente da contare.")
+            Text("Si accende in porto nelle ultime tre ore prima dell'all aboard, e in mare nell'ultima ora e mezza prima dell'attracco. Fuori da quelle finestre non ci sarebbe niente da contare.")
                 .font(.caption)
                 .foregroundStyle(livery.onHullMuted)
                 .fixedSize(horizontal: false, vertical: true)

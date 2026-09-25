@@ -31,8 +31,8 @@ struct LiveActivityDemo: View {
 
     /// 2:59:52 al rientro, come nel biglietto di Puerto Plata degli esempi.
     private let total: TimeInterval = 2 * 3600 + 59 * 60 + 52
-    /// In porto l'attività si accende nelle ultime otto ore: la barra parte da lì.
-    private let window: TimeInterval = 8 * 3600
+    /// In porto l'attività si accende nelle ultime tre ore: la barra parte da lì.
+    private let window: TimeInterval = LiveActivityController.portLead
 
     /// La molla dell'isola. Il resto dell'app non rimbalza, ma l'isola vera sì, e
     /// una che si allarga smorzata sembra un'altra cosa.

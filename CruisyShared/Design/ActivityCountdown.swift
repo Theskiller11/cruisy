@@ -36,7 +36,7 @@ import UIKit
 /// transizione che il sistema fa da solo, senza svegliare l'app.
 ///
 /// Vale fino a 9:59 — con dieci ore la cornice sarebbe corta di una cifra. In porto
-/// l'attività si accende nelle ultime otto ore, in mare nell'ultima ora e mezza.
+/// l'attività si accende nelle ultime tre ore, in mare nell'ultima ora e mezza.
 public struct ActivityCountdown: View {
     let range: ClosedRange<Date>
     let urgent: Bool

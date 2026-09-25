@@ -12,10 +12,15 @@ import Observation
 @Observable
 final class LiveActivityController {
 
-    /// Una Live Activity vive al massimo otto ore. Una sosta in porto può durare di
-    /// più, quindi non la si può armare all'attracco e dimenticarsene: si arma
-    /// quando il traguardo rientra nella finestra.
-    static let maximumLead: TimeInterval = 8 * 3600
+    /// In porto l'attività si accende nelle ultime tre ore prima del rientro a bordo.
+    ///
+    /// Erano otto, il massimo che il sistema concede a una Live Activity: ma otto
+    /// ore di countdown fisso sulla schermata di blocco, dal caffè della mattina,
+    /// sono ingombro, e Matteo l'ha trovata accesa a quattro ore dall'all aboard
+    /// senza che servisse a niente. Nelle ultime tre si comincia a pensare al
+    /// rientro: lì serve. Una sosta dura comunque più di così, quindi la si arma
+    /// quando il traguardo entra nella finestra, non all'attracco.
+    static let portLead: TimeInterval = 3 * 3600
 
     /// In navigazione l'attività si accende solo nell'ultima ora e mezza prima
     /// dell'attracco.
@@ -44,7 +49,7 @@ final class LiveActivityController {
 
     /// Vero quando manca ancora troppo perché valga la pena accenderla.
     func isTooEarly(for countdown: Countdown, at now: Date, atSea: Bool = false) -> Bool {
-        countdown.remaining(at: now) > (atSea ? Self.seaLead : Self.maximumLead)
+        countdown.remaining(at: now) > (atSea ? Self.seaLead : Self.portLead)
     }
 
     func refresh() {
@@ -129,8 +134,8 @@ final class LiveActivityController {
         // Il traguardo si è spostato più in là della finestra — un ritardo
         // annunciato, una correzione — e l'attività conterebbe ore che non le
         // spettano. Si chiude: quando la finestra si riapre, `RootTabView` la
-        // riaccende da sé. Prima la si aggiornava e basta, e restava accesa con
-        // quattro ore all'attracco invece dell'ora e mezza promessa.
+        // riaccende da sé. Prima la si aggiornava e basta, e restava accesa a
+        // quattro ore dal traguardo, fuori dalla finestra che le spetta.
         if isTooEarly(for: focus.countdown, at: now, atSea: activity.content.state.kind.isAtSea) {
             await end()
             return

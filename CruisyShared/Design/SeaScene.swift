@@ -107,10 +107,14 @@ public struct SeaScene: View {
     /// L'ora di bordo, decimale.
     let hour: Double
     let setting: Setting
+    /// La scala della nave, se chi impagina la vuole protagonista: sulla scheda
+    /// della nave è lei il soggetto, non il cielo.
+    let shipScaleOverride: CGFloat?
 
-    public init(hour: Double, setting: Setting = .openSea) {
+    public init(hour: Double, setting: Setting = .openSea, shipScale: CGFloat? = nil) {
         self.hour = hour
         self.setting = setting
+        self.shipScaleOverride = shipScale
     }
 
     private var isPaused: Bool { reduceMotion || scenePhase != .active }
@@ -408,7 +412,7 @@ public struct SeaScene: View {
 
     /// La nave, che beccheggia e sale sull'onda. Con Riduci movimento sta ferma,
     /// senza scia.
-    private func shipScale(size: CGSize) -> CGFloat { min(0.62, size.width / 620) }
+    private func shipScale(size: CGSize) -> CGFloat { shipScaleOverride ?? min(0.62, size.width / 620) }
 
     /// Dove sta la nave, a quest'ora: il centro dello scafo.
     ///

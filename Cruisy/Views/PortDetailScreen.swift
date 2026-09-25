@@ -45,6 +45,7 @@ struct PortDetailScreen: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom, 24)
             }
+            .shrinksTabBar()
         }
         .navigationTitle(current.name)
         .navigationBarTitleDisplayMode(.inline)

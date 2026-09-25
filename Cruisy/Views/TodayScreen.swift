@@ -60,7 +60,7 @@ struct TodayScreen: View {
                         .toolbar(.hidden, for: .navigationBar)
                         // **Niente barra delle schede sopra la carta.** Il dito di
                         // sotto di un pinch ci finiva sopra e cambiava scheda.
-                        .toolbar(.hidden, for: .tabBar)
+                        .hidesTabBar()
                 }
             }
         }
@@ -171,6 +171,7 @@ struct TodayScreen: View {
             }
             .padding(.bottom, 16)
         }
+        .shrinksTabBar()
         .scrollBounceBehavior(.basedOnSize)
     }
 

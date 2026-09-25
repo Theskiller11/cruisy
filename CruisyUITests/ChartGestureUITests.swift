@@ -60,7 +60,8 @@ final class ChartGestureUITests: XCTestCase {
         // il dito di sotto finiva sulla barra delle schede, che stava sopra la carta.
         // Il messaggio del test diceva "chiusa" e aveva torto — lo diceva l'albero
         // dell'interfaccia al momento del fallimento, dove c'era la scheda Nave.
-        let bar = app.tabBars.firstMatch
+        // La barra è nostra (`CruisyTabBar`): si cerca per identificatore.
+        let bar = app.descendants(matching: .any)["barra-schede"]
         XCTAssertFalse(bar.exists && bar.isHittable,
                        "la barra delle schede è sopra la carta, e un pinch la tocca")
     }

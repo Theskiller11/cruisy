@@ -126,6 +126,16 @@ final class LiveActivityController {
             return
         }
 
+        // Il traguardo si è spostato più in là della finestra — un ritardo
+        // annunciato, una correzione — e l'attività conterebbe ore che non le
+        // spettano. Si chiude: quando la finestra si riapre, `RootTabView` la
+        // riaccende da sé. Prima la si aggiornava e basta, e restava accesa con
+        // quattro ore all'attracco invece dell'ora e mezza promessa.
+        if isTooEarly(for: focus.countdown, at: now, atSea: activity.content.state.kind.isAtSea) {
+            await end()
+            return
+        }
+
         // Stesso porto, orario corretto: si riallinea invece di chiudere.
         if activity.content.state.target != focus.countdown.target {
             await update(countdown: focus.countdown,

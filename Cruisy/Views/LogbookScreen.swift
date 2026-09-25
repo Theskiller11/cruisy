@@ -42,6 +42,7 @@ struct LogbookScreen: View {
                         .padding(.top, 4)
                         .padding(.bottom, 24)
                     }
+                    .shrinksTabBar()
                 }
             }
             .navigationTitle("Diario")

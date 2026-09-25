@@ -212,3 +212,24 @@ struct PortDayBar: View {
         return parts.joined(separator: ", ")
     }
 }
+
+/// Il countdown in una riga: «fra 2:59», e nell'ultima ora «fra 19:56». Le stesse
+/// regole del numero grande di Oggi, per le righe che non sono Oggi.
+struct CompactCountdown: View {
+    let countdown: Countdown
+    var offset: TimeInterval = 0
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            let c = countdown.components(at: context.date.addingTimeInterval(offset))
+            let digits = c.hours > 0 ? String(format: "%d:%02d", c.hours, c.minutes)
+                                     : String(format: "%d:%02d", c.minutes, c.seconds)
+            Text("fra \(digits)")
+                .monospacedDigit()
+                .lineLimit(1)
+                .accessibilityLabel(Text(c.hours > 0
+                    ? String(localized: "fra \(c.hours) ore e \(c.minutes) minuti")
+                    : String(localized: "fra \(c.minutes) minuti")))
+        }
+    }
+}

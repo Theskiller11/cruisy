@@ -66,7 +66,7 @@ final class OnboardingUITests: XCTestCase {
 
         // E si può uscire senza itinerario.
         app.buttons["Lo faccio più tardi"].tap()
-        XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.descendants(matching: .any)["barra-schede"].waitForExistence(timeout: 5))
     }
 
     /// Chi usa VoiceOver non trascina: «Inizia» fa la stessa cosa.

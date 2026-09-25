@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// La scheda della nave: le carte di bordo.
+/// La scheda della nave: la nave disegnata, le carte di bordo, dove si trova.
 ///
 /// Si riempie da sola dal nome: i dati vengono da Wikidata, che è **CC0** — stazza,
 /// lunghezza, numero IMO, anno di consegna sono fatti, e i fatti non appartengono a
@@ -14,6 +14,7 @@ struct ShipScreen: View {
     @State private var photos = ShipPhotoService()
     @Environment(Reachability.self) private var reachability
     @Environment(ShipLookupService.self) private var lookup
+    @Environment(PositionService.self) private var position
 
     private var record: ShipRecord? { store.shipRecord }
 
@@ -37,26 +38,37 @@ struct ShipScreen: View {
     private func content(voyage: Voyage) -> some View {
         ScrollView {
             VStack(spacing: 14) {
-                photo(voyage: voyage)
+                // La copertina è la nave, disegnata nei colori della livrea sul mare
+                // dell'ora di bordo. Prima in cima c'era la carta della rotta, che è
+                // anche su Oggi: qui si guarda la nave.
+                SeaScene(hour: store.shipHour, setting: store.isInPort ? .port : .openSea, shipScale: 1)
+                    .frame(height: 230)
+                    .padding(.horizontal, -16)
+                    // Il nome sale sull'acqua, come il biglietto su Oggi: sotto le
+                    // onde la scena è già scafo, e lasciarla intera apriva un vuoto.
+                    .padding(.bottom, -52)
 
-                Masthead(record?.name ?? voyage.shipName,
-                         detail: record?.operatorName.isEmpty == false ? record?.operatorName : nil)
+                Masthead(record?.name ?? voyage.shipName, detail: identity)
                     .padding(.horizontal, 6)
 
                 papers(voyage: voyage)
-
-                liveryRow
 
                 if record == nil {
                     missingShip(name: voyage.shipName)
                 }
 
+                whereabouts(voyage: voyage)
+
+                if let photo = photos.photo {
+                    ShipPhotoCard(photo: photo)
+                }
+
                 sourceNote
             }
             .padding(.horizontal, 16)
-            .padding(.top, 4)
             .padding(.bottom, 24)
         }
+        .shrinksTabBar()
         .task(id: "\(record?.imageFile ?? "")|\(reachability.isExpensive)") {
             if let record {
                 await photos.load(record, allowsDownload: PhotoDownloadPolicy.allows(isMetered: reachability.isExpensive))
@@ -64,96 +76,139 @@ struct ShipScreen: View {
         }
     }
 
-    // MARK: La foto
-
-    @ViewBuilder
-    private func photo(voyage: Voyage) -> some View {
-        if let photo = photos.photo {
-            ShipPhotoCard(photo: photo)
-        } else {
-            // Senza foto non si lascia un buco: si disegna la rotta, che è un
-            // contenuto vero e sempre disponibile.
-            ZStack {
-                SeaChart(voyage: voyage, fix: nil, now: store.now,
-                         framing: .wholeVoyage, showsPortNames: false,
-                         showsGraticule: true, showsShip: false, padding: 26)
-                if photos.isLoading {
-                    ProgressView().controlSize(.small)
-                }
-            }
-            .frame(height: 190)
-            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-            .padding(6)
-            .paperCard()
-            .accessibilityLabel(Text("La rotta della crociera"))
-        }
+    /// La riga sotto il nome: chi la gestisce, la bandiera, da quando naviga.
+    private var identity: String? {
+        guard let record else { return nil }
+        var parts: [String] = []
+        if !record.operatorName.isEmpty { parts.append(record.operatorName) }
+        if !record.flag.isEmpty { parts.append(record.flag) }
+        if record.year > 0 { parts.append(String(localized: "dal \(String(record.year))")) }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
 
     // MARK: Le carte di bordo
 
-    /// Stazza, misure, anno, bandiera, identificativi: la matrice delle carte.
+    /// Le misure come campi del biglietto, la livrea come i suoi colori; nella
+    /// matrice gli identificativi, in carattere tecnico. Il nome non si ripete: è
+    /// già scritto grande sopra.
     @ViewBuilder
     private func papers(voyage: Voyage) -> some View {
-        let fields = paperFields(voyage: voyage)
-        if !fields.isEmpty {
-            Ticket {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Carte di bordo").ticketEyebrow(livery.signalInk)
-                    Text(record?.name ?? voyage.shipName)
-                        .font(.system(.largeTitle, weight: .black).width(.condensed))
-                        .textCase(.uppercase)
-                        .foregroundStyle(livery.ink)
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.6)
-                }
-                .padding(.horizontal, 18)
-                .padding(.top, 16)
-                .padding(.bottom, 14)
-            } stub: {
-                TicketMatrix(fields: fields, columns: 2)
-                    .padding(.horizontal, 18)
-                    .padding(.top, 14)
-                    .padding(.bottom, 18)
+        let fields = paperFields
+        let imo = record?.imo.isEmpty == false ? record?.imo : voyage.imo
+        let mmsi = record?.mmsi.isEmpty == false ? record?.mmsi : voyage.mmsi
+        Ticket {
+            VStack(alignment: .leading, spacing: 14) {
+                Text("Carte di bordo").ticketEyebrow(livery.signalInk)
+                if !fields.isEmpty { TicketMatrix(fields: fields, columns: 3) }
+                liveryField
             }
+            .padding(.horizontal, 18)
+            .padding(.top, 16)
+            .padding(.bottom, 16)
+        } stub: {
+            HStack(alignment: .top, spacing: 14) {
+                technical("IMO", imo)
+                technical("MMSI", mmsi)
+            }
+            .padding(.horizontal, 18)
+            .padding(.vertical, 14)
         }
     }
 
-    private func paperFields(voyage: Voyage) -> [TicketField] {
+    private var paperFields: [TicketField] {
+        guard let record else { return [] }
         var fields: [TicketField] = []
-        if let record {
-            if record.tonnage > 0 {
-                fields.append(TicketField(label: String(localized: "Stazza"), value: Format.tonnage(record.tonnage)))
-            }
-            if record.length > 0 {
-                fields.append(TicketField(label: String(localized: "Lunghezza"), value: "\(Int(record.length)) m"))
-            }
-            if record.beam > 0 {
-                fields.append(TicketField(label: String(localized: "Larghezza"), value: "\(Int(record.beam)) m"))
-            }
-            if record.year > 0 {
-                fields.append(TicketField(label: String(localized: "In servizio"), value: "\(record.year)"))
-            }
-            if !record.flag.isEmpty {
-                fields.append(TicketField(label: String(localized: "Bandiera"), value: record.flag))
-            }
+        if record.tonnage > 0 {
+            fields.append(TicketField(label: String(localized: "Stazza"), value: Format.tonnage(record.tonnage)))
         }
-        let imo = record?.imo.isEmpty == false ? record?.imo : voyage.imo
-        let mmsi = record?.mmsi.isEmpty == false ? record?.mmsi : voyage.mmsi
-        if let imo { fields.append(TicketField(label: "IMO", value: imo)) }
-        if let mmsi { fields.append(TicketField(label: "MMSI", value: mmsi)) }
+        if record.length > 0 {
+            fields.append(TicketField(label: String(localized: "Lunghezza"), value: "\(Int(record.length)) m"))
+        }
+        if record.beam > 0 {
+            fields.append(TicketField(label: String(localized: "Larghezza"), value: "\(Int(record.beam)) m"))
+        }
         return fields
     }
 
-    /// La livrea in vigore, e da dove viene. Solo come informazione: si cambia
-    /// nelle Impostazioni, e qui si dice dove.
-    @ViewBuilder
-    private var liveryRow: some View {
+    /// La livrea come la si vede: i suoi tre colori, il nome, e dove si cambia.
+    private var liveryField: some View {
         let fromCompany = preferences.livery == .company && livery != .cruisy
-        PaperRow(glyph: "paintpalette",
-                 title: String(localized: "Livrea: \(livery.name)"),
-                 subtitle: fromCompany
-                    ? String(localized: "Colori ispirati alla compagnia. Si cambia nelle Impostazioni.")
-                    : String(localized: "La livrea di Cruisy. Si cambia nelle Impostazioni."))
+        return HStack(alignment: .center, spacing: 12) {
+            HStack(spacing: -4) {
+                ForEach(Array([livery.hull, livery.paper, livery.signal].enumerated()), id: \.offset) { _, colour in
+                    Circle().fill(colour)
+                        .frame(width: 20, height: 20)
+                        .overlay(Circle().stroke(livery.perforation, lineWidth: 1))
+                }
+            }
+            .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Livrea: \(livery.name)")
+                    .font(TicketType.rowTitle)
+                    .foregroundStyle(livery.ink)
+                // Due `Text` e non un `Text` con la condizione dentro: due letterali in un
+                // ternario diventano una `String`, e una `String` non si traduce.
+                (fromCompany ? Text("Colori ispirati alla compagnia. Si cambia nelle Impostazioni.")
+                             : Text("La livrea di Cruisy. Si cambia nelle Impostazioni."))
+                    .font(TicketType.rowDetail)
+                    .foregroundStyle(livery.field)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .accessibilityElement(children: .combine)
+    }
+
+    private func technical(_ label: String, _ value: String?) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(verbatim: label).ticketFieldLabel(livery.field)
+            Text(verbatim: value ?? "—")
+                .font(.system(.body, design: .monospaced, weight: .semibold))
+                .foregroundStyle(value == nil ? livery.field : livery.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
+    }
+
+    // MARK: Dove si trova
+
+    /// La nave sulla carta: dov'è adesso in crociera, la rotta intera prima e dopo.
+    @ViewBuilder
+    private func whereabouts(voyage: Voyage) -> some View {
+        let underway = !store.isAwaitingDeparture && store.moment != .completed
+        let fix = underway ? position.shipFix(for: voyage, at: store.now) : nil
+        VStack(alignment: .leading, spacing: 0) {
+            SeaChart(voyage: voyage, fix: fix, now: store.now,
+                     framing: fix != nil ? .ship(spanDegrees: 7.5) : .wholeVoyage,
+                     showsPortNames: fix == nil, showsGraticule: true, showsShip: fix != nil, padding: 22)
+                .frame(height: 150)
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .padding(6)
+                .accessibilityHidden(true)
+            HStack(alignment: .firstTextBaseline) {
+                (fix != nil ? Text("Dove si trova") : Text("La rotta")).ticketFieldLabel(livery.field)
+                Spacer(minLength: 8)
+                Text(whereLine(voyage: voyage))
+                    .font(TicketType.rowDetail)
+                    .foregroundStyle(livery.ink)
+                    .lineLimit(1)
+            }
+            .padding(.horizontal, 14)
+            .padding(.top, 4)
+            .padding(.bottom, 12)
+        }
+        .paperCard()
+        .accessibilityElement(children: .combine)
+    }
+
+    private func whereLine(voyage: Voyage) -> String {
+        switch store.moment {
+        case .inPort(let call): String(localized: "In porto a \(call.name)")
+        case .atSea(_, let to): String(localized: "Verso \(to.name)")
+        case .beforeVoyage, .completed, .none:
+            String(localized: "\(voyage.nights) notti · \(voyage.intermediateCalls.count) scali")
+        }
     }
 
     /// Quando la nave non è nell'elenco.
@@ -186,19 +241,29 @@ struct ShipScreen: View {
                     .foregroundStyle(livery.ink)
                 retry(name: name)
             default:
-                Text("Questa nave non è nell'elenco che viaggia dentro l'app. I countdown funzionano lo stesso: la scheda è un di più.")
-                    .font(TicketType.body)
-                    .foregroundStyle(livery.ink)
+                // Una riga come quelle dei suggerimenti, non un pulsante a tutta
+                // larghezza: la scheda è un di più, e non deve sembrare un errore.
                 Button {
                     Task { await lookup.search(name) }
                 } label: {
-                    Label("Cercala su Wikidata", systemImage: "arrow.down.circle")
-                        .frame(maxWidth: .infinity)
+                    HStack(spacing: 12) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Non è nell'elenco dell'app")
+                                .font(TicketType.rowTitle)
+                                .foregroundStyle(livery.ink)
+                            Text("Cerca nave su Wikidata")
+                                .font(TicketType.rowDetail)
+                                .foregroundStyle(livery.tint)
+                        }
+                        Spacer(minLength: 8)
+                        Image(systemName: "magnifyingglass")
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(livery.tint)
+                            .accessibilityHidden(true)
+                    }
+                    .contentShape(Rectangle())
                 }
-                .buttonStyle(.borderedProminent)
-                // `tint`, non `ink`: in scuro l'inchiostro è bianco, e un pulsante
-                // bianco con la scritta bianca non si legge.
-                .tint(livery.tint)
+                .buttonStyle(.plain)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

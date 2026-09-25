@@ -41,6 +41,7 @@ struct PortsScreen: View {
                 .padding(.top, 8)
                 .padding(.bottom, 24)
             }
+            .shrinksTabBar()
         }
         .navigationTitle("Porti toccati")
         .navigationBarTitleDisplayMode(.inline)

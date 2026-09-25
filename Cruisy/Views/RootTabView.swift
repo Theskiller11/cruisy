@@ -2,9 +2,9 @@ import SwiftUI
 
 /// Le quattro schede di Cruisy.
 ///
-/// `TabView` nativa, con la barra Liquid Glass di iOS 26: si rimpicciolisce da sola
-/// allo scorrimento, rispetta l'inset dell'indicatore Home e porta con sé
-/// l'accessibilità. Il biglietto è il contenuto; la cornice resta iOS.
+/// `TabView` nativa per il contenuto — tiene lo stato di ogni scheda — ma con la
+/// barra nostra, `CruisyTabBar`: quella di sistema, scorrendo, si riduceva a una
+/// sola icona. La nostra si rimpicciolisce e tiene tutte e quattro le voci.
 ///
 /// Qui si decide anche la **livrea**: dalla scelta nelle Impostazioni e dalla
 /// compagnia della nave, e da qui scende nell'ambiente di ogni schermata.
@@ -15,6 +15,7 @@ struct RootTabView: View {
     @Environment(NotificationScheduler.self) private var notifications
     @Environment(PositionService.self) private var position
     @State private var selection: Section = .today
+    @State private var tabBar = TabBarState()
     @State private var showsDisclaimer = false
     /// Una crociera arrivata da un file, in attesa di conferma.
     @State private var incoming: Voyage?
@@ -38,45 +39,60 @@ struct RootTabView: View {
         case today, itinerary, ship, logbook
     }
 
+    // Etichette che dicono che cosa c'è dentro, non categorie ombrello.
+    private static let tabs: [CruisyTabBar<Section>.Item] = [
+        .init(section: .today, title: "Oggi", symbol: "sun.horizon"),
+        .init(section: .itinerary, title: "Itinerario", symbol: "list.bullet.indent"),
+        .init(section: .ship, title: "Nave", symbol: "ferry"),
+        .init(section: .logbook, title: "Diario", symbol: "book.closed"),
+    ]
+
     var body: some View {
         TabView(selection: $selection) {
-            Tab(value: .today) {
-                TodayScreen()
-            } label: {
-                // Etichette che dicono che cosa c'è dentro, non categorie ombrello.
-                Label("Oggi", systemImage: "sun.horizon")
+            Tab("Oggi", systemImage: "sun.horizon", value: .today) {
+                TodayScreen().cruisyTab(tabBar)
             }
-
-            Tab(value: .itinerary) {
-                ItineraryScreen()
-            } label: {
-                Label("Itinerario", systemImage: "list.bullet.indent")
+            Tab("Itinerario", systemImage: "list.bullet.indent", value: .itinerary) {
+                ItineraryScreen().cruisyTab(tabBar)
             }
-
-            Tab(value: .ship) {
-                ShipScreen()
-            } label: {
-                Label("Nave", systemImage: "ferry")
+            Tab("Nave", systemImage: "ferry", value: .ship) {
+                ShipScreen().cruisyTab(tabBar)
             }
-
-            Tab(value: .logbook) {
-                LogbookScreen()
-            } label: {
-                Label("Diario", systemImage: "book.closed")
+            Tab("Diario", systemImage: "book.closed", value: .logbook) {
+                LogbookScreen().cruisyTab(tabBar)
             }
         }
-        .tabBarMinimizeBehavior(.onScrollDown)
+        .overlay(alignment: .bottom) {
+            if !tabBar.isHidden {
+                CruisyTabBar(selection: $selection, items: Self.tabs, compact: tabBar.isCompact)
+                    .padding(.bottom, -6)
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .animation(.easeInOut(duration: 0.2), value: tabBar.isHidden)
+        // Cambiando scheda la barra si riapre: la nuova schermata parte dalla
+        // cima, e una barra stretta sopra una pagina mai scorsa non ha motivo.
+        .onChange(of: selection) { tabBar.expand() }
+        .environment(tabBar)
         .tint(livery.tabTint)
-        .environment(\.livery, livery)
-        // L'app segue l'aspetto del telefono: in chiaro biglietti bianchi sullo
-        // scafo blu, in scuro biglietti di carta scura sullo scafo quasi nero. Le
-        // barre stanno sempre sullo scafo, che è scuro in entrambe le modalità:
-        // per questo si tengono scure, così le loro scritte restano bianche.
+        // Senza questa la barra di stato prendeva le scritte scure sullo scafo scuro:
+        // la barra di sistema è nascosta, ma è ancora lei a decidere il suo colore.
         .toolbarColorScheme(.dark, for: .tabBar)
-        // Un file .cruisy ricevuto per AirDrop, messaggio o email apre qui.
+        .environment(\.livery, livery)
+        // Qui arrivano due cose diverse: il tocco su widget e Live Activity
+        // (`cruisy://today`) e un file .cruisy ricevuto per AirDrop, messaggio o
+        // email. Solo il secondo è una crociera da leggere: vedi `IncomingURL`.
         .onOpenURL { url in
-            do { incoming = try VoyageFile.read(from: url) }
-            catch { openProblem = true }
+            switch IncomingURL(url) {
+            case .today:
+                selection = .today
+            case .voyageFile(let file):
+                do { incoming = try VoyageFile.read(from: file) }
+                catch { openProblem = true }
+            case .unknown:
+                break
+            }
         }
         .alert("Aprire questa crociera?", isPresented: Binding(
             get: { incoming != nil }, set: { if !$0 { incoming = nil } })) {
@@ -90,10 +106,14 @@ struct RootTabView: View {
         } message: {
             // Mai sovrascrivere in silenzio: la crociera che c'è può contenere
             // correzioni fatte a bordo che non stanno da nessun'altra parte.
+            // Due `Text`, non un `Text` col ternario dentro: due letterali in un
+            // ternario diventano una `String`, e una `String` non si traduce.
             if let incoming {
-                Text(store.voyage == nil
-                     ? "«\(incoming.shipName)», \(incoming.calls.count) scali."
-                     : "Prenderai «\(incoming.shipName)» con \(incoming.calls.count) scali. La crociera che hai adesso, e le correzioni che le hai fatto, andranno perse.")
+                if store.voyage == nil {
+                    Text("«\(incoming.shipName)», \(incoming.calls.count) scali.")
+                } else {
+                    Text("Prenderai «\(incoming.shipName)» con \(incoming.calls.count) scali. La crociera che hai adesso, e le correzioni che le hai fatto, andranno perse.")
+                }
             }
         }
         .alert("Non riesco ad aprirlo", isPresented: $openProblem) {
@@ -201,4 +221,16 @@ struct RootTabView: View {
         .environment(Reachability())
         .environment(MarineWeatherService())
         .environment(ShipLookupService())
+}
+
+private extension View {
+    /// Il contenuto di una scheda: senza la barra di sistema, e con in fondo lo
+    /// spazio della nostra, così l'ultima card si può scorrere fin sopra di lei.
+    func cruisyTab(_ bar: TabBarState) -> some View {
+        self
+            .toolbarVisibility(.hidden, for: .tabBar)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                Color.clear.frame(height: bar.isHidden ? 0 : TabBarMetrics.height - 6)
+            }
+    }
 }

@@ -133,6 +133,15 @@ struct LiveryContrastTests {
             #expect(!brands.contains { name.contains($0) }, "«\(livery.name)» nomina una compagnia")
         }
     }
+
+    @Test("Gli inchiostri dei timbri si leggono sulla carta", arguments: cases)
+    func stampInks(livery: Livery, scheme: Livery.Scheme) {
+        let paper = rgb(livery.paperPair.hex(scheme))
+        for ink in StampInk.allCases {
+            #expect(Contrast.ratio(rgb(livery.stampInkPair(ink).hex(scheme)), paper) >= Contrast.bodyMinimum,
+                    "\(livery.id) \(scheme): inchiostro \(ink)")
+        }
+    }
 }
 
 /// Il cielo del giorno di mare: luminoso di giorno, caldo all'alba e al tramonto,

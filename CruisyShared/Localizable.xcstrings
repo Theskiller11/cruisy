@@ -59,22 +59,6 @@
         }
       }
     },
-    "%@, %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@, %2$@"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@, %2$@"
-          }
-        }
-      }
-    },
     "%@, %lld volte" : {
       "localizations" : {
         "en" : {
@@ -107,22 +91,28 @@
         }
       }
     },
+    "%@: mancano %@" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: mancano %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@: %2$@ to go"
+          }
+        }
+      }
+    },
     "%lld" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld"
-          }
-        }
-      }
-    },
-    "%lld crociere" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld cruises"
           }
         }
       }
@@ -262,12 +252,12 @@
         }
       }
     },
-    "1 crociera" : {
+    "%lld volte" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "1 cruise"
+            "value" : "%lld times"
           }
         }
       }
@@ -513,6 +503,16 @@
         }
       }
     },
+    "Apre la pagina della crociera" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens the cruise page"
+          }
+        }
+      }
+    },
     "Apri" : {
       "localizations" : {
         "en" : {
@@ -709,6 +709,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Boarding pass"
+          }
+        }
+      }
+    },
+    "Carta della crociera: %@. %@" : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Carta della crociera: %1$@. %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cruise chart: %1$@. %2$@"
           }
         }
       }
@@ -964,6 +980,16 @@
         }
       }
     },
+    "Cosa ci finirà" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What goes in"
+          }
+        }
+      }
+    },
     "Cosa ha letto Cruisy" : {
       "localizations" : {
         "en" : {
@@ -1030,6 +1056,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cruise finished"
+          }
+        }
+      }
+    },
+    "Crociere" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cruises"
           }
         }
       }
@@ -1216,6 +1252,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Logbook"
+          }
+        }
+      }
+    },
+    "Diario di bordo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ship’s logbook"
           }
         }
       }
@@ -1435,6 +1481,16 @@
         }
       }
     },
+    "Giorno per giorno" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day by day"
+          }
+        }
+      }
+    },
     "Gli annunci di bordo fanno fede" : {
       "localizations" : {
         "en" : {
@@ -1511,6 +1567,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ports you keep returning to"
+          }
+        }
+      }
+    },
+    "I primati" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Records"
           }
         }
       }
@@ -1623,6 +1689,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Around the world"
+          }
+        }
+      }
+    },
+    "Il primo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The first"
           }
         }
       }
@@ -1996,6 +2072,16 @@
         }
       }
     },
+    "La rotta di ogni crociera" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The route of each cruise"
+          }
+        }
+      }
+    },
     "La traversata atlantica" : {
       "localizations" : {
         "en" : {
@@ -2042,6 +2128,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Photos of ships and ports come from Wikimedia Commons and Wikipedia. On cellular, a hotspot or Low Data Mode they download only if you allow it; photos you've already seen always stay. To your iPhone the ship's Wi-Fi is ordinary Wi-Fi, even if you pay for it: to save data there, turn on Low Data Mode for that network."
+          }
+        }
+      }
+    },
+    "Le miglia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The miles"
           }
         }
       }
@@ -2296,6 +2392,16 @@
         }
       }
     },
+    "Miglia e timbri restano" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miles and stamps stay"
+          }
+        }
+      }
+    },
     "Miglia percorse" : {
       "localizations" : {
         "en" : {
@@ -2312,6 +2418,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Real miles"
+          }
+        }
+      }
+    },
+    "Miglia, porti e timbri restano. Sparisce la linea di dove sei passato." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miles, ports and stamps stay. The line of where you sailed goes."
           }
         }
       }
@@ -2980,6 +3096,46 @@
         }
       }
     },
+    "Più a nord" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Northernmost"
+          }
+        }
+      }
+    },
+    "Più a sud" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Southernmost"
+          }
+        }
+      }
+    },
+    "Più lunga" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Longest"
+          }
+        }
+      }
+    },
+    "Più veloce" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fastest"
+          }
+        }
+      }
+    },
     "Poco mosso" : {
       "localizations" : {
         "en" : {
@@ -3096,6 +3252,16 @@
         }
       }
     },
+    "Primati di questa crociera" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Records of this cruise"
+          }
+        }
+      }
+    },
     "Privacy" : {
       "localizations" : {
         "en" : {
@@ -3153,26 +3319,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recorded points"
-          }
-        }
-      }
-    },
-    "Punto più a nord" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Northernmost point"
-          }
-        }
-      }
-    },
-    "Punto più a sud" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Southernmost point"
           }
         }
       }
@@ -3333,6 +3479,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Course"
+          }
+        }
+      }
+    },
+    "Rotta non registrata: le miglia sono in linea retta fra gli scali." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Route not recorded: miles are straight lines between ports."
+          }
+        }
+      }
+    },
+    "Rotta registrata dal telefono, tranne i tratti tratteggiati." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Route recorded by the phone, except the dashed stretches."
+          }
+        }
+      }
+    },
+    "Rotta registrata dal telefono, tutta." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Route recorded by the phone, all of it."
           }
         }
       }
@@ -3679,6 +3855,22 @@
         }
       }
     },
+    "Si riempie da solo. Il primo timbro arriva a %@, %@ alle %@." : {
+      "localizations" : {
+        "it" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Si riempie da solo. Il primo timbro arriva a %1$@, %2$@ alle %3$@."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It fills itself. The first stamp arrives in %1$@, %2$@ at %3$@."
+          }
+        }
+      }
+    },
     "Si salpa fra" : {
       "localizations" : {
         "en" : {
@@ -4010,6 +4202,36 @@
         }
       }
     },
+    "Togli la rotta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove the route"
+          }
+        }
+      }
+    },
+    "Togli solo la rotta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove only the route"
+          }
+        }
+      }
+    },
+    "Togliere la rotta di questa crociera?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove this cruise’s route?"
+          }
+        }
+      }
+    },
     "Togliere questa crociera dal diario?" : {
       "localizations" : {
         "en" : {
@@ -4026,16 +4248,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Back to the ship"
-          }
-        }
-      }
-    },
-    "Traversata più lunga" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Longest crossing"
           }
         }
       }
@@ -4116,6 +4328,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last step"
+          }
+        }
+      }
+    },
+    "Un timbro per porto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A stamp for each port"
           }
         }
       }
@@ -4246,6 +4468,16 @@
         }
       }
     },
+    "arrivo %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "arrived %@"
+          }
+        }
+      }
+    },
     "attracco %@" : {
       "localizations" : {
         "en" : {
@@ -4263,6 +4495,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ahead of"
+          }
+        }
+      }
+    },
+    "con la data, come sul passaporto" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "with the date, like in a passport"
+          }
+        }
+      }
+    },
+    "contate mentre navighi, messe in scala" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "counted as you sail, put to scale"
           }
         }
       }
@@ -4400,16 +4652,26 @@
     },
     "fra %lld ore e %lld minuti" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "in %1$lld hours and %2$lld minutes"
+          }
+        },
         "it" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "fra %1$lld ore e %2$lld minuti"
           }
-        },
+        }
+      }
+    },
+    "fra gli scali" : {
+      "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "in %1$lld hours and %2$lld minutes"
+            "value" : "between ports"
           }
         }
       }
@@ -4444,6 +4706,26 @@
         }
       }
     },
+    "imbarco" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "boarding"
+          }
+        }
+      }
+    },
+    "imbarco · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "boarding · %@"
+          }
+        }
+      }
+    },
     "in linea d'aria, non lungo la strada" : {
       "localizations" : {
         "en" : {
@@ -4472,6 +4754,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "km/h"
+          }
+        }
+      }
+    },
+    "la traversata più lunga, il punto più a nord" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the longest crossing, the northernmost point"
           }
         }
       }
@@ -4642,6 +4934,16 @@
         }
       }
     },
+    "registrata" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "recorded"
+          }
+        }
+      }
+    },
     "rientro a bordo alle %@" : {
       "localizations" : {
         "en" : {
@@ -4652,12 +4954,62 @@
         }
       }
     },
+    "rotta non registrata, in linea retta fra gli scali" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "route not recorded, straight lines between ports"
+          }
+        }
+      }
+    },
+    "rotta registrata dal telefono" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "route recorded by the phone"
+          }
+        }
+      }
+    },
+    "sbarco · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "disembarking · %@"
+          }
+        }
+      }
+    },
+    "se registri la posizione, sulla sua pagina" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "if you record your position, on its own page"
+          }
+        }
+      }
+    },
     "sec" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "sec"
+          }
+        }
+      }
+    },
+    "senza rotta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "no route"
           }
         }
       }
@@ -4701,6 +5053,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "pasted text"
+          }
+        }
+      }
+    },
+    "timbro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "stamp"
           }
         }
       }

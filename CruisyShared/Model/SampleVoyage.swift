@@ -177,5 +177,72 @@ public enum SampleVoyage {
     public static func allAboardImminent(now: Date = .now) -> Scenario {
         scenario(now: now, hoursIntoVoyage: 99.5 - (20.0 / 60.0))
     }
+
+    // MARK: Una crociera passata, per il Diario
+
+    /// Una crociera del maggio 2025 nel Mediterraneo, già nel diario, con la rotta
+    /// registrata e un buco: fra Ajaccio e Portofino il telefono era spento.
+    ///
+    /// Serve a provare la pagina di una crociera conclusa, che con la sola crociera
+    /// di prova — sempre in corso — non si vedrebbe mai.
+    public static func pastCruise() -> LoggedVoyage {
+        let clock = ShipClock(secondsFromGMT: 2 * 3600, source: .portTimeZone)
+        // 3 maggio 2025, 16:00 a bordo.
+        let embark = Date(timeIntervalSince1970: 1_746_280_800)
+        let hour = 3600.0
+        let stops: [(String, String, Double, Double, Double)] = [
+            ("Barcellona", "Spagna", 41.3775, 2.1830, 0),
+            ("Palma", "Spagna", 39.5588, 2.6360, 16),
+            ("Ajaccio", "Francia", 41.9192, 8.7386, 64),
+            ("Portofino", "Italia", 44.3030, 9.2098, 87),
+            ("Civitavecchia", "Italia", 42.0931, 11.7903, 135),
+        ]
+        let ports = stops.map { LoggedPort(name: $0.0, region: $0.1,
+                                           coordinate: Coordinate(latitude: $0.2, longitude: $0.3),
+                                           arrival: embark + $0.4 * hour) }
+        // Punti di passaggio fra un porto e l'altro, per una rotta che non tagli
+        // le isole. Il terzo tratto si ferma a Capo Corso: lì il telefono si spegne.
+        let legs: [[(Double, Double)]] = [
+            [(41.25, 2.35), (40.55, 2.55), (39.75, 2.62)],
+            [(39.45, 3.4), (39.55, 5.2), (40.3, 6.9), (41.2, 8.2), (41.75, 8.6)],
+            [(42.15, 8.5), (42.7, 8.65), (43.05, 9.3)],
+            [(44.1, 9.55), (43.6, 10.05), (43.0, 10.35), (42.5, 10.9), (42.2, 11.5)],
+        ]
+        var points: [TrackPoint] = []
+        for (index, waypoints) in legs.enumerated() {
+            let from = ports[index], to = ports[index + 1]
+            let leave = from.arrival + 9 * hour
+            let arrive = to.arrival - 0.5 * hour
+            var path = [from.coordinate] + waypoints.map { Coordinate(latitude: $0.0, longitude: $0.1) }
+            if index != 2 { path.append(to.coordinate) }
+            let steps = max(1, Int(arrive.timeIntervalSince(leave) / 600))
+            // Una velocità costante lungo la spezzata: un punto ogni dieci minuti.
+            let lengths = zip(path, path.dropFirst()).map { Geo.nauticalMiles(from: $0, to: $1) }
+            let total = lengths.reduce(0, +)
+            let end = index == 2 ? leave + 4 * hour : arrive
+            let count = index == 2 ? 24 : steps
+            for step in 0...count {
+                var travelled = total * Double(step) / Double(count)
+                var segment = 0
+                while segment < lengths.count - 1, travelled > lengths[segment] {
+                    travelled -= lengths[segment]
+                    segment += 1
+                }
+                let t = lengths[segment] > 0 ? min(travelled / lengths[segment], 1) : 0
+                let a = path[segment], b = path[segment + 1]
+                points.append(TrackPoint(
+                    coordinate: Coordinate(latitude: a.latitude + (b.latitude - a.latitude) * t,
+                                           longitude: a.longitude + (b.longitude - a.longitude) * t),
+                    at: leave + end.timeIntervalSince(leave) * Double(step) / Double(count)))
+            }
+        }
+        let track = Track(points: points)
+        var entry = LoggedVoyage(id: UUID(uuidString: "5E1F0000-0000-4000-8000-000000002025")!,
+                                 shipName: "Stella Polare", ports: ports,
+                                 nauticalMiles: 0, seaDays: 2, secondsFromGMT: clock.secondsFromGMT(at: embark),
+                                 track: track)
+        entry.nauticalMiles = entry.legs(track: track).reduce(0) { $0 + $1.nauticalMiles }
+        return entry
+    }
 }
 #endif

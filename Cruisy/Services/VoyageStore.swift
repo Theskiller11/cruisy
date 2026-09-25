@@ -59,6 +59,14 @@ final class VoyageStore {
         } else if autoload, let scenario = Self.debugScenario() {
             self.voyage = scenario.voyage
             self.isDemo = true
+            #if DEBUG
+            // Una crociera già finita, perché la pagina di una crociera conclusa
+            // si possa vedere: quella di prova è sempre in corso. `-diarioVuoto` la
+            // toglie, per vedere il diario ancora bianco prima dell'imbarco.
+            if !ProcessInfo.processInfo.arguments.contains("-diarioVuoto") {
+                self.logbook.include(sample: SampleVoyage.pastCruise())
+            }
+            #endif
             self.timeOffset = scenario.timeOffset
             self.now = now.addingTimeInterval(scenario.timeOffset)
         } else if autoload {

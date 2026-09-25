@@ -19,8 +19,9 @@ enum DebugLaunch {
     /// La scheda: `oggi`, `itinerario`, `nave`, `diario`.
     static var tab: String? { value("tab") }
 
-    /// Una schermata dentro una scheda: `carta`, `scalo`, `porti`, `editor`,
-    /// `importazione`, `impostazioni`, `onboarding`.
+    /// Una schermata dentro una scheda: `carta`, `scalo`, `porti`, `crociera`
+    /// (la pagina di una crociera conclusa nel Diario), `editor`, `importazione`,
+    /// `impostazioni`, `onboarding`.
     static var open: String? { value("open") }
 
     /// `-ora 6.5` finge che a bordo siano le sei e mezza: serve a guardare la scena del
@@ -43,7 +44,7 @@ enum DebugLaunch {
     static var tabForOpen: String? {
         switch open {
         case "carta": "oggi"
-        case "porti": "diario"
+        case "porti", "crociera": "diario"
         case "scalo", "editor", "importazione", "impostazioni": "itinerario"
         default: nil
         }

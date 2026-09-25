@@ -81,8 +81,10 @@ com.apple.CoreSimulator.SimRuntime.iOS-27-0`. Il tipo **iPhone Duo** c'è già; 
   non toccare. Per arrivare dritti a una schermata usa gli argomenti DEBUG:
   - `-sample inPort | atSea | beforeBoarding | farFromBoarding | imminent` — una crociera di prova;
   - `-tab oggi | itinerario | nave | diario`;
-  - `-open carta | scalo | porti | editor | importazione | impostazioni | onboarding`
-    (`Cruisy/Services/DebugLaunch.swift`);
+  - `-open carta | scalo | porti | crociera | editor | importazione | impostazioni | onboarding`
+    (`Cruisy/Services/DebugLaunch.swift`); `crociera` apre la pagina di una crociera conclusa
+    del Diario, che gli scenari mettono in memoria (`SampleVoyage.pastCruise`); `-diarioVuoto`
+    la toglie, per vedere il diario ancora bianco;
   - `-onboardingStep 0…4`, insieme a `-open onboarding`, apre l'onboarding a un passo preciso;
   - `-cruisy.hasSeenDisclaimer YES` salta l'onboarding, `-AppleLanguages "(en)"` cambia lingua;
   - `-livrea rosso` veste l'app con una livrea del catalogo (`Livery.id`), perché la nave di prova

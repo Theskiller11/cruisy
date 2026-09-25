@@ -17,6 +17,9 @@ final class LogbookStore {
     /// a non riscrivere il file a ogni battito dell'orologio.
     private var loggedCallCount = 0
 
+    /// Le crociere di prova: si vedono, ma non si scrivono mai nel file.
+    private var samples: Set<UUID> = []
+
     /// Falso per anteprime e test: il diario resta in memoria.
     ///
     /// Senza questo, un'anteprima di SwiftUI che registra una crociera sovrascrive il
@@ -72,8 +75,29 @@ final class LogbookStore {
         save()
     }
 
+    /// Toglie la rotta a una crociera e lascia il resto: miglia, porti, date.
+    ///
+    /// Per chi vuole il diario ma non vuole tenere, per sempre, dov'è passato
+    /// punto per punto. Le miglia restano quelle già contate: sono un numero, non
+    /// un posto.
+    func forgetTrack(of entry: LoggedVoyage) {
+        guard let index = logbook.voyages.firstIndex(where: { $0.id == entry.id }) else { return }
+        logbook.voyages[index].track = nil
+        save()
+    }
+
+    #if DEBUG
+    /// Mette nel diario una crociera di prova, **solo in memoria**.
+    func include(sample entry: LoggedVoyage) {
+        samples.insert(entry.id)
+        logbook.record(entry)
+    }
+    #endif
+
     private func save() {
         guard persists else { return }
-        try? LogbookArchive.save(logbook)
+        var written = logbook
+        written.voyages.removeAll { samples.contains($0.id) }
+        try? LogbookArchive.save(written)
     }
 }
